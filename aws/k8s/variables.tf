@@ -1,0 +1,77 @@
+variable "env" {
+  type        = string
+  description = "Deployment environment eg prod, dev"
+}
+
+variable "team" {
+  type        = string
+  description = "Used to tag resources"
+}
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "sns_topic" {
+  type        = string
+  description = "SNS topic ARN for notifications"
+  default     = ""
+}
+
+variable "region" {
+  type    = string
+}
+
+/* variable "cluster_version" {
+  type = string
+}
+
+variable "cluster_endpoint_public_access" {
+  default = true
+}
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "subnet_ids" {
+  type = list(string)
+}
+
+variable "capacity_type" {
+  description = "Type of capacity associated with the EKS Node Group. Valid values: `ON_DEMAND`, `SPOT`"
+  type        = string
+  default     = "ON_DEMAND"
+}
+
+variable "nodegroup_properties" {
+  type = any
+  default = {
+    "min_size"       = 1
+    "max_size"       = 2
+    "desired_size"   = 1
+    "instance_types" = ["t4g.2xlarge"]
+    "capacity_type"  = "ON_DEMAND"
+  }
+}
+
+variable "users" {
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    }
+  ]
+} */
+
