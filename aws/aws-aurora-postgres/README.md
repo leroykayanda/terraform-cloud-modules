@@ -12,13 +12,13 @@
       engine_version               = var.db_engine_version
       master_password              = var.master_password
       master_username              = var.db_master_username
-      backup_retention_period      = var.db_backup_retention_period
       port                         = var.db_port
-      create_cpu_credit_alarm      = var.db_create_cpu_credit_alarm
-      preferred_maintenance_window = var.preferred_maintenance_window
-      preferred_backup_window      = var.preferred_backup_window
       db_instance_count            = var.db_instance_count
       database_name                = var.database_name
       region                       = var.region
-      parameter_group_family       = local.db_parameter_group_family
+      parameter_group_family       = local.db_parameter_group_family #these are optional
+      backup_retention_period      = var.db_backup_retention_period
+      create_cpu_credit_alarm      = var.db_create_cpu_credit_alarm
+      preferred_maintenance_window = var.preferred_maintenance_window
+      preferred_backup_window      = var.preferred_backup_window
     }
