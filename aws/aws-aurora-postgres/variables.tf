@@ -59,7 +59,8 @@ variable "master_password" {
 }
 
 variable "backup_retention_period" {
-  type = number
+  type    = number
+  default = 35
 }
 
 variable "port" {
@@ -73,14 +74,17 @@ variable "database_name" {
 variable "create_cpu_credit_alarm" {
   type        = string
   description = "Create alarm only if a burstable instance class has been chosen. Possible values - yes or no"
+  default     = "no"
 }
 
 variable "preferred_maintenance_window" {
-  type = string
+  type    = string
+  default = "sun:00:00-sun:01:00"
 }
 
 variable "preferred_backup_window" {
-  type = string
+  type    = string
+  default = "02:00-03:00"
 }
 
 variable "db_instance_count" {
@@ -88,12 +92,14 @@ variable "db_instance_count" {
 }
 
 variable "db_cluster_snapshot_identifier" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "snapshot_cluster" {
   type        = string
   description = "cluster whose snapshot we are using"
+  default     = null
 }
 
 variable "parameter_group_family" {
@@ -103,5 +109,19 @@ variable "parameter_group_family" {
 
 variable "creating_db" {
   type    = bool
+  default = false
+}
+
+variable "local_storage_threshold" {
+  type    = number
+  default = 10
+}
+
+variable "dbload_threshold" {
+  type    = number
+  default = 5
+}
+
+variable "publicly_accessible" {
   default = false
 }

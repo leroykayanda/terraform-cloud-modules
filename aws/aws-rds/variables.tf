@@ -38,11 +38,11 @@ variable "username" {
 }
 
 variable "storage_throughput" {
-  type = string
+  default = null
 }
 
 variable "iops" {
-  type = string
+  default = null
 }
 
 variable "password" {
@@ -55,7 +55,8 @@ variable "performance_insights_retention_period" {
 }
 
 variable "backup_retention_period" {
-  type = number
+  type    = number
+  default = 35
 }
 
 variable "port" {
@@ -65,25 +66,30 @@ variable "port" {
 variable "create_cpu_credit_alarm" {
   type        = string
   description = "Create alarm only if a burstable instance class has been chosen. Possible values - yes or no"
+  default     = "no"
 }
 
 variable "maintenance_window" {
   type        = string
   description = "eg Mon:00:00-Mon:03:00"
+  default     = "Mon:00:00-Mon:03:00"
 }
 
 variable "backup_window" {
   type        = string
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Must not overlap with maintenance_window.Eg: 00:00-02:00"
+  default     = "04:00-06:00"
 }
 
 variable "allocated_storage" {
   type        = number
   description = "The allocated storage in gibibytes"
+  default     = 20
 }
 
 variable "max_allocated_storage" {
-  type = number
+  type    = number
+  default = 1000
 }
 
 variable "db_name" {
@@ -92,12 +98,12 @@ variable "db_name" {
 }
 
 variable "deletion_protection" {
+  default = true
 }
 
 variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
-  description = "Set of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported. Valid values (depending on engine). MySQL and MariaDB: audit, error, general, slowquery. PostgreSQL: postgresql, upgrade. MSSQL: agent , error. Oracle: alert, audit, listener, trace."
-  default     = ["postgresql"]
+  description = "Set of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported. Valid values (depending on engine). MySQL and MariaDB: audit, error, general, slowquery. PostgreSQL: postgresql, upgrade. MSSQL: agent , error. Oracle: alert, audit, listener, trace. eg ['postgresql']"
 }
 
 variable "engine" {
@@ -116,23 +122,28 @@ variable "multi_az" {
 variable "memory_alarm_threshold" {
   type        = number
   description = "Threshold for memory DB alarm to trigger in bytes"
+  default     = 1000
 }
 
 variable "storage_alarm_threshold" {
   type        = number
   description = "gb"
+  default     = 5
 }
 
 variable "iops_alarm_threshold" {
-  type = number
+  type    = number
+  default = 1000
 }
 
 variable "throughput_alarm_threshold" {
-  type = number
+  type    = number
+  default = 1000
 }
 
 variable "queue_depth_alarm_threshold" {
-  type = number
+  type    = number
+  default = 1000
 }
 
 variable "region" {
@@ -141,4 +152,8 @@ variable "region" {
 
 variable "parameter_group_family" {
   type = string
+}
+
+variable "publicly_accessible" {
+  default = false
 }

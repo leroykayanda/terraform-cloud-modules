@@ -1,6 +1,6 @@
 
     module "dam" {
-      source            = "git@github.com:abc/terraform-modules.git//modules/aws-dam?ref=v1.0.12"
+      source            = "modules/aws-dam?ref=v1.0.12"
       env               = var.env
       microservice_name = var.microservice_name
       team              = "devops"

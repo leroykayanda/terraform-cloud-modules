@@ -2,7 +2,7 @@
 
     module "aurora_global_db" {
       count                        = var.env == "prod" ? 1 : 0
-      source                       = "git@github.com:abc/terraform-modules.git//modules/aws-aurora-postgres-global-db?ref=v1.1.15"
+      source                       = "modules/aws-aurora-postgres-global-db?ref=v1.1.15"
       env                          = var.env
       team                         = var.team
       microservice_name            = var.service
@@ -34,6 +34,7 @@
       dr_sns_topic                 = var.sns_topic_dr
       dr_availability_zones        = var.availability_zones_dr #optional
       dbload_threshold             = var.dbload_threshold
+      local_storage_threshold      = var.local_storage_threshold
     
       providers = {
         aws    = aws.primary

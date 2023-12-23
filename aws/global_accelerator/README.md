@@ -1,5 +1,5 @@
     module "global_accelerator_prod" {
-      source            = "git@github.com:abc/terraform-modules.git//modules/global_accelerator?ref=v1.1.43"
+      source            = "modules/global_accelerator?ref=v1.1.43"
       env               = var.env
       microservice_name = var.service
       team              = var.team

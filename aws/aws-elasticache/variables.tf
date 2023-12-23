@@ -42,6 +42,7 @@ variable "automatic_failover_enabled" {
 variable "num_cache_clusters" {
   type        = number
   description = "Number of redis nodes"
+  default     = 1
 }
 
 variable "node_type" {

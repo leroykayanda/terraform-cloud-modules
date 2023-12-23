@@ -53,6 +53,7 @@ resource "aws_elasticache_replication_group" "elasticache_cluster" {
   subnet_group_name          = aws_elasticache_subnet_group.elasticache_subnet_group.name
   at_rest_encryption_enabled = true
   kms_key_id                 = aws_kms_key.kms_key.arn
+  transit_encryption_enabled = false
 
   log_delivery_configuration {
     destination      = aws_cloudwatch_log_group.redis_log_group.name

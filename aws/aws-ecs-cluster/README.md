@@ -1,5 +1,5 @@
     module "ecs_cluster" {
-      source            = "git@github.com:abc/terraform-modules.git//modules/aws-ecs-cluster?ref=v1.0.22"
+      source            = "modules/aws-ecs-cluster?ref=v1.0.22"
       env               = var.env
       team              = var.team
       microservice_name = var.microservice_name

@@ -146,7 +146,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Namespace} MetricName=\"namespace_number_of_running_pods\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Namespace} MetricName=\"namespace_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -169,7 +169,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName,InstanceId, NodeName} MetricName=\"node_cpu_utilization\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName,InstanceId, NodeName} MetricName=\"node_cpu_utilization\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -200,7 +200,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_filesystem_utilization\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_filesystem_utilization\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -231,7 +231,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_memory_utilization\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_memory_utilization\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -262,7 +262,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_number_of_running_pods\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -285,7 +285,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, PodName, Namespace} MetricName=\"pod_number_of_container_restarts\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, PodName, Namespace} MetricName=\"pod_number_of_container_restarts\" ClusterName=\"${var.cluster_name}\"', 'Sum')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -295,9 +295,9 @@ resource "aws_cloudwatch_dashboard" "dash" {
                 "showUnits" : false
               }
             },
-            "period" : 60,
+            "period" : 300,
             "title" : "Container Restarts",
-            "stat" : "Average"
+            "stat" : "Sum"
           }
         },
         {
@@ -308,7 +308,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Service, Namespace} MetricName=\"service_number_of_running_pods\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Service, Namespace} MetricName=\"service_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,

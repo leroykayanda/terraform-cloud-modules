@@ -1,6 +1,6 @@
     module "ecs_service" {
-      source                            = "git@github.com:abc/terraform-modules.git//modules/aws-ecsService?ref=v1.0.73"
-      cluster_arn                       = module.ecs_cluster.ecs_cluster_arn
+      source                            = "modules/aws-ecsService?ref=v1.0.73"
+      cluster_arn                       = module.ecs_cluster.arn
       cluster_name                      = module.ecs_cluster.name
       container_image                   = var.container_image
       container_name                    = var.container_name
@@ -16,10 +16,7 @@
       task_subnets                      = var.task_subnets
       vpc_id                            = var.vpc_id
       vpc_cidr                          = var.vpc_cidr
-      internal                          = var.internal
       alb_subnets                       = var.alb_subnets
-      deregistration_delay              = var.deregistration_delay
-      health_check_path                 = var.health_check_path
       certificate_arn                   = var.certificate_arn
       min_capacity                      = var.min_capacity
       max_capacity                      = var.max_capacity
@@ -27,6 +24,8 @@
       team                              = var.team
       capacity_provider                 = var.capacity_provider
       company_name                      = var.company_name
+      port_mappings                     = var.port_mappings
+      container_port                    = var.container_port
       task_sg                           = aws_security_group.task_sg.id #optional variables follow
       command                           = var.command
       user                              = var.user
@@ -44,11 +43,12 @@
       entry_point                       = var.entry_point
       entry_point_2                     = var.entry_point_2
       create_elb                        = var.create_elb
-      container_port                    = var.container_port
-      port_mappings                     = var.port_mappings
       port_mappings_2                   = var.port_mappings_2
       domain_name                       = var.domain_name
       zone_id                           = var.zone_id
       waf                               = var.waf
       health_check_grace_period_seconds = var.health_check_grace_period_seconds
+      internal                          = var.internal
+      deregistration_delay              = var.deregistration_delay
+      health_check_path                 = var.health_check_path
     }

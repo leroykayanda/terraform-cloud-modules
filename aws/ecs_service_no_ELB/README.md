@@ -1,7 +1,7 @@
 This module sets up an ECS service with no ELB.
 
     module "ecs_service_no_ELB" {
-      source                            = "git@github.com:abc/terraform-modules.git//modules/ecs_service_no_ELB?ref=v1.0.41"
+      source                            = "modules/ecs_service_no_ELB?ref=v1.0.41"
       cluster_arn                       = module.ecs_cluster.arn
       container_image                   = var.container_image
       container_name                    = local.service_name

@@ -1,5 +1,5 @@
     module "sqs_file_cleaning_trigger" {
-      source                     = "git@github.com:abc/terraform-modules.git//modules/aws-s3-bucket?ref=v1.1.85"
+      source                     = "modules/aws-s3-bucket?ref=v1.1.85"
       env                        = var.env
       team                       = var.team
       microservice_name          = "${var.env}-recon-file-processing-trigger"

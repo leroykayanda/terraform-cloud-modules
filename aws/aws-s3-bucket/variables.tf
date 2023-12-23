@@ -40,5 +40,5 @@ variable "region" {
 }
 
 variable "create_lifecycle_config" {
-  default = "yes"
+  default = "no"
 }

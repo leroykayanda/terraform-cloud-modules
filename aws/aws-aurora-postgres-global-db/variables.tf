@@ -143,3 +143,8 @@ variable "dbload_threshold" {
   type    = number
   default = 5
 }
+
+variable "local_storage_threshold" {
+  type    = number
+  default = 10
+}

@@ -68,6 +68,7 @@ resource "aws_db_instance" "db_instance" {
   storage_type                          = "gp3"
   storage_throughput                    = var.storage_throughput
   parameter_group_name                  = aws_db_parameter_group.db_parameter_group.name
+  publicly_accessible                   = var.publicly_accessible
 
   tags = {
     Environment = var.env

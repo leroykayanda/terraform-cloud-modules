@@ -1,7 +1,7 @@
 This module is used to set up an AWS ECS fargate cluster.
 
     module "ecsModule" {
-    source  = "git@github.com:abc/terraform-modules.git//aws-ecsModule?ref=1.0.0"
+    source  = "aws-ecsModule?ref=1.0.0"
     env = var.env
     region  = var.region
     cluster_name  = "${var.env}-${var.cluster_name}"

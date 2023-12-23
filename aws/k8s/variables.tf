@@ -8,21 +8,26 @@ variable "team" {
   description = "Used to tag resources"
 }
 
+variable "sns_topic" {
+  type        = string
+  description = "SNS topic ARN for notifications"
+}
+
+variable "region" {
+  type = string
+}
+
+#eks
+variable "cluster_created" {
+  description = "create applications such as argocd only when the eks cluster has already been created"
+  default     = false
+}
+
 variable "cluster_name" {
   type = string
 }
 
-variable "sns_topic" {
-  type        = string
-  description = "SNS topic ARN for notifications"
-  default     = ""
-}
-
-variable "region" {
-  type    = string
-}
-
-/* variable "cluster_version" {
+variable "cluster_version" {
   type = string
 }
 
@@ -73,5 +78,19 @@ variable "users" {
       groups   = ["system:masters"]
     }
   ]
-} */
+}
 
+variable "autoscaler_service_name" {
+  type    = string
+  default = "cluster-autoscaler-sa"
+}
+
+variable "container_insights_service_name" {
+  type    = string
+  default = "container-insights"
+}
+
+variable "lb_service_name" {
+  type    = string
+  default = "lb-controller"
+}

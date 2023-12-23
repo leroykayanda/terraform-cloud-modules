@@ -224,7 +224,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_DiskQueueDepth" {
   namespace           = "AWS/RDS"
   period              = "300"
   statistic           = "Average"
-  threshold           = "100"
+  threshold           = "200"
   alarm_description   = "This alarm monitors for high disk queue depth"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
@@ -258,6 +258,45 @@ resource "aws_cloudwatch_metric_alarm" "rds_DBLoad" {
 
   dimensions = {
     DBInstanceIdentifier = aws_rds_cluster_instance.cluster_instances[0].id
+  }
+
+  tags = {
+    Environment = var.env
+    Team        = var.team
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "rds_FreeLocalStorage" {
+  alarm_name          = "${var.env}-${var.microservice_name}-DB-Low-FreeLocalStorage"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  threshold           = var.local_storage_threshold
+  alarm_description   = "This alarm monitors for low FreeLocalStorage on a DB instance."
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "ignore"
+
+  metric_query {
+    id          = "e1"
+    expression  = "m1/1000000000"
+    label       = "FreeLocalStorage"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+
+    metric {
+      metric_name = "FreeLocalStorage"
+      namespace   = "AWS/RDS"
+      period      = 300
+      stat        = "Minimum"
+
+      dimensions = {
+        DBInstanceIdentifier = aws_rds_cluster_instance.cluster_instances[0].id
+      }
+    }
   }
 
   tags = {

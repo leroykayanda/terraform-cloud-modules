@@ -1,7 +1,7 @@
 
 
     module "lambda" {
-      source            = "git@github.com:abc/terraform-modules.git//modules/aws-lambda?ref=v1.1.98"
+      source            = "modules/aws-lambda?ref=v1.1.98"
       env               = var.env
       team              = var.team
       microservice_name = "abc"
