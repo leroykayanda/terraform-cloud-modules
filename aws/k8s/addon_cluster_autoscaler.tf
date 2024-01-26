@@ -29,6 +29,13 @@ resource "helm_release" "cluster_autoscaler" {
     name  = "rbac.serviceAccount.name"
     value = var.autoscaler_service_name
   }
+
+  values = [
+    <<EOF
+   extraArgs:
+     skip-nodes-with-local-storage: "false"
+   EOF
+  ]
 }
 
 #create service account

@@ -4,7 +4,7 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   namespace  = "argocd"
-  version    = "5.46.8"
+  version    = "5.52.1"
 
   set {
     name  = "server.service.type"

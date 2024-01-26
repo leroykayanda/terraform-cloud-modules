@@ -21,4 +21,7 @@
       create_cpu_credit_alarm      = var.db_create_cpu_credit_alarm
       preferred_maintenance_window = var.preferred_maintenance_window
       preferred_backup_window      = var.preferred_backup_window
+      local_storage_threshold      = var.local_storage_threshold
+      dbload_threshold             = var.dbload_threshold
+      publicly_accessible          = var.publicly_accessible
     }

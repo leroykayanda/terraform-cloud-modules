@@ -118,6 +118,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               ["ContainerInsights", "cluster_failed_node_count", "ClusterName", "${var.cluster_name}"]
             ],
             "region" : "${var.region}",
+            "stat" : "Maximum",
             "title" : "Cluster Failed Node Count"
           }
         },
@@ -128,13 +129,14 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "x" : 6,
           "type" : "metric",
           "properties" : {
-            "view" : "timeSeries",
-            "stacked" : true,
+            "view" : "singleValue",
+            "sparkline" : true,
             "period" : 60,
             "metrics" : [
               ["ContainerInsights", "cluster_node_count", "ClusterName", "${var.cluster_name}"]
             ],
             "region" : "${var.region}",
+            "stat" : "Maximum",
             "title" : "Cluster Node Count"
           }
         },
@@ -146,13 +148,13 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Namespace} MetricName=\"namespace_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Namespace} MetricName=\"namespace_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Maximum')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
             "region" : "${var.region}",
-            "stat" : "Average",
             "period" : 60,
+            "stat" : "Maximum",
             "title" : "Running Pods",
             "yAxis" : {
               "left" : {
@@ -200,7 +202,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_filesystem_utilization\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_filesystem_utilization\" ClusterName=\"${var.cluster_name}\"', 'Maximum')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -218,9 +220,9 @@ resource "aws_cloudwatch_dashboard" "dash" {
                 "showUnits" : false
               }
             },
-            "period" : 60,
+            "period" : 300,
             "title" : "Node Disk Usage",
-            "stat" : "Average"
+            "stat" : "Maximum"
           }
         },
         {
@@ -262,7 +264,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, NodeName, InstanceId} MetricName=\"node_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Maximum')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -274,7 +276,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             },
             "period" : 60,
             "title" : "Node Running Pods",
-            "stat" : "Average"
+            "stat" : "Maximum"
           }
         },
         {
@@ -308,7 +310,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "type" : "metric",
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Service, Namespace} MetricName=\"service_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Average')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
+              [{ "expression" : "SEARCH('{ContainerInsights, ClusterName, Service, Namespace} MetricName=\"service_number_of_running_pods\" ClusterName=\"${var.cluster_name}\"', 'Maximum')", "label" : "", "id" : "e1", "region" : "${var.region}" }]
             ],
             "view" : "timeSeries",
             "stacked" : true,
@@ -320,28 +322,11 @@ resource "aws_cloudwatch_dashboard" "dash" {
             },
             "period" : 60,
             "title" : "Service Running Pods",
-            "stat" : "Average"
-          }
-        },
-        {
-          "type" : "metric",
-          "x" : 6,
-          "y" : 12,
-          "width" : 6,
-          "height" : 6,
-          "properties" : {
-            "sparkline" : true,
-            "view" : "singleValue",
-            "period" : 60,
             "stat" : "Maximum"
-            "metrics" : [
-              ["ContainerInsights", "cluster_node_count", "ClusterName", "${var.cluster_name}"]
-            ],
-            "region" : "${var.region}",
-            "title" : "Cluster Node Count"
           }
         }
       ]
     }
   )
 }
+#
