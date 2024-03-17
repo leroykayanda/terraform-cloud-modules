@@ -46,6 +46,6 @@ module "access_log_bucket" {
   source            = "../aws-alb-access-log-bucket"
   env               = var.env
   team              = var.team
-  microservice_name = "eks-cluster"
+  microservice_name = "${var.company_name}-eks-cluster"
 }
 

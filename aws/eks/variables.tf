@@ -17,6 +17,11 @@ variable "region" {
   type = string
 }
 
+variable "company_name" {
+  type        = string
+  description = "To make bucket name unique"
+}
+
 #eks
 variable "cluster_created" {
   description = "create applications such as argocd only when the eks cluster has already been created"
