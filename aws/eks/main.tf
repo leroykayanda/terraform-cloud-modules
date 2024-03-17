@@ -8,6 +8,7 @@ module "eks" {
   vpc_id                                   = var.vpc_id
   subnet_ids                               = var.subnet_ids
   authentication_mode                      = "API_AND_CONFIG_MAP"
+  cloudwatch_log_group_retention_in_days   = 30
   enable_cluster_creator_admin_permissions = true
 
   access_entries = var.access_entries
