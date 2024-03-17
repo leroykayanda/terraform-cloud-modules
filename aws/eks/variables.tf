@@ -60,26 +60,6 @@ variable "nodegroup_properties" {
   }
 }
 
-variable "users" {
-  type = list(object({
-    userarn  = string
-    username = string
-    groups   = list(string)
-  }))
-  default = [
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user2"
-      username = "user2"
-      groups   = ["system:masters"]
-    }
-  ]
-}
-
 variable "autoscaler_service_name" {
   type    = string
   default = "cluster-autoscaler-sa"
@@ -93,4 +73,10 @@ variable "container_insights_service_name" {
 variable "lb_service_name" {
   type    = string
   default = "lb-controller"
+}
+
+variable "access_entries" {
+  type        = map(any)
+  default     = {}
+  description = "Map of access entries for the EKS cluster"
 }

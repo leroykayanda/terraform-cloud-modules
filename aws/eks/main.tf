@@ -1,15 +1,16 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.20.0"
+  version = "~> 20.8.3"
 
-  cluster_name                   = var.cluster_name
-  cluster_version                = var.cluster_version
-  cluster_endpoint_public_access = var.cluster_endpoint_public_access
-  vpc_id                         = var.vpc_id
-  subnet_ids                     = var.subnet_ids
-  create_aws_auth_configmap      = false
-  manage_aws_auth_configmap      = true
-  aws_auth_users                 = var.users
+  cluster_name                             = var.cluster_name
+  cluster_version                          = var.cluster_version
+  cluster_endpoint_public_access           = var.cluster_endpoint_public_access
+  vpc_id                                   = var.vpc_id
+  subnet_ids                               = var.subnet_ids
+  authentication_mode                      = "API_AND_CONFIG_MAP"
+  enable_cluster_creator_admin_permissions = true
+
+  access_entries = var.access_entries
 
   cluster_addons = {
     coredns = {
