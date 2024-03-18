@@ -137,5 +137,4 @@ variable "argo_slack_token" {
 }
 
 variable "argocd_image_updater_values" {
-  type = map(list(string))
 }
