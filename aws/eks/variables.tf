@@ -85,3 +85,40 @@ variable "access_entries" {
   default     = {}
   description = "Map of access entries for the EKS cluster"
 }
+
+#argocd
+variable "argo_subnets" {
+  type = string
+}
+
+variable "certificate_arn" {
+  type = string
+}
+
+variable "argo_load_balancer_attributes" {
+  type = string
+}
+
+variable "argo_target_group_attributes" {
+  type = string
+}
+
+variable "argo_tags" {
+  type = string
+}
+
+variable "argo_domain_name" {
+  type = string
+}
+
+variable "argo_zone_id" {
+  type = string
+}
+
+variable "argo_lb_dns_name" {
+  type = string
+}
+
+variable "argo_lb_zone_id" {
+  type = string
+}
