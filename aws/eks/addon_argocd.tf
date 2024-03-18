@@ -112,7 +112,7 @@ resource "kubernetes_ingress_v1" "ingress" {
 
 #argo ssh auth
 
-resource "kubernetes_secret" "secret" {
+resource "kubernetes_secret" "argo-secret" {
   count = var.cluster_created ? 1 : 0
   metadata {
     name      = "private-repo"
