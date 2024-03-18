@@ -135,3 +135,7 @@ variable "argo_ssh_private_key" {
 variable "argo_slack_token" {
   type = string
 }
+
+variable "argocd_image_updater_values" {
+  type = map(list(string))
+}

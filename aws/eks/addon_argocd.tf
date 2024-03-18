@@ -166,7 +166,7 @@ resource "kubernetes_config_map" "argocd_notifications_cm" {
     EOT
 
     "trigger.on-health-degraded" = <<-EOT
-      - when: app.status.health.status == 'Degraded' || app.status.health.status == 'Missing' || app.status.health.status == 'Unknown' || app.status.health.status == 'Progressing'
+      - when: app.status.health.status == 'Degraded' || app.status.health.status == 'Missing' || app.status.health.status == 'Unknown'
         send: [app-degraded]
     EOT
 
@@ -191,4 +191,14 @@ resource "kubernetes_config_map" "argocd_notifications_cm" {
           }]
     EOT
   }
+}
+
+resource "helm_release" "image_updater" {
+  count      = var.cluster_created ? 1 : 0
+  name       = "argocd-image-updater"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-image-updater"
+  namespace  = "argocd"
+  version    = "0.9.2"
+  values     = var.argocd_image_updater_values
 }
