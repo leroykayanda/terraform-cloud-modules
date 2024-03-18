@@ -122,3 +122,12 @@ variable "argo_lb_dns_name" {
 variable "argo_lb_zone_id" {
   type = string
 }
+
+variable "argo_repo" {
+  type = string
+}
+
+variable "argo_ssh_private_key" {
+  description = "The SSH private key"
+  type        = string
+}
