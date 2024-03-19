@@ -193,6 +193,8 @@ resource "kubernetes_config_map" "argocd_notifications_cm" {
   }
 }
 
+#image updater
+
 resource "helm_release" "image_updater" {
   count      = var.cluster_created ? 1 : 0
   name       = "argocd-image-updater"
