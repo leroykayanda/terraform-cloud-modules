@@ -115,14 +115,6 @@ variable "argo_zone_id" {
   type = string
 }
 
-variable "argo_lb_dns_name" {
-  type = string
-}
-
-variable "argo_lb_zone_id" {
-  type = string
-}
-
 variable "argo_repo" {
   type = string
 }
