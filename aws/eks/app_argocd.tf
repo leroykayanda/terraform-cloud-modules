@@ -39,6 +39,7 @@ resource "helm_release" "argocd" {
 configs:
   cm:
     "timeout.reconciliation": "60s"
+    "kustomize.buildOptions": "--enable-helm"
 EOT
   ]
 }
