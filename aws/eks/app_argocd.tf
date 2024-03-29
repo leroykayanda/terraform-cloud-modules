@@ -57,8 +57,8 @@ resource "aws_route53_record" "ingress-elb" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.ingress[0].dns_name
-    zone_id                = aws_lb.ingress[0].zone_id
+    name                   = data.aws_lb.ingress[0].dns_name
+    zone_id                = data.aws_lb.ingress[0].zone_id
     evaluate_target_health = false
   }
 }
