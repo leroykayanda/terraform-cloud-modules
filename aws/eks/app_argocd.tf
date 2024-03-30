@@ -46,23 +46,23 @@ EOT
 
 #ingress dns name
 
-data "aws_lb" "ingress" {
-  count = var.cluster_created ? 1 : 0
-  name  = "${var.env}-eks-cluster"
-}
+# data "aws_lb" "ingress" {
+#   count = var.cluster_created ? 1 : 0
+#   name  = "${var.env}-eks-cluster"
+# }
 
-resource "aws_route53_record" "ingress-elb" {
-  count   = var.cluster_created ? 1 : 0
-  zone_id = var.argo_zone_id
-  name    = var.argo_domain_name
-  type    = "A"
+# resource "aws_route53_record" "ingress-elb" {
+#   count   = var.cluster_created ? 1 : 0
+#   zone_id = var.argo_zone_id
+#   name    = var.argo_domain_name
+#   type    = "A"
 
-  alias {
-    name                   = data.aws_lb.ingress[0].dns_name
-    zone_id                = data.aws_lb.ingress[0].zone_id
-    evaluate_target_health = false
-  }
-}
+#   alias {
+#     name                   = data.aws_lb.ingress[0].dns_name
+#     zone_id                = data.aws_lb.ingress[0].zone_id
+#     evaluate_target_health = false
+#   }
+# }
 
 #ingress
 
