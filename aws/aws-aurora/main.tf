@@ -115,9 +115,9 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   promotion_tier                        = 2
   preferred_maintenance_window          = aws_rds_cluster.aurora.preferred_maintenance_window
   auto_minor_version_upgrade            = true
-  performance_insights_enabled          = true
-  performance_insights_kms_key_id       = aws_kms_key.kms_key.arn
-  performance_insights_retention_period = 7
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_kms_key_id       = var.performance_insights_enabled ? aws_kms_key.kms_key.arn : null
+  performance_insights_retention_period = var.performance_insights_enabled ? 7 : null
   db_parameter_group_name               = aws_db_parameter_group.db_parameter_group.name
 
   tags = {

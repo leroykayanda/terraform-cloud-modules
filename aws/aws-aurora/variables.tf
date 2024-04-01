@@ -134,3 +134,6 @@ variable "dbload_threshold" {
 variable "publicly_accessible" {
   default = false
 }
+
+variable "performance_insights_enabled" {
+}

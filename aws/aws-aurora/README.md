@@ -17,6 +17,7 @@
       db_instance_count               = var.db_instance_count
       database_name                   = var.database_name
       region                          = var.region
+      performance_insights_enabled    = var.performance_insights_enabled
       parameter_group_family          = local.db_parameter_group_family #these are optional
       backup_retention_period         = var.db_backup_retention_period
       create_cpu_credit_alarm         = var.db_create_cpu_credit_alarm
