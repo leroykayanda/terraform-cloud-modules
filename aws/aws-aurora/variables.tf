@@ -106,6 +106,11 @@ variable "snapshot_cluster" {
   default     = null
 }
 
+variable "db_cluster_snapshot_identifier" {
+  type    = string
+  default = null
+}
+
 variable "parameter_group_family" {
   type        = string
   description = "eg aurora-postgresql13"

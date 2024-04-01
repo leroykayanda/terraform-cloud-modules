@@ -28,4 +28,5 @@
       enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
       snapshot_cluster                = var.snapshot_cluster
       creating_db                     = var.creating_db
+      db_cluster_snapshot_identifier  = var.db_cluster_snapshot_identifier
     }
