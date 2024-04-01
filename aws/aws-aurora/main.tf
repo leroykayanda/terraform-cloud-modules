@@ -61,7 +61,7 @@ resource "aws_db_parameter_group" "db_parameter_group" {
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier              = "${var.env}-${var.microservice_name}"
   apply_immediately               = true
-  engine                          = "aurora-postgresql"
+  engine                          = var.db_engine
   engine_version                  = var.engine_version
   engine_mode                     = "provisioned"
   availability_zones              = var.availability_zones
@@ -70,7 +70,7 @@ resource "aws_rds_cluster" "aurora" {
   backup_retention_period         = var.backup_retention_period
   db_subnet_group_name            = aws_db_subnet_group.subnet_group.name
   deletion_protection             = true
-  enabled_cloudwatch_logs_exports = ["postgresql"]
+  enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   storage_encrypted               = true
   kms_key_id                      = aws_kms_key.kms_key.arn
   port                            = var.port

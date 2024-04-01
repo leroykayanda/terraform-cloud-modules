@@ -47,8 +47,9 @@ EOT
 #ingress dns name
 
 data "aws_lb" "ingress" {
-  count = var.cluster_created ? 1 : 0
-  name  = "${var.env}-eks-cluster"
+  count      = var.cluster_created ? 1 : 0
+  name       = "${var.env}-eks-cluster"
+  depends_on = [kubernetes_ingress_v1.ingress]
 }
 
 resource "aws_route53_record" "ingress-elb" {

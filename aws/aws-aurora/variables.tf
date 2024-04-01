@@ -40,7 +40,6 @@ variable "db_cluster_instance_class" {
 variable "sns_topic" {
   type        = string
   description = "SNS topic ARN for notifications"
-  default     = ""
 }
 
 variable "security_group_id" {
@@ -91,9 +90,14 @@ variable "db_instance_count" {
   type = number
 }
 
-variable "db_cluster_snapshot_identifier" {
-  type    = string
-  default = null
+variable "db_engine" {
+  type        = string
+  description = "Valid Values: aurora-mysql, aurora-postgresql, mysql, postgres"
+}
+
+variable "enabled_cloudwatch_logs_exports" {
+  type    = list(string)
+  default = []
 }
 
 variable "snapshot_cluster" {
