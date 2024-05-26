@@ -1,5 +1,5 @@
 resource "helm_release" "cluster_autoscaler" {
-  count      = var.cluster_created ? 1 : 0
+  count      = var.cluster_created && var.autoscaling_type == "cluster-autoscaler" ? 1 : 0
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
@@ -40,7 +40,7 @@ resource "helm_release" "cluster_autoscaler" {
 
 #create service account
 resource "aws_iam_role" "role" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.autoscaling_type == "cluster-autoscaler" ? 1 : 0
   name  = "${var.cluster_name}-${var.autoscaler_service_name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -58,7 +58,7 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_policy" "policy" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.autoscaling_type == "cluster-autoscaler" ? 1 : 0
   name  = "${var.cluster_name}-${var.autoscaler_service_name}"
 
   policy = jsonencode({
@@ -88,13 +88,13 @@ resource "aws_iam_policy" "policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "attachment" {
-  count      = var.cluster_created ? 1 : 0
+  count      = var.cluster_created && var.autoscaling_type == "cluster-autoscaler" ? 1 : 0
   role       = aws_iam_role.role[0].name
   policy_arn = aws_iam_policy.policy[0].arn
 }
 
 resource "kubernetes_service_account" "this" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.autoscaling_type == "cluster-autoscaler" ? 1 : 0
   metadata {
     name      = var.autoscaler_service_name
     namespace = "kube-system"

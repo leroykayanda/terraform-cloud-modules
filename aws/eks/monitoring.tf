@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "cluster_failed_node_count" {
+  count               = var.monitoring_type == "cloudwatch" ? 1 : 0
   alarm_name          = "${var.cluster_name}-Kubernetes-Cluster-Failed-Node"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -24,6 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "cluster_failed_node_count" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "node_cpu_utilization" {
+  count               = var.monitoring_type == "cloudwatch" ? 1 : 0
   alarm_name          = "${var.cluster_name}-Kubernetes-Cluster-High-Worker-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -49,6 +51,7 @@ resource "aws_cloudwatch_metric_alarm" "node_cpu_utilization" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "node_filesystem_utilization" {
+  count               = var.monitoring_type == "cloudwatch" ? 1 : 0
   alarm_name          = "${var.cluster_name}-Kubernetes-Cluster-High-Worker-Disk-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -74,6 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "node_filesystem_utilization" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "node_memory_utilization" {
+  count               = var.monitoring_type == "cloudwatch" ? 1 : 0
   alarm_name          = "${var.cluster_name}-Kubernetes-Cluster-High-Worker-Memory"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -99,6 +103,7 @@ resource "aws_cloudwatch_metric_alarm" "node_memory_utilization" {
 }
 
 resource "aws_cloudwatch_dashboard" "dash" {
+  count          = var.monitoring_type == "cloudwatch" ? 1 : 0
   dashboard_name = "${var.cluster_name}-kubernetes-cluster"
 
   dashboard_body = jsonencode(

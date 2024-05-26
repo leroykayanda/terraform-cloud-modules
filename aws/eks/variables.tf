@@ -28,6 +28,16 @@ variable "cluster_created" {
   default     = false
 }
 
+variable "monitoring_type" {
+  description = "cloudwatch or grafana-elk"
+  default     = "cloudwatch"
+}
+
+variable "autoscaling_type" {
+  description = "cluster-autoscaler or karpenter"
+  default     = "karpenter"
+}
+
 variable "cluster_name" {
   type = string
 }
