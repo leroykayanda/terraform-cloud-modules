@@ -1,10 +1,10 @@
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
-  repository = "oci://public.ecr.aws/karpenter/karpenter"
+  repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
   namespace  = "kube-system"
-  version    = "v0.32.10"
+  version    = "v0.33.0"
 
   set {
     name  = "settings.aws.clusterName"
