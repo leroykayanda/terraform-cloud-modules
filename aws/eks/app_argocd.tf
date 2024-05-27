@@ -12,7 +12,7 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   namespace  = "argocd"
-  version    = "6.7.2"
+  version    = "6.11.1"
 
   set {
     name  = "server.service.type"
@@ -39,7 +39,6 @@ resource "helm_release" "argocd" {
 configs:
   cm:
     "timeout.reconciliation": "60s"
-    "kustomize.buildOptions": "--enable-helm"
 EOT
   ]
 }
@@ -54,8 +53,8 @@ data "aws_lb" "ingress" {
 
 resource "aws_route53_record" "ingress-elb" {
   count   = var.cluster_created ? 1 : 0
-  zone_id = var.argo_zone_id
-  name    = var.argo_domain_name
+  zone_id = var.zone_id
+  name    = var.argocd["dns_name"]
   type    = "A"
 
   alias {
@@ -81,9 +80,9 @@ resource "kubernetes_ingress_v1" "ingress" {
       "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
       "alb.ingress.kubernetes.io/subnets"                  = "${var.argo_subnets}"
       "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
-      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argo_load_balancer_attributes
-      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argo_target_group_attributes
-      "alb.ingress.kubernetes.io/tags"                     = var.argo_tags
+      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
+      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
+      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
       "alb.ingress.kubernetes.io/group.name"               = var.env
     }
   }
@@ -92,7 +91,7 @@ resource "kubernetes_ingress_v1" "ingress" {
     ingress_class_name = "alb"
 
     rule {
-      host = var.argo_domain_name
+      host = var.argocd["dns_name"]
 
       http {
         path {
@@ -112,7 +111,7 @@ resource "kubernetes_ingress_v1" "ingress" {
     }
 
     tls {
-      hosts = [var.argo_domain_name]
+      hosts = [var.argocd["dns_name"]]
     }
   }
 }
@@ -133,7 +132,7 @@ resource "kubernetes_secret" "argo-secret" {
 
   data = {
     "type"          = "git"
-    "url"           = var.argo_repo
+    "url"           = var.argocd["repo"]
     "sshPrivateKey" = var.argo_ssh_private_key
   }
 }
@@ -169,7 +168,7 @@ resource "kubernetes_config_map" "argocd_notifications_cm" {
     EOT
 
     "context" = <<-EOT
-      argocdUrl: https://${var.argo_domain_name}
+      argocdUrl: https://${var.argocd["dns_name"]}
     EOT
 
     "trigger.on-health-degraded" = <<-EOT

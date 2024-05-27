@@ -126,7 +126,7 @@ variable "argo_domain_name" {
   type = string
 }
 
-variable "argo_zone_id" {
+variable "zone_id" {
   type = string
 }
 
@@ -141,6 +141,10 @@ variable "argo_ssh_private_key" {
 
 variable "argo_slack_token" {
   type = string
+}
+
+variable "argocd" {
+  type = any
 }
 
 variable "argocd_image_updater_values" {
