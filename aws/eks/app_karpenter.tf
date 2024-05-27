@@ -61,10 +61,64 @@ resource "aws_iam_role" "karpenter" {
   })
 }
 
+resource "aws_iam_policy" "karpenter" {
+  count  = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  name   = "${var.cluster_name}-${local.karpenter_sa}"
+  policy = <<EOF
+{
+    "Statement": [
+        {
+            "Action": [
+                "ec2:CreateLaunchTemplate",
+                "ec2:CreateFleet",
+                "ec2:RunInstances",
+                "ec2:CreateTags",
+                "ec2:TerminateInstances",
+                "ec2:DeleteLaunchTemplate",
+                "ec2:DescribeLaunchTemplates",
+                "ec2:DescribeInstances",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeImages",
+                "ec2:DescribeInstanceTypes",
+                "ec2:DescribeInstanceTypeOfferings",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeSpotPriceHistory",
+                "iam:PassRole",
+                "ssm:GetParameter",
+                "pricing:GetProducts"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "Karpenter"
+        },
+        {
+            "Action": "ec2:TerminateInstances",
+            "Condition": {
+                "StringLike": {
+                    "ec2:ResourceTag/Name": "*karpenter*"
+                }
+            },
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "ConditionalEC2Termination"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "eks:DescribeCluster",
+            "Resource": "${module.eks.cluster_arn}",
+            "Sid": "eksClusterEndpointLookup"
+        }
+    ],
+    "Version": "2012-10-17"
+}
+EOF
+}
+
 resource "aws_iam_role_policy_attachment" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   role       = aws_iam_role.karpenter[0].name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSKarpenterControllerPolicy"
+  policy_arn = aws_iam_policy.karpenter[0].arn
 }
 
 resource "kubernetes_service_account" "karpenter" {
