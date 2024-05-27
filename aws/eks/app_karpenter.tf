@@ -1,18 +1,18 @@
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
-  repository = "https://charts.karpenter.sh/"
+  repository = "oci://public.ecr.aws/karpenter/karpenter"
   chart      = "karpenter"
   namespace  = "kube-system"
-  version    = "0.16.3"
+  version    = "v0.32.10"
 
   set {
-    name  = "clusterName"
+    name  = "settings.aws.clusterName"
     value = var.cluster_name
   }
 
   set {
-    name  = "clusterEndpoint"
+    name  = "settings.aws.clusterEndpoint"
     value = module.eks.cluster_endpoint
   }
 
@@ -24,11 +24,6 @@ resource "helm_release" "karpenter" {
   set {
     name  = "serviceAccount.name"
     value = local.karpenter_sa
-  }
-
-  set {
-    name  = "webhook.enabled"
-    value = false
   }
 
   values = [
