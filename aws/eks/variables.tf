@@ -110,27 +110,7 @@ variable "certificate_arn" {
   type = string
 }
 
-variable "argo_load_balancer_attributes" {
-  type = string
-}
-
-variable "argo_target_group_attributes" {
-  type = string
-}
-
-variable "argo_tags" {
-  type = string
-}
-
-variable "argo_domain_name" {
-  type = string
-}
-
 variable "zone_id" {
-  type = string
-}
-
-variable "argo_repo" {
   type = string
 }
 
