@@ -26,6 +26,11 @@ resource "helm_release" "karpenter" {
     value = local.karpenter_sa
   }
 
+  set {
+    name  = "webhook.enabled"
+    value = false
+  }
+
   values = [
     <<EOF
     controller:
