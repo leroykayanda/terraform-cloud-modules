@@ -26,6 +26,11 @@ resource "helm_release" "karpenter" {
     value = local.karpenter_sa
   }
 
+  set {
+    name  = "replicas"
+    value = var.karpenter["replicas"]
+  }
+
   values = [
     <<EOF
     controller:

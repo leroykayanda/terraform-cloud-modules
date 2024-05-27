@@ -127,5 +127,9 @@ variable "argocd" {
   type = any
 }
 
+variable "karpenter" {
+  type = any
+}
+
 variable "argocd_image_updater_values" {
 }
