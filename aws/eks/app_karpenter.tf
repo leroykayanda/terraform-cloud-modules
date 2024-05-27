@@ -11,6 +11,11 @@ resource "helm_release" "karpenter" {
     value = var.cluster_name
   }
 
+  set {
+    name  = "clusterEndpoint"
+    value = module.eks.cluster_endpoint
+  }
+
   values = [
     <<EOF
     controller:
