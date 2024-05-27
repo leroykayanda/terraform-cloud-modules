@@ -7,12 +7,12 @@ resource "helm_release" "karpenter" {
   version    = "v0.33.0"
 
   set {
-    name  = "settings.aws.clusterName"
+    name  = "settings.clusterName"
     value = var.cluster_name
   }
 
   set {
-    name  = "settings.aws.clusterEndpoint"
+    name  = "settings.clusterEndpoint"
     value = module.eks.cluster_endpoint
   }
 
