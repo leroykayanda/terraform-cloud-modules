@@ -28,8 +28,13 @@ variable "cluster_created" {
   default     = false
 }
 
-variable "monitoring_type" {
-  description = "cloudwatch or grafana-elk"
+variable "metrics_type" {
+  description = "cloudwatch or prometheus-grafana"
+  default     = "cloudwatch"
+}
+
+variable "logs_type" {
+  description = "cloudwatch or elk"
   default     = "cloudwatch"
 }
 
