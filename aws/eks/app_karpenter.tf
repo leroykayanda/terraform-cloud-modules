@@ -358,7 +358,7 @@ resource "kubernetes_manifest" "karpenter_node_template" {
       subnetSelectorTerms = [
         {
           tags = {
-            "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+            "${var.karpenter["karpenter_subnet_key"]}" = "${var.karpenter["karpenter_subnet_value"]}"
           }
         }
       ]
