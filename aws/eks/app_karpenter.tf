@@ -317,20 +317,20 @@ resource "kubernetes_manifest" "nodepools" {
             {
               key      = "node.kubernetes.io/instance-type"
               operator = "In"
-              values   = var.karpenter["instance_types"]
+              values   = "${var.karpenter["instance_types"]}"
             }
           ]
         }
       }
       limits = {
-        cpu    = var.karpenter["cpu_limit"]
-        memory = var.karpenter["memory_limit"]
+        cpu    = "${var.karpenter["cpu_limit"]}"
+        memory = "${var.karpenter["memory_limit"]}"
       }
       disruption = {
         consolidationPolicy = "WhenUnderutilized"
         budgets = [
           {
-            nodes = var.karpenter["disruption_budget"]
+            nodes = "${var.karpenter["disruption_budget"]}"
           }
         ]
       }
