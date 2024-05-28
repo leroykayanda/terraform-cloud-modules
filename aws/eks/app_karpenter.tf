@@ -328,11 +328,9 @@ resource "kubernetes_manifest" "nodepools" {
       }
       disruption = {
         consolidationPolicy = "WhenUnderutilized"
-        budgets = [
-          {
-            nodes = "20%"
-          }
-        ]
+        budgets = {
+          nodes = "${var.karpenter["disruption_budget"]}"
+        }
       }
     }
   }
