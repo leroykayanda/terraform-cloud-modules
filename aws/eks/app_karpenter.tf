@@ -146,7 +146,8 @@ resource "kubernetes_service_account" "karpenter" {
 # setting up a instance profile
 
 resource "aws_iam_role" "karpenter_instance_profile_role" {
-  name = "karpenter-instance-profile-role-${var.env}"
+  count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  name  = "karpenter-instance-profile-role-${var.env}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -164,11 +165,13 @@ resource "aws_iam_role" "karpenter_instance_profile_role" {
 }
 
 resource "aws_iam_instance_profile" "karpenter" {
-  name = "karpenter-instance-profile-${var.env}"
-  role = aws_iam_role.karpenter_instance_profile_role.name
+  count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  name  = "karpenter-instance-profile-${var.env}"
+  role  = aws_iam_role.karpenter_instance_profile_role[0].name
 }
 
 resource "aws_iam_policy" "instance_profile_policy" {
+  count       = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name        = "instance-profile-karpenter-policy-${var.env}"
   description = "instance profile for karpenter policy"
 
@@ -282,6 +285,7 @@ resource "aws_iam_policy" "instance_profile_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "instance_profile" {
-  role       = aws_iam_role.karpenter_instance_profile_role.name
-  policy_arn = aws_iam_policy.instance_profile_policy.arn
+  count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  role       = aws_iam_role.karpenter_instance_profile_role[0].name
+  policy_arn = aws_iam_policy.instance_profile_policy[0].arn
 }
