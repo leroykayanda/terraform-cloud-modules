@@ -322,18 +322,18 @@ resource "kubernetes_manifest" "nodepools" {
           ]
         }
       }
-      limits = {
-        cpu    = "${var.karpenter["cpu_limit"]}"
-        memory = "${var.karpenter["memory_limit"]}"
-      }
-      disruption = {
-        consolidationPolicy = "WhenUnderutilized"
-        budgets = [
-          {
-            nodes = "${var.karpenter["disruption_budget"]}"
-          }
-        ]
-      }
+      #   limits = {
+      #     cpu    = "${var.karpenter["cpu_limit"]}"
+      #     memory = "${var.karpenter["memory_limit"]}"
+      #   }
+      #   disruption = {
+      #     consolidationPolicy = "WhenUnderutilized"
+      #     budgets = [
+      #       {
+      #         nodes = "${var.karpenter["disruption_budget"]}"
+      #       }
+      #     ]
+      #   }
     }
   }
 }
