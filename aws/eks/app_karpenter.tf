@@ -326,14 +326,14 @@ resource "kubernetes_manifest" "nodepools" {
         cpu    = "${var.karpenter["cpu_limit"]}"
         memory = "${var.karpenter["memory_limit"]}"
       }
-      #   disruption = {
-      #     consolidationPolicy = "WhenUnderutilized"
-      #     budgets = [
-      #       {
-      #         nodes = "${var.karpenter["disruption_budget"]}"
-      #       }
-      #     ]
-      #   }
+      disruption = {
+        consolidationPolicy = "WhenUnderutilized"
+        # budgets = [
+        #   {
+        #     nodes = "${var.karpenter["disruption_budget"]}"
+        #   }
+        # ]
+      }
     }
   }
 }
