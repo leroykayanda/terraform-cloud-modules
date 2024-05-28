@@ -362,7 +362,8 @@ resource "kubernetes_manifest" "karpenter_node_template" {
           }
         }
       ]
-      instanceProfile = aws_iam_instance_profile.karpenter[0].name
+      #instanceProfile = aws_iam_instance_profile.karpenter[0].name
+      role = aws_iam_role.karpenter_instance_profile_role[0].name
       tags = {
         Team        = var.team
         Environment = var.env
