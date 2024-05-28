@@ -169,7 +169,7 @@ resource "aws_iam_instance_profile" "karpenter" {
 }
 
 resource "aws_iam_policy" "instance_profile_policy" {
-  name        = "instance_profile-karpenter-policy"
+  name        = "instance-profile-karpenter-policy-${var.env}"
   description = "instance profile for karpenter policy"
 
   policy = jsonencode({
