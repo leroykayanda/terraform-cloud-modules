@@ -290,52 +290,52 @@ resource "aws_iam_role_policy_attachment" "instance_profile" {
 }
 
 
-# resource "kubernetes_manifest" "nodepools" {
-#   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+resource "kubernetes_manifest" "nodepools" {
+  count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-#   manifest = {
-#     apiVersion = "karpenter.sh/v1beta1"
-#     kind       = "NodePool"
-#     metadata = {
-#       name = "default"
-#     }
-#     spec = {
-#       template = {
-#         spec = {
-#           nodeClassRef = {
-#             apiVersion = "karpenter.k8s.aws/v1beta1"
-#             kind       = "EC2NodeClass"
-#             name       = "default"
-#           }
-#           requirements = [
-#             {
-#               key      = "karpenter.sh/capacity-type"
-#               operator = "In"
-#               values   = ["on-demand"]
-#             },
-#             {
-#               key      = "node.kubernetes.io/instance-type"
-#               operator = "In"
-#               values   = "${var.karpenter["instance_types"]}"
-#             }
-#           ]
-#         }
-#       }
-#       limits = {
-#         cpu    = "${var.karpenter["cpu_limit"]}"
-#         memory = "${var.karpenter["memory_limit"]}"
-#       }
-#       disruption = {
-#         consolidationPolicy = "WhenUnderutilized"
-#         budgets = [
-#           {
-#             nodes = "${var.karpenter["disruption_budget"]}"
-#           }
-#         ]
-#       }
-#     }
-#   }
-# }
+  manifest = {
+    apiVersion = "karpenter.sh/v1beta1"
+    kind       = "NodePool"
+    metadata = {
+      name = "default"
+    }
+    spec = {
+      template = {
+        spec = {
+          nodeClassRef = {
+            apiVersion = "karpenter.k8s.aws/v1beta1"
+            kind       = "EC2NodeClass"
+            name       = "default"
+          }
+          requirements = [
+            {
+              key      = "karpenter.sh/capacity-type"
+              operator = "In"
+              values   = ["on-demand"]
+            },
+            {
+              key      = "node.kubernetes.io/instance-type"
+              operator = "In"
+              values   = "${var.karpenter["instance_types"]}"
+            }
+          ]
+        }
+      }
+      limits = {
+        cpu    = "${var.karpenter["cpu_limit"]}"
+        memory = "${var.karpenter["memory_limit"]}"
+      }
+      disruption = {
+        consolidationPolicy = "WhenUnderutilized"
+        budgets = [
+          {
+            nodes = "${var.karpenter["disruption_budget"]}"
+          }
+        ]
+      }
+    }
+  }
+}
 
 # resource "kubernetes_manifest" "karpenter_node_template" {
 #   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
