@@ -4,7 +4,7 @@ resource "helm_release" "karpenter" {
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
   namespace  = "kube-system"
-  version    = "v0.33.0"
+  version    = "v0.34.6"
 
   set {
     name  = "settings.clusterName"
@@ -328,9 +328,11 @@ resource "kubernetes_manifest" "nodepools" {
       }
       disruption = {
         consolidationPolicy = "WhenUnderutilized"
-        budgets = {
-          nodes = "${var.karpenter["disruption_budget"]}"
-        }
+        budgets = [
+          {
+            nodes = "${var.karpenter["disruption_budget"]}"
+          }
+        ]
       }
     }
   }
