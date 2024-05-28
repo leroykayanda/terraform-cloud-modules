@@ -337,47 +337,47 @@ resource "kubernetes_manifest" "nodepools" {
   }
 }
 
-# resource "kubernetes_manifest" "karpenter_node_template" {
-#   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+resource "kubernetes_manifest" "karpenter_node_template" {
+  count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-#   manifest = {
-#     apiVersion = "karpenter.k8s.aws/v1beta1"
-#     kind       = "EC2NodeClass"
-#     metadata = {
-#       name = "default"
-#     }
-#     spec = {
-#       amiFamily = "Bottlerocket"
-#       securityGroupSelectorTerms = [
-#         {
-#           tags = {
-#             "karpenter.sh/discovery" = var.cluster_name
-#           }
-#         }
-#       ]
-#       subnetSelectorTerms = [
-#         {
-#           tags = {
-#             "kubernetes.io/cluster/${var.cluster_name}" = "owned"
-#           }
-#         }
-#       ]
-#       instanceProfile = aws_iam_instance_profile.karpenter[0].name
-#       tags = {
-#         Team        = var.team
-#         Environment = var.env
-#       }
-#       blockDeviceMappings = [
-#         {
-#           deviceName = "/dev/xvda"
-#           ebs = {
-#             volumeSize          = var.karpenter["disk_size"]
-#             volumeType          = "gp3"
-#             deleteOnTermination = true
-#           }
-#         }
-#       ]
-#     }
-#   }
-# }
+  manifest = {
+    apiVersion = "karpenter.k8s.aws/v1beta1"
+    kind       = "EC2NodeClass"
+    metadata = {
+      name = "default"
+    }
+    spec = {
+      amiFamily = "Bottlerocket"
+      securityGroupSelectorTerms = [
+        {
+          tags = {
+            "karpenter.sh/discovery" = var.cluster_name
+          }
+        }
+      ]
+      subnetSelectorTerms = [
+        {
+          tags = {
+            "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+          }
+        }
+      ]
+      instanceProfile = aws_iam_instance_profile.karpenter[0].name
+      tags = {
+        Team        = var.team
+        Environment = var.env
+      }
+      blockDeviceMappings = [
+        {
+          deviceName = "/dev/xvda"
+          ebs = {
+            volumeSize          = var.karpenter["disk_size"]
+            volumeType          = "gp3"
+            deleteOnTermination = true
+          }
+        }
+      ]
+    }
+  }
+}
 
