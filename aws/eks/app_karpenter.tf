@@ -351,7 +351,7 @@ resource "kubernetes_manifest" "karpenter_node_template" {
       securityGroupSelectorTerms = [
         {
           tags = {
-            "karpenter.sh/discovery" = var.cluster_name
+            "kubernetes.io/cluster/${var.var.cluster_name}" = "owned"
           }
         }
       ]
