@@ -164,6 +164,14 @@ resource "aws_iam_role" "karpenter_instance_profile_role" {
   })
 }
 
+# add karpenter role to EKS access entries to allow karpenter nodes to join cluster
+
+resource "aws_eks_access_entry" "karpenter" {
+  cluster_name  = var.cluster_name
+  principal_arn = aws_iam_role.karpenter_instance_profile_role.arn
+  type          = "EC2_LINUX"
+}
+
 resource "aws_iam_instance_profile" "karpenter" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name  = "karpenter-instance-profile-${var.env}"
