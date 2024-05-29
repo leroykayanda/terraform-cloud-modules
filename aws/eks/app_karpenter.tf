@@ -337,7 +337,7 @@ resource "kubernetes_manifest" "nodepools" {
       }
       disruption = {
         consolidationPolicy = "WhenUnderutilized"
-        expireAfter         = "720h"
+        expireAfter         = var.karpenter["expire_after"]
         budgets = [
           {
             nodes = "${var.karpenter["disruption_budget"]}"
