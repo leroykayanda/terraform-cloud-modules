@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "ns" {
+resource "kubernetes_namespace" "karpenter" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   metadata {
     name = "karpenter"
