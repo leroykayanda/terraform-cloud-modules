@@ -95,7 +95,8 @@ resource "aws_iam_policy" "karpenter" {
                 "ec2:DescribeSpotPriceHistory",
                 "iam:PassRole",
                 "ssm:GetParameter",
-                "pricing:GetProducts"
+                "pricing:GetProducts",
+                "iam:GetInstanceProfile"
             ],
             "Effect": "Allow",
             "Resource": "*",
