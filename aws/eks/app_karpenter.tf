@@ -1,16 +1,9 @@
-resource "kubernetes_namespace" "karpenter" {
-  count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
-  metadata {
-    name = "karpenter"
-  }
-}
-
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  namespace  = "karpenter"
+  namespace  = "kube-system"
   version    = "0.36.2"
 
   set {
@@ -141,7 +134,7 @@ resource "kubernetes_service_account" "karpenter" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   metadata {
     name      = local.karpenter_sa
-    namespace = "karpenter"
+    namespace = "kube-system"
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.karpenter[0].arn
     }
@@ -304,8 +297,7 @@ resource "kubernetes_manifest" "nodepools" {
     apiVersion = "karpenter.sh/v1beta1"
     kind       = "NodePool"
     metadata = {
-      name      = "default"
-      namespace = "karpenter"
+      name = "karpenter"
     }
     spec = {
       template = {
@@ -313,7 +305,7 @@ resource "kubernetes_manifest" "nodepools" {
           nodeClassRef = {
             apiVersion = "karpenter.k8s.aws/v1beta1"
             kind       = "EC2NodeClass"
-            name       = "default"
+            name       = "karpenter"
           }
           requirements = [
             {
@@ -352,8 +344,7 @@ resource "kubernetes_manifest" "karpenter_node_template" {
     apiVersion = "karpenter.k8s.aws/v1beta1"
     kind       = "EC2NodeClass"
     metadata = {
-      name      = "default"
-      namespace = "karpenter"
+      name = "karpenter"
     }
     spec = {
       amiFamily = "Bottlerocket"
