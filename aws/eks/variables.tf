@@ -143,3 +143,7 @@ variable "elastic" {
 variable "elastic_password" {
   type = string
 }
+
+variable "kibana" {
+  type = any
+}
