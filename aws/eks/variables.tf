@@ -133,3 +133,13 @@ variable "karpenter" {
 
 variable "argocd_image_updater_values" {
 }
+
+# elastic
+
+variable "elastic" {
+  type = any
+}
+
+variable "elastic_password" {
+  type = string
+}
