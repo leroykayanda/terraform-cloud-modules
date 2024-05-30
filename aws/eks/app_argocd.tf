@@ -83,7 +83,6 @@ resource "kubernetes_ingress_v1" "ingress" {
       "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
       "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
       "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
-      "alb.ingress.kubernetes.io/target-type"              = "ip"
       "alb.ingress.kubernetes.io/group.name"               = var.env
     }
   }
