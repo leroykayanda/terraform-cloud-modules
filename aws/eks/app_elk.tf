@@ -1,7 +1,7 @@
 # elk namespace
 
 resource "kubernetes_namespace" "elk" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   metadata {
     name = "elk"
   }
@@ -10,7 +10,7 @@ resource "kubernetes_namespace" "elk" {
 # elasticsearch
 
 resource "helm_release" "elastic" {
-  count      = var.cluster_created ? 1 : 0
+  count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   name       = "elasticsearch"
   chart      = "elasticsearch"
   version    = "8.5.1"
