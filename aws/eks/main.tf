@@ -42,8 +42,9 @@ module "eks" {
   }
 
   tags = {
-    Environment = var.env
-    Team        = var.team
+    Environment                                 = var.env
+    Team                                        = var.team
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 }
 
