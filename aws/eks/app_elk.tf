@@ -120,3 +120,54 @@ resource "aws_route53_record" "kibana" {
     evaluate_target_health = false
   }
 }
+
+# kibana ingress
+
+resource "kubernetes_ingress_v1" "kibana" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "kibana"
+    namespace = "elk"
+    annotations = {
+      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTPS"
+      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
+      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
+      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
+      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
+      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
+      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
+      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
+      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
+      "alb.ingress.kubernetes.io/group.name"               = var.env
+    }
+  }
+
+  spec {
+    ingress_class_name = "alb"
+
+    rule {
+      host = var.kibana["dns_name"]
+
+      http {
+        path {
+          path = "/*"
+
+          backend {
+            service {
+              name = "kibana-kibana"
+              port {
+                number = 5601
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+    tls {
+      hosts = [var.kibana["dns_name"]]
+    }
+  }
+}

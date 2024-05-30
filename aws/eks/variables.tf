@@ -102,7 +102,7 @@ variable "access_entries" {
 }
 
 #argocd
-variable "argo_subnets" {
+variable "public_ingress_subnets" {
   type = string
 }
 
