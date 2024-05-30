@@ -88,6 +88,11 @@ resource "helm_release" "kibana" {
     value = false
   }
 
+  set {
+    name  = "service.type"
+    value = "NodePort"
+  }
+
   values = [
     <<EOF
     resources: 
