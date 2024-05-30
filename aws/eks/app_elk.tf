@@ -105,3 +105,18 @@ resource "helm_release" "kibana" {
   ]
 
 }
+
+# kibana dns name
+
+resource "aws_route53_record" "kibana" {
+  count   = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  zone_id = var.zone_id
+  name    = var.kibana["dns_name"]
+  type    = "A"
+
+  alias {
+    name                   = data.aws_lb.ingress[0].dns_name
+    zone_id                = data.aws_lb.ingress[0].zone_id
+    evaluate_target_health = false
+  }
+}
