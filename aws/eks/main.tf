@@ -2,14 +2,15 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.8.3"
 
-  cluster_name                             = var.cluster_name
-  cluster_version                          = var.cluster_version
-  cluster_endpoint_public_access           = var.cluster_endpoint_public_access
-  vpc_id                                   = var.vpc_id
-  subnet_ids                               = var.subnet_ids
-  authentication_mode                      = "API_AND_CONFIG_MAP"
-  cloudwatch_log_group_retention_in_days   = 30
-  enable_cluster_creator_admin_permissions = true
+  cluster_name                               = var.cluster_name
+  cluster_version                            = var.cluster_version
+  cluster_endpoint_public_access             = var.cluster_endpoint_public_access
+  vpc_id                                     = var.vpc_id
+  subnet_ids                                 = var.subnet_ids
+  authentication_mode                        = "API_AND_CONFIG_MAP"
+  cloudwatch_log_group_retention_in_days     = 30
+  enable_cluster_creator_admin_permissions   = true
+  create_cluster_primary_security_group_tags = false
 
   access_entries = var.access_entries
 
