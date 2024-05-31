@@ -243,7 +243,7 @@ resource "helm_release" "logstash" {
 # filebeat helm chart
 
 resource "helm_release" "filebeat" {
-  count      = var.cluster_created ? 1 : 0
+  count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   name       = "filebeat"
   chart      = "filebeat"
   version    = "8.5.1"

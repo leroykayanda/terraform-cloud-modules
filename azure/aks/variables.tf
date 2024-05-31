@@ -116,6 +116,11 @@ variable "letsencrypt_email" {
   description = "email to contact you about expiring certificates & issues"
 }
 
+variable "letsencrypt_environment" {
+  type = string
+}
+
+
 variable "elastic" {
   type = any
 }
@@ -137,10 +142,6 @@ variable "prometheus" {
 }
 
 variable "slack_incoming_webhook_url" {
-  type = string
-}
-
-variable "letsencrypt_environment" {
   type = string
 }
 

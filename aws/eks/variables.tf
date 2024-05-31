@@ -147,3 +147,7 @@ variable "elastic_password" {
 variable "kibana" {
   type = any
 }
+
+variable "prometheus" {
+  type = any
+}
