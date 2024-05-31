@@ -151,3 +151,15 @@ variable "kibana" {
 variable "prometheus" {
   type = any
 }
+
+variable "grafana" {
+  type = any
+}
+
+variable "slack_incoming_webhook_url" {
+  type = string
+}
+
+variable "grafana_password" {
+  type = string
+}
