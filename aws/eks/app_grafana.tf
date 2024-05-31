@@ -122,3 +122,18 @@ EOF
   ]
 
 }
+
+# grafana dns name
+
+resource "aws_route53_record" "grafana" {
+  count   = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
+  zone_id = var.zone_id
+  name    = var.grafana["dns_name"]
+  type    = "A"
+
+  alias {
+    name                   = data.aws_lb.ingress[0].dns_name
+    zone_id                = data.aws_lb.ingress[0].zone_id
+    evaluate_target_health = false
+  }
+}
