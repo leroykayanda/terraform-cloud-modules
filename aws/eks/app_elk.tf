@@ -177,3 +177,65 @@ resource "kubernetes_ingress_v1" "kibana" {
     }
   }
 }
+
+# logstash helm chart
+
+resource "helm_release" "logstash" {
+  count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  name       = "logstash"
+  chart      = "logstash"
+  version    = "8.5.1"
+  repository = "https://helm.elastic.co"
+  namespace  = "elk"
+
+  values = [
+    <<EOF
+    logstashConfig:
+      logstash.yml: |
+        http.host: 0.0.0.0
+        xpack.monitoring.enabled: false
+    logstashPipeline: 
+      logstash.conf: |
+        input {
+          beats {
+            port => 5044
+          }
+        }
+        filter {
+        }
+        output {
+          elasticsearch {
+            hosts => "https://elasticsearch-master.elk:9200"
+            ssl_certificate_verification => false
+            user => "elastic"
+            password => "${var.elastic_password}"
+            manage_template => false
+            index => "%%{[@metadata][beat]}-%%{+YYYY.MM.dd}"
+            document_type => "%%{[@metadata][type]}"
+          }
+        }
+    service:
+      type: ClusterIP
+      ports:
+        - name: beats
+          port: 5044
+          protocol: TCP
+          targetPort: 5044
+        - name: http
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+    resources: 
+      requests:
+        cpu: "512m"
+        memory: "1Gi"
+      limits:
+        cpu: "1024m"
+        memory: "2Gi"
+    EOF
+  ]
+
+  depends_on = [
+    helm_release.elastic
+  ]
+}
