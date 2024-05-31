@@ -54,6 +54,11 @@ resource "helm_release" "grafana" {
   }
 
   set {
+    name  = "service.type"
+    value = "NodePort"
+  }
+
+  set {
     name  = "persistence.storageClassName"
     value = var.grafana["storageClassName"]
   }

@@ -120,7 +120,6 @@ variable "letsencrypt_environment" {
   type = string
 }
 
-
 variable "elastic" {
   type = any
 }
