@@ -52,6 +52,8 @@ resource "helm_release" "elastic" {
     esConfig: 
       elasticsearch.yml: |
         xpack.security.enabled: true
+    readinessProbe:
+      initialDelaySeconds: 180
     resources: 
       requests:
         cpu: "500m"
