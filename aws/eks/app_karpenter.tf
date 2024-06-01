@@ -36,11 +36,6 @@ resource "helm_release" "karpenter" {
     value = var.karpenter["replicas"]
   }
 
-  set {
-    name  = "maxUnavailable"
-    value = 0
-  }
-
   values = [
     <<EOF
     controller:
