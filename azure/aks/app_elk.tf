@@ -47,11 +47,6 @@ resource "helm_release" "elastic" {
     value = var.elastic_password
   }
 
-  set {
-    name  = "maxUnavailable"
-    value = 0
-  }
-
   values = [
     <<EOF
     esConfig: 
