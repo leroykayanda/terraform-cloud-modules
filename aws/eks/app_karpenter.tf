@@ -329,6 +329,16 @@ resource "kubernetes_manifest" "nodepools" {
               values   = "${var.karpenter["instance_types"]}"
             }
           ]
+
+          kubelet = {
+            evictionSoft = {
+              "memory.available" = "10%"
+            }
+            evictionSoftGracePeriod = {
+              "memory.available" = "1m"
+            }
+          }
+
         }
       }
       limits = {
