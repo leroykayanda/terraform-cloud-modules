@@ -193,6 +193,11 @@ resource "helm_release" "logstash" {
   repository = "https://helm.elastic.co"
   namespace  = "elk"
 
+  set {
+    name  = "maxUnavailable"
+    value = 0
+  }
+
   values = [
     <<EOF
     logstashConfig:
