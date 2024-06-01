@@ -1,54 +1,54 @@
-resource "helm_release" "karpenter" {
-  count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
-  name       = "karpenter"
-  repository = "oci://public.ecr.aws/karpenter"
-  chart      = "karpenter"
-  namespace  = "kube-system"
-  version    = "0.37.0"
+# resource "helm_release" "karpenter" {
+#   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+#   name       = "karpenter"
+#   repository = "oci://public.ecr.aws/karpenter"
+#   chart      = "karpenter"
+#   namespace  = "kube-system"
+#   version    = "0.37.0"
 
-  set {
-    name  = "settings.clusterName"
-    value = var.cluster_name
-  }
+#   set {
+#     name  = "settings.clusterName"
+#     value = var.cluster_name
+#   }
 
-  set {
-    name  = "settings.clusterEndpoint"
-    value = module.eks.cluster_endpoint
-  }
+#   set {
+#     name  = "settings.clusterEndpoint"
+#     value = module.eks.cluster_endpoint
+#   }
 
-  set {
-    name  = "settings.defaultInstanceProfile"
-    value = aws_iam_instance_profile.karpenter[0].name
-  }
+#   set {
+#     name  = "settings.defaultInstanceProfile"
+#     value = aws_iam_instance_profile.karpenter[0].name
+#   }
 
-  set {
-    name  = "serviceAccount.create"
-    value = false
-  }
+#   set {
+#     name  = "serviceAccount.create"
+#     value = false
+#   }
 
-  set {
-    name  = "serviceAccount.name"
-    value = local.karpenter_sa
-  }
+#   set {
+#     name  = "serviceAccount.name"
+#     value = local.karpenter_sa
+#   }
 
-  set {
-    name  = "replicas"
-    value = var.karpenter["replicas"]
-  }
+#   set {
+#     name  = "replicas"
+#     value = var.karpenter["replicas"]
+#   }
 
-  values = [
-    <<EOF
-    controller:
-      resources: 
-        requests:
-          cpu: "100m"
-          memory: "256Mi"
-        limits:
-          cpu: "1000m"
-          memory: "1Gi"
-    EOF
-  ]
-}
+#   values = [
+#     <<EOF
+#     controller:
+#       resources: 
+#         requests:
+#           cpu: "100m"
+#           memory: "256Mi"
+#         limits:
+#           cpu: "1000m"
+#           memory: "1Gi"
+#     EOF
+#   ]
+# }
 
 #create service account
 
