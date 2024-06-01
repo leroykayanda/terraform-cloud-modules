@@ -4,7 +4,7 @@ resource "helm_release" "karpenter" {
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
   namespace  = "kube-system"
-  version    = "0.36.2"
+  version    = "0.37.0"
 
   set {
     name  = "settings.clusterName"
