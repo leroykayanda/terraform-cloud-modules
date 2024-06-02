@@ -198,6 +198,11 @@ resource "helm_release" "logstash" {
     value = 0
   }
 
+  set {
+    name  = "replicas"
+    value = 2
+  }
+
   values = [
     <<EOF
     logstashConfig:
