@@ -38,7 +38,7 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    green = var.nodegroup_properties
+    initial-nodegroup = var.nodegroup_properties
   }
 
   tags = {

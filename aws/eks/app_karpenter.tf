@@ -330,12 +330,6 @@ resource "kubernetes_manifest" "nodepools" {
             }
           ]
 
-          kubelet = {
-            evictionSoft = {
-              "memory.available" = "10%"
-            }
-          }
-
         }
       }
       limits = {
