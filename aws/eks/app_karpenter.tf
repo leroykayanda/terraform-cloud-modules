@@ -299,6 +299,11 @@ resource "aws_iam_role_policy_attachment" "instance_profile" {
   policy_arn = aws_iam_policy.instance_profile_policy[0].arn
 }
 
+resource "aws_iam_role_policy_attachment" "ebs" {
+  count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  role       = aws_iam_role.karpenter_instance_profile_role[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
 
 resource "kubernetes_manifest" "nodepools" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
