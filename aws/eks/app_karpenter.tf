@@ -334,9 +334,6 @@ resource "kubernetes_manifest" "nodepools" {
             evictionSoft = {
               "memory.available" = "10%"
             }
-            evictionSoftGracePeriod = {
-              "memory.available" = "1m"
-            }
           }
 
         }
