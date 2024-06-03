@@ -33,6 +33,73 @@ resource "helm_release" "prometheus" {
 
 }
 
+# prometheus dns name
+
+resource "aws_route53_record" "prometheus" {
+  count   = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
+  zone_id = var.zone_id
+  name    = var.grafana["dns_name"]
+  type    = "A"
+
+  alias {
+    name                   = data.aws_lb.ingress[0].dns_name
+    zone_id                = data.aws_lb.ingress[0].zone_id
+    evaluate_target_health = false
+  }
+}
+
+# prometheus ingress
+
+resource "kubernetes_ingress_v1" "grafana" {
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
+  metadata {
+    name      = "prometheus"
+    namespace = "grafana"
+    annotations = {
+      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTP"
+      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
+      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
+      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
+      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
+      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
+      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
+      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
+      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
+      "alb.ingress.kubernetes.io/success-codes"            = "200-399"
+      "alb.ingress.kubernetes.io/group.name"               = var.env
+    }
+  }
+
+  spec {
+    ingress_class_name = "alb"
+
+    rule {
+      host = var.prometheus["dns_name"]
+
+      http {
+        path {
+          path = "/*"
+
+          backend {
+            service {
+              name = "prometheus-server"
+              port {
+                number = 80
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+    tls {
+      hosts = [var.prometheus["dns_name"]]
+    }
+  }
+}
+
 # grafana helm chart
 
 resource "helm_release" "grafana" {
