@@ -80,6 +80,17 @@ variable "nodegroup_properties" {
   }
 }
 
+variable "critical_nodegroup" {
+  type = any
+  default = {
+    "min_size"       = 2
+    "max_size"       = 2
+    "desired_size"   = 1
+    "instance_types" = ["t4g.2xlarge"]
+    "capacity_type"  = "ON_DEMAND"
+  }
+}
+
 variable "autoscaler_service_name" {
   type    = string
   default = "cluster-autoscaler-sa"

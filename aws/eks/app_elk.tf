@@ -47,11 +47,6 @@ resource "helm_release" "elastic" {
     value = var.elastic_password
   }
 
-  set {
-    name  = "maxUnavailable"
-    value = 0
-  }
-
   values = [
     <<EOF
     esConfig: 
@@ -192,11 +187,6 @@ resource "helm_release" "logstash" {
   version    = "8.5.1"
   repository = "https://helm.elastic.co"
   namespace  = "elk"
-
-  set {
-    name  = "maxUnavailable"
-    value = 0
-  }
 
   set {
     name  = "replicas"

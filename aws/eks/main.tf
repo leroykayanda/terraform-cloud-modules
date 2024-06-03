@@ -38,7 +38,8 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    initial-nodegroup = var.nodegroup_properties
+    initial-nodegroup  = var.nodegroup_properties
+    critical-nodegroup = var.critical_nodegroup
   }
 
   tags = {
