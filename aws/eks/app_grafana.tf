@@ -28,7 +28,7 @@ resource "helm_release" "prometheus" {
   }
 
   set {
-    name  = "service.type"
+    name  = "server.service.type"
     value = "NodePort"
   }
 
