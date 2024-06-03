@@ -27,6 +27,11 @@ resource "helm_release" "prometheus" {
     value = var.prometheus["retention"]
   }
 
+  set {
+    name  = "service.type"
+    value = "NodePort"
+  }
+
   depends_on = [
     kubernetes_namespace.grafana
   ]
