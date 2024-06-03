@@ -364,7 +364,7 @@ resource "kubernetes_manifest" "karpenter_node_template" {
       name = "karpenter"
     }
     spec = {
-      amiFamily = "Bottlerocket"
+      amiFamily = "AL2023"
       securityGroupSelectorTerms = [
         {
           tags = {
