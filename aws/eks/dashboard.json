@@ -234,32 +234,7 @@
                     },
                     "unit": "percent"
                 },
-                "overrides": [
-                    {
-                        "__systemRef": "hideSeriesFrom",
-                        "matcher": {
-                            "id": "byNames",
-                            "options": {
-                                "mode": "exclude",
-                                "names": [
-                                    "ip-10-0-2-241.eu-west-1.compute.internal"
-                                ],
-                                "prefix": "All except:",
-                                "readOnly": true
-                            }
-                        },
-                        "properties": [
-                            {
-                                "id": "custom.hideFrom",
-                                "value": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": true
-                                }
-                            }
-                        ]
-                    }
-                ]
+                "overrides": []
             },
             "gridPos": {
                 "h": 11,
@@ -377,32 +352,7 @@
                     },
                     "unit": "percent"
                 },
-                "overrides": [
-                    {
-                        "__systemRef": "hideSeriesFrom",
-                        "matcher": {
-                            "id": "byNames",
-                            "options": {
-                                "mode": "exclude",
-                                "names": [
-                                    "ip-10-0-1-48.eu-west-1.compute.internal"
-                                ],
-                                "prefix": "All except:",
-                                "readOnly": true
-                            }
-                        },
-                        "properties": [
-                            {
-                                "id": "custom.hideFrom",
-                                "value": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": true
-                                }
-                            }
-                        ]
-                    }
-                ]
+                "overrides": []
             },
             "gridPos": {
                 "h": 11,
@@ -991,8 +941,7 @@
                         "mode": "percentage",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1094,8 +1043,7 @@
                         "mode": "percentage",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1192,8 +1140,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1287,8 +1234,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1387,8 +1333,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1487,8 +1432,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1585,8 +1529,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1653,8 +1596,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1753,8 +1695,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1867,8 +1808,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -1979,8 +1919,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -2082,8 +2021,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -2175,8 +2113,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "light-green",
-                                "value": null
+                                "color": "light-green"
                             }
                         ]
                     },
@@ -2202,8 +2139,7 @@
                                     "mode": "absolute",
                                     "steps": [
                                         {
-                                            "color": "light-green",
-                                            "value": null
+                                            "color": "light-green"
                                         },
                                         {
                                             "color": "semi-dark-yellow",
@@ -2260,8 +2196,7 @@
                                     "mode": "absolute",
                                     "steps": [
                                         {
-                                            "color": "light-green",
-                                            "value": null
+                                            "color": "light-green"
                                         },
                                         {
                                             "color": "light-green",
@@ -2538,7 +2473,7 @@
         "list": []
     },
     "time": {
-        "from": "now-5m",
+        "from": "now-1h",
         "to": "now"
     },
     "timepicker": {
@@ -2569,6 +2504,6 @@
     "timezone": "browser",
     "title": "Kubernetes Dashboard",
     "uid": "cdlpol5hdssg0c",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
 }
