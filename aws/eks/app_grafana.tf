@@ -38,7 +38,7 @@ resource "helm_release" "prometheus" {
 resource "aws_route53_record" "prometheus" {
   count   = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   zone_id = var.zone_id
-  name    = var.grafana["dns_name"]
+  name    = var.prometheus["dns_name"]
   type    = "A"
 
   alias {
