@@ -50,7 +50,7 @@ resource "aws_route53_record" "prometheus" {
 
 # prometheus ingress
 
-resource "kubernetes_ingress_v1" "grafana" {
+resource "kubernetes_ingress_v1" "prometheus" {
   count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   metadata {
     name      = "prometheus"
