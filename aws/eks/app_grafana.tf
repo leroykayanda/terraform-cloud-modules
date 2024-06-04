@@ -32,6 +32,18 @@ resource "helm_release" "prometheus" {
     value = "NodePort"
   }
 
+  values = [
+    <<EOF
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
+    nodeSelector:
+      priority: "critical"
+    EOF
+  ]
+
   depends_on = [
     kubernetes_namespace.grafana
   ]
