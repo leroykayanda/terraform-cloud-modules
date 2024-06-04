@@ -124,13 +124,14 @@ resource "helm_release" "kibana" {
       limits:
         cpu: "1000m"
         memory: "2Gi"
-    tolerations:
-    - key: "priority"
-      operator: "Equal"
-      value: "critical"
-      effect: "NoSchedule"
-    nodeSelector:
-      priority: "critical"
+    server:
+      tolerations:
+      - key: "priority"
+        operator: "Equal"
+        value: "critical"
+        effect: "NoSchedule"
+      nodeSelector:
+        priority: "critical"
     EOF
   ]
 
