@@ -359,6 +359,10 @@ resource "kubernetes_manifest" "nodepools" {
       }
     }
   }
+
+  depends_on = [
+    helm_release.karpenter
+  ]
 }
 
 resource "kubernetes_manifest" "karpenter_node_template" {
@@ -403,5 +407,9 @@ resource "kubernetes_manifest" "karpenter_node_template" {
       ]
     }
   }
+
+  depends_on = [
+    helm_release.karpenter
+  ]
 }
 
