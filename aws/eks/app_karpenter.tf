@@ -311,7 +311,7 @@ resource "aws_iam_role_policy_attachment" "ebs" {
 resource "kubectl_manifest" "nodepools" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-  manifest = <<EOF
+  yaml_body = <<EOF
 apiVersion: karpenter.sh/v1beta1
 kind: NodePool
 metadata:
@@ -344,7 +344,7 @@ EOF
 resource "kubectl_manifest" "karpenter_node_template" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-  manifest = <<EOF
+  yaml_body = <<EOF
 apiVersion: karpenter.k8s.aws/v1beta1
 kind: EC2NodeClass
 metadata:
