@@ -329,7 +329,7 @@ spec:
         values: ["on-demand"]
       - key: node.kubernetes.io/instance-type
         operator: In
-        values: "${var.karpenter["instance_types"]}"
+        values: ["${join(",", var.karpenter["instance_types"])}"]
   limits:
     cpu: "${var.karpenter["cpu_limit"]}"
     memory: "${var.karpenter["memory_limit"]}"
