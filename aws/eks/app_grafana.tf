@@ -34,13 +34,14 @@ resource "helm_release" "prometheus" {
 
   values = [
     <<EOF
-    tolerations:
-    - key: "priority"
-      operator: "Equal"
-      value: "critical"
-      effect: "NoSchedule"
-    nodeSelector:
-      priority: "critical"
+    server:
+      tolerations:
+      - key: "priority"
+        operator: "Equal"
+        value: "critical"
+        effect: "NoSchedule"
+      nodeSelector:
+        priority: "critical"
     EOF
   ]
 
