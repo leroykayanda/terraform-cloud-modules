@@ -251,6 +251,13 @@ resource "helm_release" "logstash" {
       limits:
         cpu: "1024m"
         memory: "2Gi"
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
+    nodeSelector:
+      priority: "critical"
     EOF
   ]
 
