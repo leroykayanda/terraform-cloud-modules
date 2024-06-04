@@ -1,4 +1,5 @@
 resource "kubernetes_storage_class" "sc" {
+  count = var.cluster_created ? 1 : 0
   metadata {
     name = "gp3"
     annotations = {

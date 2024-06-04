@@ -46,6 +46,13 @@ resource "helm_release" "karpenter" {
         limits:
           cpu: "1000m"
           memory: "1Gi"
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
+    nodeSelector:
+      priority: "critical"
     EOF
   ]
 }
