@@ -1,12 +1,3 @@
-resource "helm_release" "karpenter_crds" {
-  count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
-  name       = "karpenter-crds"
-  repository = "oci://public.ecr.aws/karpenter/karpenter-crd"
-  chart      = "karpenter-crd"
-  version    = "0.37.0"
-  namespace  = "kube-system"
-}
-
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
@@ -23,11 +14,6 @@ resource "helm_release" "karpenter" {
   set {
     name  = "settings.clusterEndpoint"
     value = module.eks.cluster_endpoint
-  }
-
-  set {
-    name  = "settings.defaultInstanceProfile"
-    value = aws_iam_instance_profile.karpenter[0].name
   }
 
   set {
@@ -63,10 +49,6 @@ resource "helm_release" "karpenter" {
     nodeSelector:
       priority: "critical"
     EOF
-  ]
-
-  depends_on = [
-    helm_release.karpenter_crds
   ]
 
 }
@@ -326,104 +308,66 @@ resource "aws_iam_role_policy_attachment" "ebs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
-resource "kubernetes_manifest" "nodepools" {
+resource "kubectl_manifest" "nodepools" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-  manifest = {
-    apiVersion = "karpenter.sh/v1beta1"
-    kind       = "NodePool"
-    metadata = {
-      name = "karpenter"
-    }
-    spec = {
-      template = {
-        spec = {
-          nodeClassRef = {
-            apiVersion = "karpenter.k8s.aws/v1beta1"
-            kind       = "EC2NodeClass"
-            name       = "karpenter"
-          }
-          requirements = [
-            {
-              key      = "karpenter.sh/capacity-type"
-              operator = "In"
-              values   = ["on-demand"]
-            },
-            {
-              key      = "node.kubernetes.io/instance-type"
-              operator = "In"
-              values   = "${var.karpenter["instance_types"]}"
-            }
-          ]
-
-        }
-      }
-      limits = {
-        cpu    = "${var.karpenter["cpu_limit"]}"
-        memory = "${var.karpenter["memory_limit"]}"
-      }
-      disruption = {
-        consolidationPolicy = "WhenUnderutilized"
-        expireAfter         = var.karpenter["expire_after"]
-        budgets = [
-          {
-            nodes = "${var.karpenter["disruption_budget"]}"
-          }
-        ]
-      }
-    }
-  }
-
-  depends_on = [
-    helm_release.karpenter
-  ]
+  manifest = <<EOF
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: "karpenter"
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        apiVersion: karpenter.k8s.aws/v1beta1
+        kind: EC2NodeClass
+        name: "karpenter"
+      requirements:
+      - key: karpenter.sh/capacity-type
+        operator: In
+        values: ["on-demand"]
+      - key: node.kubernetes.io/instance-type
+        operator: In
+        values: "${var.karpenter["instance_types"]}"
+  limits:
+    cpu: "${var.karpenter["cpu_limit"]}"
+    memory: "${var.karpenter["memory_limit"]}"
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    expireAfter:         "${var.karpenter["expire_after"]}"
+    budgets:
+    - nodes: "${var.karpenter["disruption_budget"]}"
+EOF
 }
 
-resource "kubernetes_manifest" "karpenter_node_template" {
+resource "kubectl_manifest" "karpenter_node_template" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
 
-  manifest = {
-    apiVersion = "karpenter.k8s.aws/v1beta1"
-    kind       = "EC2NodeClass"
-    metadata = {
-      name = "karpenter"
-    }
-    spec = {
-      amiFamily = "AL2023"
-      securityGroupSelectorTerms = [
-        {
-          tags = {
-            "Name" = "${var.cluster_name}-node"
-          }
-        }
-      ]
-      subnetSelectorTerms = [
-        {
-          tags = {
-            "${var.karpenter["karpenter_subnet_key"]}" = "${var.karpenter["karpenter_subnet_value"]}"
-          }
-        }
-      ]
-      instanceProfile = aws_iam_instance_profile.karpenter[0].name
-      tags = {
-        Team        = var.team
-        Environment = var.env
-      }
-      blockDeviceMappings = [
-        {
-          deviceName = "/dev/xvda"
-          ebs = {
-            volumeSize          = var.karpenter["disk_size"]
-            volumeType          = "gp3"
-            deleteOnTermination = true
-          }
-        }
-      ]
-    }
-  }
-
-  depends_on = [
-    helm_release.karpenter
-  ]
+  manifest = <<EOF
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  name: "karpenter"
+spec:
+  amiFamily: "AL2023"
+  securityGroupSelectorTerms:
+  - tags:
+      Name: "${var.cluster_name}-node"
+  subnetSelectorTerms:
+  - tags:
+      "${var.karpenter["karpenter_subnet_key"]}" : "${var.karpenter["karpenter_subnet_value"]}"
+  instanceProfile: "${aws_iam_instance_profile.karpenter[0].name}"
+  tags:
+    Team: "${var.team}"
+    Environment: "${var.env}"
+  blockDeviceMappings:
+  - deviceName: "/dev/xvda"
+    ebs:
+      volumeSize: ${var.karpenter["disk_size"]}
+      volumeType: "gp3"
+      deleteOnTermination: true
+EOF
 }
+
 
