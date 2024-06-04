@@ -33,3 +33,24 @@ resource "aws_efs_file_system" "efs" {
     Team        = var.team
   }
 }
+
+# security group
+
+resource "aws_security_group" "efs" {
+  name        = "${var.cluster_name}-efs-sg"
+  description = "Allow inbound efs traffic from VPC CIDR"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    cidr_blocks = var.vpc_cidr
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+  }
+
+  tags = {
+    Name        = "${var.cluster_name}-efs-sg"
+    Environment = var.env
+    Team        = var.team
+  }
+}
