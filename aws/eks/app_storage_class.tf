@@ -125,7 +125,7 @@ resource "aws_efs_mount_target" "efs_mount_target" {
 
 # EFS storage class
 
-resource "kubectl_manifest" "karpenter_node_template" {
+resource "kubectl_manifest" "efs" {
   count = var.cluster_created ? 1 : 0
 
   yaml_body = <<EOF
