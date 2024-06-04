@@ -22,6 +22,65 @@ resource "kubernetes_storage_class" "sc" {
 
 # EFS
 
+# EFS CSI driver helm chart
+
+resource "helm_release" "aws_efs_csi_driver" {
+  count      = var.cluster_created ? 1 : 0
+  chart      = "aws-efs-csi-driver"
+  name       = "aws-efs-csi-driver"
+  namespace  = "kube-system"
+  repository = "oci://public.ecr.aws/efs-csi-driver/amazon/aws-efs-csi-driver"
+  version    = "v2.0.3"
+
+  set {
+    name  = "controller.serviceAccount.create"
+    value = false
+  }
+
+  set {
+    name  = "controller.serviceAccount.name"
+    value = "efs-csi-controller-sa"
+  }
+}
+
+#create service account
+
+resource "aws_iam_role" "efs" {
+  name = "${var.cluster_name}-efs-sa-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.eks_oidc_issuer}"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "efs" {
+  role       = aws_iam_role.efs.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+}
+
+resource "kubernetes_service_account" "efs" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "efs-csi-controller-sa"
+    namespace = "kube-system"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.efs.arn
+    }
+  }
+  automount_service_account_token = true
+}
+
+# EFS file system
+
 resource "aws_efs_file_system" "efs" {
   creation_token   = "${var.cluster_name}-efs"
   performance_mode = "generalPurpose"
@@ -63,3 +122,4 @@ resource "aws_efs_mount_target" "efs_mount_target" {
   subnet_id       = var.private_subnets[count.index]
   security_groups = [aws_security_group.efs.id]
 }
+
