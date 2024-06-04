@@ -58,7 +58,7 @@ resource "helm_release" "karpenter" {
 
 }
 
-#create service account
+# create service account
 
 resource "aws_iam_role" "karpenter" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0

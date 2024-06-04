@@ -3,9 +3,9 @@
 resource "kubernetes_storage_class" "sc" {
   count = var.cluster_created ? 1 : 0
   metadata {
-    name = "gp3"
+    name = "ebs"
     annotations = {
-      "storageclass.kubernetes.io/is-default-class" = "true"
+      "storageclass.kubernetes.io/is-default-class" = "false"
     }
   }
 
@@ -30,6 +30,7 @@ resource "helm_release" "aws_efs_csi_driver" {
   name       = "aws-efs-csi-driver"
   namespace  = "kube-system"
   repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+  version    = "2.0.3"
 
   set {
     name  = "controller.serviceAccount.create"
@@ -120,5 +121,28 @@ resource "aws_efs_mount_target" "efs_mount_target" {
   file_system_id  = aws_efs_file_system.efs.id
   subnet_id       = var.private_subnets[count.index]
   security_groups = [aws_security_group.efs.id]
+}
+
+# EFS storage class
+
+resource "kubectl_manifest" "karpenter_node_template" {
+  count = var.cluster_created ? 1 : 0
+
+  yaml_body = <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: efs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer 
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  fileSystemId: "${aws_efs_file_system.efs.id}"
+  provisioningMode: efs-ap
+  directoryPerms: "777"
+EOF
 }
 
