@@ -63,7 +63,7 @@ variable "vpc_cidr" {
   type = string
 }
 
-variable "subnet_ids" {
+variable "private_subnets" {
   type = list(string)
 }
 
