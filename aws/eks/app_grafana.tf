@@ -155,6 +155,13 @@ resource "helm_release" "grafana" {
 
   values = [
     <<EOF
+tolerations:
+- key: "priority"
+  operator: "Equal"
+  value: "critical"
+  effect: "NoSchedule"
+nodeSelector:
+  priority: "critical"
 datasources:
   datasources.yaml:
     apiVersion: 1
