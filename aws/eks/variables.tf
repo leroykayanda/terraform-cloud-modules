@@ -69,7 +69,7 @@ variable "capacity_type" {
   default     = "ON_DEMAND"
 }
 
-variable "nodegroup_properties" {
+variable "initial_nodegroup" {
   type = any
   default = {
     "min_size"       = 1
