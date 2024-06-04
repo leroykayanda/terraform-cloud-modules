@@ -1,3 +1,12 @@
+resource "helm_release" "karpenter_crds" {
+  count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
+  name       = "karpenter-crds"
+  repository = "oci://public.ecr.aws/karpenter/karpenter-crd"
+  chart      = "karpenter-crd"
+  version    = "0.37.0"
+  namespace  = "kube-system"
+}
+
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
@@ -55,6 +64,11 @@ resource "helm_release" "karpenter" {
       priority: "critical"
     EOF
   ]
+
+  depends_on = [
+    helm_release.karpenter_crds
+  ]
+
 }
 
 #create service account
