@@ -146,11 +146,6 @@ resource "helm_release" "grafana" {
   }
 
   set {
-    name  = "persistence.storageClassName"
-    value = var.grafana["storageClassName"]
-  }
-
-  set {
     name  = "adminPassword"
     value = var.grafana_password
   }
