@@ -611,7 +611,7 @@
                     },
                     "editorMode": "code",
                     "exemplar": true,
-                    "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=\"false\"})",
+                    "expr": "sum(kube_node_status_condition{condition=\"Ready\",status!=\"true\"})",
                     "interval": "",
                     "legendFormat": "",
                     "range": true,
@@ -941,7 +941,8 @@
                         "mode": "percentage",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1043,7 +1044,8 @@
                         "mode": "percentage",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1140,7 +1142,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1234,7 +1237,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1333,7 +1337,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1432,7 +1437,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1529,7 +1535,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1596,7 +1603,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1695,7 +1703,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1808,7 +1817,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -1919,7 +1929,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -2021,7 +2032,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green"
+                                "color": "green",
+                                "value": null
                             },
                             {
                                 "color": "red",
@@ -2113,7 +2125,8 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "light-green"
+                                "color": "light-green",
+                                "value": null
                             }
                         ]
                     },
@@ -2139,7 +2152,8 @@
                                     "mode": "absolute",
                                     "steps": [
                                         {
-                                            "color": "light-green"
+                                            "color": "light-green",
+                                            "value": null
                                         },
                                         {
                                             "color": "semi-dark-yellow",
@@ -2196,7 +2210,8 @@
                                     "mode": "absolute",
                                     "steps": [
                                         {
-                                            "color": "light-green"
+                                            "color": "light-green",
+                                            "value": null
                                         },
                                         {
                                             "color": "light-green",
@@ -2504,6 +2519,6 @@
     "timezone": "browser",
     "title": "Kubernetes Dashboard",
     "uid": "cdlpol5hdssg0c",
-    "version": 2,
+    "version": 1,
     "weekStart": ""
 }
