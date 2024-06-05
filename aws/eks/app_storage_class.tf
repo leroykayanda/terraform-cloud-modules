@@ -41,6 +41,11 @@ resource "helm_release" "aws_efs_csi_driver" {
     name  = "controller.serviceAccount.name"
     value = "efs-csi-controller-sa"
   }
+
+  set {
+    name  = "node.volMetricsOptIn"
+    value = "true"
+  }
 }
 
 #create service account
