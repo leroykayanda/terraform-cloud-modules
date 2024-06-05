@@ -42,6 +42,8 @@ resource "helm_release" "prometheus" {
         effect: "NoSchedule"
       nodeSelector:
         priority: "critical"
+      persistentVolume:
+        accessModes: ["${var.prometheus["pv_access_mode"]}"]
     EOF
   ]
 
@@ -155,6 +157,8 @@ resource "helm_release" "grafana" {
 
   values = [
     <<EOF
+persistence:
+  accessModes: ["${var.grafana["pv_access_mode"]}"]
 tolerations:
 - key: "priority"
   operator: "Equal"
