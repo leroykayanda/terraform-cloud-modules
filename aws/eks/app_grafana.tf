@@ -150,6 +150,11 @@ resource "helm_release" "grafana" {
     value = var.grafana_password
   }
 
+  set {
+    name  = "initChownData.enabled"
+    value = "false"
+  }
+
   values = [
     <<EOF
 persistence:
