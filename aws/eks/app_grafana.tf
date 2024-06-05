@@ -208,13 +208,6 @@ alerting:
               type: slack
               settings:
                 url: "${var.slack_incoming_webhook_url}"
-  rules.yaml:
-    apiVersion: 1
-    groups:
-      - orgId: 1
-        name: evaluation_group
-        folder: "${var.env}-env"
-        interval: 5m
   policies.yaml:
     policies:
       - orgId: 1

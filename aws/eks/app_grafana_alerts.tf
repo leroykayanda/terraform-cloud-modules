@@ -1,11 +1,16 @@
+resource "grafana_folder" "rule_folder" {
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
+  title = var.env
+}
+
 resource "grafana_rule_group" "node_memory" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "node_memory"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -63,13 +68,13 @@ resource "grafana_rule_group" "node_memory" {
 }
 
 resource "grafana_rule_group" "node_cpu" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "node_cpu"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -125,13 +130,13 @@ resource "grafana_rule_group" "node_cpu" {
 }
 
 resource "grafana_rule_group" "node_disk" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "node_disk"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -187,13 +192,13 @@ resource "grafana_rule_group" "node_disk" {
 }
 
 resource "grafana_rule_group" "node_condition" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "node_condition"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -250,13 +255,13 @@ resource "grafana_rule_group" "node_condition" {
 }
 
 resource "grafana_rule_group" "container_mem_limit_use" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "container_mem_limit_use"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -312,13 +317,13 @@ resource "grafana_rule_group" "container_mem_limit_use" {
 }
 
 resource "grafana_rule_group" "container_cpu_limit_use" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "container_cpu_limit_use"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -374,13 +379,13 @@ resource "grafana_rule_group" "container_cpu_limit_use" {
 }
 
 resource "grafana_rule_group" "container_oom" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "container_oom"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -436,13 +441,13 @@ resource "grafana_rule_group" "container_oom" {
 }
 
 resource "grafana_rule_group" "container_restarts" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "container_restarts"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
@@ -501,13 +506,13 @@ resource "grafana_rule_group" "container_restarts" {
 
 
 resource "grafana_rule_group" "pv_almost_full" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "pv_almost_full"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 300
 
   rule {
@@ -563,13 +568,13 @@ resource "grafana_rule_group" "pv_almost_full" {
 }
 
 resource "grafana_rule_group" "pod_not_ready" {
-  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
+  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
   org_id           = 1
   name             = "pod_not_ready"
-  folder_uid       = "edlxveq50veo0c"
+  folder_uid       = grafana_folder.rule_folder.uid
   interval_seconds = 60
 
   rule {
