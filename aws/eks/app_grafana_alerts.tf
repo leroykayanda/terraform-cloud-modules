@@ -10,7 +10,7 @@ resource "grafana_rule_group" "node_memory" {
   ]
   org_id           = 1
   name             = "node_memory"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -74,7 +74,7 @@ resource "grafana_rule_group" "node_cpu" {
   ]
   org_id           = 1
   name             = "node_cpu"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -136,7 +136,7 @@ resource "grafana_rule_group" "node_disk" {
   ]
   org_id           = 1
   name             = "node_disk"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -198,7 +198,7 @@ resource "grafana_rule_group" "node_condition" {
   ]
   org_id           = 1
   name             = "node_condition"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -261,7 +261,7 @@ resource "grafana_rule_group" "container_mem_limit_use" {
   ]
   org_id           = 1
   name             = "container_mem_limit_use"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -323,7 +323,7 @@ resource "grafana_rule_group" "container_cpu_limit_use" {
   ]
   org_id           = 1
   name             = "container_cpu_limit_use"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -385,7 +385,7 @@ resource "grafana_rule_group" "container_oom" {
   ]
   org_id           = 1
   name             = "container_oom"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -447,7 +447,7 @@ resource "grafana_rule_group" "container_restarts" {
   ]
   org_id           = 1
   name             = "container_restarts"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
@@ -512,7 +512,7 @@ resource "grafana_rule_group" "pv_almost_full" {
   ]
   org_id           = 1
   name             = "pv_almost_full"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 300
 
   rule {
@@ -574,7 +574,7 @@ resource "grafana_rule_group" "pod_not_ready" {
   ]
   org_id           = 1
   name             = "pod_not_ready"
-  folder_uid       = grafana_folder.rule_folder.uid
+  folder_uid       = grafana_folder.rule_folder[0].uid
   interval_seconds = 60
 
   rule {
