@@ -33,11 +33,6 @@ resource "helm_release" "elastic" {
   }
 
   set {
-    name  = "volumeClaimTemplate.accessModes"
-    value = "[${var.elastic["pv_access_mode"]}]"
-  }
-
-  set {
     name  = "createCert"
     value = "true"
   }
@@ -57,6 +52,8 @@ resource "helm_release" "elastic" {
     esConfig: 
       elasticsearch.yml: |
         xpack.security.enabled: true
+    volumeClaimTemplate:
+      accessModes: ["${var.elastic["pv_access_mode"]}"]
     resources: 
       requests:
         cpu: "500m"
