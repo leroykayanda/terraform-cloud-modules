@@ -1,5 +1,5 @@
 resource "grafana_rule_group" "node_memory" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -63,7 +63,7 @@ resource "grafana_rule_group" "node_memory" {
 }
 
 resource "grafana_rule_group" "node_cpu" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -125,7 +125,7 @@ resource "grafana_rule_group" "node_cpu" {
 }
 
 resource "grafana_rule_group" "node_disk" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -187,7 +187,7 @@ resource "grafana_rule_group" "node_disk" {
 }
 
 resource "grafana_rule_group" "node_condition" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -250,7 +250,7 @@ resource "grafana_rule_group" "node_condition" {
 }
 
 resource "grafana_rule_group" "container_mem_limit_use" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -312,7 +312,7 @@ resource "grafana_rule_group" "container_mem_limit_use" {
 }
 
 resource "grafana_rule_group" "container_cpu_limit_use" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -374,7 +374,7 @@ resource "grafana_rule_group" "container_cpu_limit_use" {
 }
 
 resource "grafana_rule_group" "container_oom" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -436,7 +436,7 @@ resource "grafana_rule_group" "container_oom" {
 }
 
 resource "grafana_rule_group" "container_restarts" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -501,7 +501,7 @@ resource "grafana_rule_group" "container_restarts" {
 
 
 resource "grafana_rule_group" "pv_almost_full" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
@@ -563,7 +563,7 @@ resource "grafana_rule_group" "pv_almost_full" {
 }
 
 resource "grafana_rule_group" "pod_not_ready" {
-  count = var.cluster_created ? 1 : 0
+  count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]
