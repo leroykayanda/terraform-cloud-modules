@@ -34,7 +34,7 @@ resource "helm_release" "elastic" {
 
   set {
     name  = "volumeClaimTemplate.accessModes"
-    value = jsonencode(var.elastic["pv_access_mode"])
+    value = var.elastic["pv_access_mode"]
   }
 
   set {
