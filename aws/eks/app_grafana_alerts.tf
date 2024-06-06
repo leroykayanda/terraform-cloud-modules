@@ -590,7 +590,7 @@ resource "grafana_rule_group" "pod_not_ready" {
       }
 
       datasource_uid = "PBFA97CFB590B2093"
-      model          = "{\"editorMode\":\"code\",\"expr\":\"kube_pod_status_ready{condition=\\\"false\\\"}\",\"instant\":true,\"intervalMs\":1000,\"legendFormat\":\"__auto\",\"maxDataPoints\":43200,\"range\":false,\"refId\":\"A\"}"
+      model          = "{\"editorMode\":\"code\",\"expr\":\"kube_pod_status_ready{condition=\\\"false\\\", pod!~\\\"argo-cd-argocd-redis-secret-init-.*\\\"}\",\"instant\":true,\"intervalMs\":1000,\"legendFormat\":\"__auto\",\"maxDataPoints\":43200,\"range\":false,\"refId\":\"A\"}"
 
     }
     data {
