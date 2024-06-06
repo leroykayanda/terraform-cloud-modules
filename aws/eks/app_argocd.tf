@@ -12,7 +12,7 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   namespace  = "argocd"
-  version    = "6.11.1"
+  version    = "7.1.2"
 
   set {
     name  = "server.service.type"
@@ -207,6 +207,6 @@ resource "helm_release" "image_updater" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-image-updater"
   namespace  = "argocd"
-  version    = "0.10.0"
+  version    = "0.10.1"
   values     = var.argocd_image_updater_values
 }
