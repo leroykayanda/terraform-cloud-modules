@@ -506,7 +506,7 @@ resource "grafana_rule_group" "container_restarts" {
 
 
 resource "grafana_rule_group" "pv_almost_full" {
-  count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
+  count = var.cluster_created && var.create_pv_full_alert && var.metrics_type == "prometheus-grafana" ? 1 : 0
   depends_on = [
     helm_release.grafana
   ]

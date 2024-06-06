@@ -171,6 +171,10 @@ variable "grafana" {
   type = any
 }
 
+variable "create_pv_full_alert" {
+  default = false
+}
+
 variable "slack_incoming_webhook_url" {
   type = string
 }
