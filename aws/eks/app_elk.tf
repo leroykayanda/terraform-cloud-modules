@@ -60,7 +60,7 @@ resource "helm_release" "elastic" {
         memory: "1.5Gi"
       limits:
         cpu: "1000m"
-        memory: "2Gi"
+        memory: "2.5Gi"
     tolerations:
     - key: "priority"
       operator: "Equal"
