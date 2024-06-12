@@ -3,6 +3,7 @@ module "aks" {
   version                                           = "8.0.0"
   resource_group_name                               = var.resource_group_name
   cluster_name                                      = var.cluster_name
+  kubernetes_version                                = var.kubernetes_version
   prefix                                            = var.prefix
   vnet_subnet_id                                    = var.vnet_subnet_id
   rbac_aad                                          = var.rbac_aad
