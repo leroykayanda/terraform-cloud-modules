@@ -124,6 +124,10 @@ variable "letsencrypt_environment" {
   type = string
 }
 
+variable "node_pools" {
+  type = any
+}
+
 variable "elastic" {
   type = any
 }

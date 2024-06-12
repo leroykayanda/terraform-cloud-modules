@@ -38,6 +38,7 @@ module "aks" {
   temporary_name_for_rotation                       = "tempnodepool"
   oidc_issuer_enabled                               = true
   workload_identity_enabled                         = true
+  node_pools                                        = var.node_pools
 
   brown_field_application_gateway_for_ingress = {
     id        = azurerm_application_gateway.gateway.id
