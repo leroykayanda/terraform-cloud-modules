@@ -39,6 +39,7 @@ module "aks" {
   oidc_issuer_enabled                               = true
   workload_identity_enabled                         = true
   node_pools                                        = var.node_pools
+  storage_profile_enabled                           = true
 
   brown_field_application_gateway_for_ingress = {
     id        = azurerm_application_gateway.gateway.id
