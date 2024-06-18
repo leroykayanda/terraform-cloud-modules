@@ -125,82 +125,82 @@ resource "helm_release" "kibana" {
 
 }
 
-# # kibana dns name
+# kibana dns name
 
-# resource "azurerm_dns_a_record" "kibana" {
-#   count               = var.cluster_created ? 1 : 0
-#   name                = var.kibana["dns_name"]
-#   zone_name           = var.dns_zone
-#   resource_group_name = var.resource_group_name
-#   ttl                 = 300
-#   target_resource_id  = azurerm_public_ip.ip.id
-# }
+resource "azurerm_dns_a_record" "kibana" {
+  count               = var.cluster_created ? 1 : 0
+  name                = var.kibana["dns_name"]
+  zone_name           = var.dns_zone
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  target_resource_id  = azurerm_public_ip.ip.id
+}
 
-# # kibana tls secret
+# kibana tls secret
 
-# resource "kubernetes_secret" "kibana" {
-#   count = var.cluster_created ? 1 : 0
-#   metadata {
-#     name      = "tls-cert"
-#     namespace = "elk"
-#   }
+resource "kubernetes_secret" "kibana" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "tls-cert"
+    namespace = "elk"
+  }
 
-#   type = "kubernetes.io/tls"
+  type = "kubernetes.io/tls"
 
-#   data = {
-#     "tls.key" = ""
-#     "tls.crt" = ""
-#   }
+  data = {
+    "tls.key" = ""
+    "tls.crt" = ""
+  }
 
-#   lifecycle {
-#     ignore_changes = [metadata]
-#   }
-# }
+  lifecycle {
+    ignore_changes = [metadata]
+  }
+}
 
-# # kibana ingress
+# kibana ingress
 
-# resource "kubernetes_ingress_v1" "kibana" {
-#   count = var.cluster_created ? 1 : 0
-#   metadata {
-#     name      = "kibana"
-#     namespace = "elk"
-#     annotations = {
-#       "kubernetes.io/ingress.class"                                  = "azure/application-gateway"
-#       "appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold" = "2"
-#       "appgw.ingress.kubernetes.io/request-timeout"                  = "60"
-#       "appgw.ingress.kubernetes.io/ssl-redirect"                     = "true"
-#       "cert-manager.io/cluster-issuer"                               = "letsencrypt-issuer"
-#       "appgw.ingress.kubernetes.io/backend-protocol"                 = "HTTP"
-#     }
-#   }
+resource "kubernetes_ingress_v1" "kibana" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "kibana"
+    namespace = "elk"
+    annotations = {
+      "kubernetes.io/ingress.class"                                  = "azure/application-gateway"
+      "appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold" = "2"
+      "appgw.ingress.kubernetes.io/request-timeout"                  = "60"
+      "appgw.ingress.kubernetes.io/ssl-redirect"                     = "true"
+      "cert-manager.io/cluster-issuer"                               = "letsencrypt-issuer"
+      "appgw.ingress.kubernetes.io/backend-protocol"                 = "HTTP"
+    }
+  }
 
-#   spec {
-#     tls {
-#       hosts       = ["${var.kibana["dns_name"]}.${var.dns_zone}"]
-#       secret_name = "tls-cert"
-#     }
+  spec {
+    tls {
+      hosts       = ["${var.kibana["dns_name"]}.${var.dns_zone}"]
+      secret_name = "tls-cert"
+    }
 
-#     rule {
-#       host = "${var.kibana["dns_name"]}.${var.dns_zone}"
+    rule {
+      host = "${var.kibana["dns_name"]}.${var.dns_zone}"
 
-#       http {
-#         path {
-#           path = "/"
+      http {
+        path {
+          path = "/"
 
-#           backend {
-#             service {
-#               name = "kibana-kibana"
-#               port {
-#                 number = 5601
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
+          backend {
+            service {
+              name = "kibana-kibana"
+              port {
+                number = 5601
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-# }
+}
 
 # # logstash helm chart
 
