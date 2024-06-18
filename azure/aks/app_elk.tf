@@ -80,43 +80,50 @@ resource "helm_release" "elastic" {
 
 }
 
-# # kibana helm chart
+# kibana helm chart
 
-# resource "helm_release" "kibana" {
-#   count      = var.cluster_created ? 1 : 0
-#   name       = "kibana"
-#   chart      = "kibana"
-#   version    = "8.5.1"
-#   repository = "https://helm.elastic.co"
-#   namespace  = "elk"
+resource "helm_release" "kibana" {
+  count      = var.cluster_created ? 1 : 0
+  name       = "kibana"
+  chart      = "kibana"
+  version    = "8.5.1"
+  repository = "https://helm.elastic.co"
+  namespace  = "elk"
 
-#   set {
-#     name  = "elasticsearchHosts"
-#     value = "https://elasticsearch-master.elk:9200"
-#   }
+  set {
+    name  = "elasticsearchHosts"
+    value = "https://elasticsearch-master.elk:9200"
+  }
 
-#   set {
-#     name  = "automountToken"
-#     value = false
-#   }
+  set {
+    name  = "automountToken"
+    value = false
+  }
 
-#   values = [
-#     <<EOF
-#     resources: 
-#       requests:
-#         cpu: "500m"
-#         memory: "1Gi"
-#       limits:
-#         cpu: "1000m"
-#         memory: "2Gi"
-#     EOF
-#   ]
+  values = [
+    <<EOF
+    resources: 
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
+    nodeSelector:
+      priority: "critical"
+    EOF
+  ]
 
-#   depends_on = [
-#     helm_release.elastic
-#   ]
+  depends_on = [
+    helm_release.elastic
+  ]
 
-# }
+}
 
 # # kibana dns name
 
