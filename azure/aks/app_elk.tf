@@ -27,10 +27,10 @@ resource "helm_release" "elastic" {
     value = var.elastic["minimumMasterNodes"]
   }
 
-  set {
-    name  = "volumeClaimTemplate.storageClassName"
-    value = "elasticsearch"
-  }
+  #   set {
+  #     name  = "volumeClaimTemplate.storageClassName"
+  #     value = "elasticsearch"
+  #   }
 
   set {
     name  = "volumeClaimTemplate.resources.requests.storage"
