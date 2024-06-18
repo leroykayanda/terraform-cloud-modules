@@ -7,67 +7,79 @@ resource "kubernetes_namespace" "elk" {
   }
 }
 
-# # elasticsearch
+# elasticsearch
 
-# resource "helm_release" "elastic" {
-#   count      = var.cluster_created ? 1 : 0
-#   name       = "elasticsearch"
-#   chart      = "elasticsearch"
-#   version    = "8.5.1"
-#   repository = "https://helm.elastic.co"
-#   namespace  = "elk"
+resource "helm_release" "elastic" {
+  count      = var.cluster_created ? 1 : 0
+  name       = "elasticsearch"
+  chart      = "elasticsearch"
+  version    = "8.5.1"
+  repository = "https://helm.elastic.co"
+  namespace  = "elk"
 
-#   set {
-#     name  = "replicas"
-#     value = var.elastic["replicas"]
-#   }
+  set {
+    name  = "replicas"
+    value = var.elastic["replicas"]
+  }
 
-#   set {
-#     name  = "minimumMasterNodes"
-#     value = var.elastic["minimumMasterNodes"]
-#   }
+  set {
+    name  = "minimumMasterNodes"
+    value = var.elastic["minimumMasterNodes"]
+  }
 
-#   set {
-#     name  = "volumeClaimTemplate.resources.requests.storage"
-#     value = var.elastic["pv_storage"]
-#   }
+  set {
+    name  = "volumeClaimTemplate.storageClassName"
+    value = "elasticsearch"
+  }
 
-#   set {
-#     name  = "createCert"
-#     value = "true"
-#   }
+  set {
+    name  = "volumeClaimTemplate.resources.requests.storage"
+    value = var.elastic["pv_storage"]
+  }
 
-#   set {
-#     name  = "protocol"
-#     value = "https"
-#   }
+  set {
+    name  = "createCert"
+    value = "true"
+  }
 
-#   set {
-#     name  = "secret.password"
-#     value = var.elastic_password
-#   }
+  set {
+    name  = "protocol"
+    value = "https"
+  }
 
-#   values = [
-#     <<EOF
-#     esConfig: 
-#       elasticsearch.yml: |
-#         xpack.security.enabled: true
-#     resources: 
-#       requests:
-#         cpu: "500m"
-#         memory: "1Gi"
-#       limits:
-#         cpu: "1000m"
-#         memory: "2Gi"
-#     EOF
-#   ]
+  set {
+    name  = "secret.password"
+    value = var.elastic_password
+  }
 
-#   depends_on = [
-#     kubernetes_namespace.elk,
-#     kubectl_manifest.elasticsearch_storage_class
-#   ]
+  values = [
+    <<EOF
+    esConfig: 
+      elasticsearch.yml: |
+        xpack.security.enabled: true
+    resources: 
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
+    nodeSelector:
+      priority: "critical"
+    EOF
+  ]
 
-# }
+  depends_on = [
+    kubernetes_namespace.elk,
+    kubectl_manifest.storage_class
+  ]
+
+}
 
 # # kibana helm chart
 
