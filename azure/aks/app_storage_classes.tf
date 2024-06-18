@@ -1,6 +1,5 @@
 resource "kubectl_manifest" "storage_class" {
-  count    = var.cluster_created ? 1 : 0
-  for_each = local.storage_classes
+  for_each = var.cluster_created ? local.storage_classes : {}
 
   yaml_body = <<YAML
 apiVersion: storage.k8s.io/v1
