@@ -272,45 +272,45 @@ resource "helm_release" "logstash" {
 }
 
 
-# # filebeat helm chart
+# filebeat helm chart
 
-# resource "helm_release" "filebeat" {
-#   count      = var.cluster_created ? 1 : 0
-#   name       = "filebeat"
-#   chart      = "filebeat"
-#   version    = "8.5.1"
-#   repository = "https://helm.elastic.co"
-#   namespace  = "elk"
+resource "helm_release" "filebeat" {
+  count      = var.cluster_created ? 1 : 0
+  name       = "filebeat"
+  chart      = "filebeat"
+  version    = "8.5.1"
+  repository = "https://helm.elastic.co"
+  namespace  = "elk"
 
-#   values = [
-#     <<EOF
-#     filebeatConfig:
-#         filebeat.yml: |
-#             filebeat.inputs:
-#             - type: container
-#               paths:
-#                 - /var/log/containers/*.log
-#               processors:
-#               - add_kubernetes_metadata:
-#                     host: $${NODE_NAME}
-#                     matchers:
-#                     - logs_path:
-#                         logs_path: "/var/log/containers/"
+  values = [
+    <<EOF
+    filebeatConfig:
+        filebeat.yml: |
+            filebeat.inputs:
+            - type: container
+              paths:
+                - /var/log/containers/*.log
+              processors:
+              - add_kubernetes_metadata:
+                    host: $${NODE_NAME}
+                    matchers:
+                    - logs_path:
+                        logs_path: "/var/log/containers/"
 
-#             output.logstash:
-#                 hosts: ["logstash-logstash.elk:5044"]
-#     resources: 
-#       requests:
-#         cpu: "100m"
-#         memory: "100Mi"
-#       limits:
-#         cpu: "1024m"
-#         memory: "1000Mi"
-#     EOF
-#   ]
+            output.logstash:
+                hosts: ["logstash-logstash.elk:5044"]
+    resources: 
+      requests:
+        cpu: "100m"
+        memory: "100Mi"
+      limits:
+        cpu: "1024m"
+        memory: "1000Mi"
+    EOF
+  ]
 
-#   depends_on = [
-#     helm_release.logstash
-#   ]
+  depends_on = [
+    helm_release.logstash
+  ]
 
-# }
+}
