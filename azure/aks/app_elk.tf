@@ -1,11 +1,11 @@
-# # elk namespace
+# elk namespace
 
-# resource "kubernetes_namespace" "elk" {
-#   count = var.cluster_created ? 1 : 0
-#   metadata {
-#     name = "elk"
-#   }
-# }
+resource "kubernetes_namespace" "elk" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name = "elk"
+  }
+}
 
 # # elasticsearch
 
@@ -63,7 +63,8 @@
 #   ]
 
 #   depends_on = [
-#     kubernetes_namespace.elk
+#     kubernetes_namespace.elk,
+#     kubectl_manifest.elasticsearch_storage_class
 #   ]
 
 # }
