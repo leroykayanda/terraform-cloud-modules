@@ -75,8 +75,7 @@ resource "helm_release" "elastic" {
   ]
 
   depends_on = [
-    kubernetes_namespace.elk,
-    kubectl_manifest.storage_class
+    kubernetes_namespace.elk
   ]
 
 }
