@@ -17,32 +17,24 @@ resource "helm_release" "cert-manager" {
 
 # set up ClusterIssuer. This is a resource that represents a certificate authority (CA) able to sign certificates in response to certificate signing requests.
 
-resource "kubernetes_manifest" "letsencrypt_issuer" {
+resource "kubectl_manifest" "letsencrypt_issuer" {
   count = var.cluster_created ? 1 : 0
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "letsencrypt-issuer"
-    }
-    spec = {
-      acme = {
-        email  = var.letsencrypt_email
-        server = var.letsencrypt_environment
-        privateKeySecretRef = {
-          name = "letsencrypt-issuer"
-        }
-        solvers = [
-          {
-            http01 = {
-              ingress = {
-                class = "azure/application-gateway"
-              }
-            }
-          }
-        ]
-      }
-    }
-  }
+
+  yaml_body = <<YAML
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+spec:
+  acme:
+    email: ${var.letsencrypt_email}
+    server: ${var.letsencrypt_environment}
+    privateKeySecretRef:
+      name: letsencrypt-issuer
+    solvers:
+      - http01:
+          ingress:
+            class: azure/application-gateway
+YAML
 }
 
