@@ -173,3 +173,11 @@ variable "argo_slack_token" {
 
 variable "argocd_image_updater_values" {
 }
+
+variable "metrics_type" {
+  default = "prometheus-grafana"
+}
+
+variable "create_pv_full_alert" {
+  default = true
+}
