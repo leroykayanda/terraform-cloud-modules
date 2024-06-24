@@ -213,79 +213,79 @@ EOF
 
 }
 
-# # grafana dns name
+# grafana dns name
 
-# resource "azurerm_dns_a_record" "grafana" {
-#   count               = var.cluster_created ? 1 : 0
-#   name                = var.grafana["dns_name"]
-#   zone_name           = var.dns_zone
-#   resource_group_name = var.resource_group_name
-#   ttl                 = 300
-#   target_resource_id  = azurerm_public_ip.ip.id
-# }
+resource "azurerm_dns_a_record" "grafana" {
+  count               = var.cluster_created ? 1 : 0
+  name                = var.grafana["dns_name"]
+  zone_name           = var.dns_zone
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  target_resource_id  = azurerm_public_ip.ip.id
+}
 
-# # grafana tls secret
+# grafana tls secret
 
-# resource "kubernetes_secret" "grafana" {
-#   count = var.cluster_created ? 1 : 0
-#   metadata {
-#     name      = "grafana-tls-cert"
-#     namespace = "grafana"
-#   }
+resource "kubernetes_secret" "grafana" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "grafana-tls-cert"
+    namespace = "grafana"
+  }
 
-#   type = "kubernetes.io/tls"
+  type = "kubernetes.io/tls"
 
-#   data = {
-#     "tls.key" = ""
-#     "tls.crt" = ""
-#   }
+  data = {
+    "tls.key" = ""
+    "tls.crt" = ""
+  }
 
-#   lifecycle {
-#     ignore_changes = [metadata]
-#   }
-# }
+  lifecycle {
+    ignore_changes = [metadata]
+  }
+}
 
-# # grafana ingress
+# grafana ingress
 
-# resource "kubernetes_ingress_v1" "grafana" {
-#   count = var.cluster_created ? 1 : 0
-#   metadata {
-#     name      = "grafana"
-#     namespace = "grafana"
-#     annotations = {
-#       "kubernetes.io/ingress.class"                                  = "azure/application-gateway"
-#       "appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold" = "2"
-#       "appgw.ingress.kubernetes.io/request-timeout"                  = "60"
-#       "appgw.ingress.kubernetes.io/ssl-redirect"                     = "true"
-#       "cert-manager.io/cluster-issuer"                               = "letsencrypt-issuer"
-#       "appgw.ingress.kubernetes.io/backend-protocol"                 = "HTTP"
-#     }
-#   }
+resource "kubernetes_ingress_v1" "grafana" {
+  count = var.cluster_created ? 1 : 0
+  metadata {
+    name      = "grafana"
+    namespace = "grafana"
+    annotations = {
+      "kubernetes.io/ingress.class"                                  = "azure/application-gateway"
+      "appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold" = "2"
+      "appgw.ingress.kubernetes.io/request-timeout"                  = "60"
+      "appgw.ingress.kubernetes.io/ssl-redirect"                     = "true"
+      "cert-manager.io/cluster-issuer"                               = "letsencrypt-issuer"
+      "appgw.ingress.kubernetes.io/backend-protocol"                 = "HTTP"
+    }
+  }
 
-#   spec {
-#     tls {
-#       hosts       = ["${var.grafana["dns_name"]}.${var.dns_zone}"]
-#       secret_name = "grafana-tls-cert"
-#     }
+  spec {
+    tls {
+      hosts       = ["${var.grafana["dns_name"]}.${var.dns_zone}"]
+      secret_name = "grafana-tls-cert"
+    }
 
-#     rule {
-#       host = "${var.grafana["dns_name"]}.${var.dns_zone}"
+    rule {
+      host = "${var.grafana["dns_name"]}.${var.dns_zone}"
 
-#       http {
-#         path {
-#           path = "/"
+      http {
+        path {
+          path = "/"
 
-#           backend {
-#             service {
-#               name = "grafana"
-#               port {
-#                 number = 80
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
+          backend {
+            service {
+              name = "grafana"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-# }
+}
