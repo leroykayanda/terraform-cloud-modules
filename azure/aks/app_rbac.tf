@@ -23,6 +23,12 @@ resource "azurerm_role_assignment" "key_vault" {
   principal_id         = azuread_group.admins.object_id
 }
 
+resource "azurerm_role_assignment" "terraform_sp_key_vault" {
+  scope                = data.azurerm_subscription.sub.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 # add super-user access to admin group
 
 # resource "azurerm_role_assignment" "aks_cluster_admin_assignment" {
