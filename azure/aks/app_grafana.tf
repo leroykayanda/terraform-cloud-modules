@@ -46,6 +46,17 @@ resource "helm_release" "prometheus" {
 
 }
 
+# prometheus dns name
+
+resource "azurerm_dns_a_record" "prometheus" {
+  count               = var.cluster_created ? 1 : 0
+  name                = var.prometheus["dns_name"]
+  zone_name           = var.dns_zone
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  target_resource_id  = azurerm_public_ip.ip.id
+}
+
 # # grafana helm chart
 
 # resource "helm_release" "grafana" {
