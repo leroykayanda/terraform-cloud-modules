@@ -145,7 +145,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
           "height" : 6,
           "properties" : {
             "metrics" : [
-              [{ "expression" : "SEARCH('{AWS/Kafka, \"Cluster Name\", \"Broker ID\"} MetricName=\"MemoryUsed\" \"Cluster Name\"=\"${var.env}-${var.service}\"', 'Average')/${var.kafka_settings["broker_memory_in_gb"]}*1073741824*100", "label" : "MemoryUsed", "id" : "e1", "period" : 60 }]
+              [{ "expression" : "(SEARCH('{AWS/Kafka, \"Cluster Name\", \"Broker ID\"} MetricName=\"MemoryUsed\" \"Cluster Name\"=\"${var.env}-${var.service}\"', 'Average')/(${var.kafka_settings["broker_memory_in_gb"]}*1073741824))*100", "label" : "MemoryUsed", "id" : "e1", "period" : 60 }]
             ],
             "view" : "timeSeries",
             "stacked" : false,
