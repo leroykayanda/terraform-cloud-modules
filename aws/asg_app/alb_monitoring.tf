@@ -106,7 +106,8 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "metrics" : [
               ["AWS/AutoScaling", "GroupPendingInstances", "AutoScalingGroupName", aws_autoscaling_group.asg.name]
             ],
-            "region" : var.region
+            "region" : var.region,
+            "stat" : "Maximum",
           }
         },
         {
@@ -123,6 +124,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             ],
             "region" : var.region,
             "period" : 60,
+            "stat" : "Maximum",
           }
         },
         {
@@ -139,6 +141,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             ],
             "region" : var.region,
             "period" : 60,
+            "stat" : "Minimum",
           }
         },
         {
