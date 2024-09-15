@@ -68,7 +68,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "view" : "timeSeries",
             "stacked" : true,
             "region" : var.region,
-            "stat" : "Average",
+            "stat" : "Minimum",
             "period" : 60
           }
         },
