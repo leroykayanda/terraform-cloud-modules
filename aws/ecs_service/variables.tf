@@ -209,6 +209,16 @@ variable "create_elb" {
   description = "Whether to create an ELB or not"
 }
 
+variable "existing_elb_settings" {
+  type        = map(any)
+  description = "Use a pre-existing ELB"
+  default = {
+    use_existing_elb = false
+    target_group_arn = ""
+    container_port   = null
+  }
+}
+
 variable "elb_settings" {
   type = map(any)
   default = {
@@ -216,7 +226,7 @@ variable "elb_settings" {
     "idle_timeout"                  = 60
     "load_balancer_type"            = "application"
     "access_logs_expiry"            = 180
-    "target_group_port"             = 80
+    "container_port"                = 80
     "target_group_protocol"         = "HTTP"
     "target_group_protocol_version" = "HTTP2"
     "health_check_path"             = "/"

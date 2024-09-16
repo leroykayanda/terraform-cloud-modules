@@ -167,7 +167,16 @@ resource "aws_ecs_service" "ecs_service" {
     content {
       target_group_arn = aws_lb_target_group.target_group[0].arn
       container_name   = var.container_name
-      container_port   = var.elb_settings["target_group_port"]
+      container_port   = var.elb_settings["container_port"]
+    }
+  }
+
+  dynamic "load_balancer" {
+    for_each = var.existing_elb_settings["use_existing_elb"] ? [1] : []
+    content {
+      target_group_arn = var.existing_elb_settings["target_group_arn"]
+      container_name   = var.container_name
+      container_port   = var.existing_elb_settings["container_port"]
     }
   }
 
