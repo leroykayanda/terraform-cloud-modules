@@ -224,6 +224,28 @@ resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "no_healthy_hosts" {
+  alarm_name          = "${var.env}-${var.service}-ELB-No-Healthy-Hosts"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "HealthyHostCount"
+  namespace           = "AWS/ApplicationELB"
+  period              = "60"
+  statistic           = "Minimum"
+  threshold           = 0
+  alarm_description   = "This alarm monitors for when there an no healthy ELB hosts"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "breaching"
+  tags                = var.tags
+
+  dimensions = {
+    TargetGroup  = aws_lb_target_group.target_group.arn_suffix
+    LoadBalancer = module.alb.arn_suffix
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "asg_memory" {
   alarm_name          = "${var.env}-${var.service}-ASG-Memory"
   comparison_operator = "GreaterThanOrEqualToThreshold"
