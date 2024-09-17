@@ -168,7 +168,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
 
 # Unacknowledged messages
 resource "aws_cloudwatch_metric_alarm" "unacknowledged_messages" {
-  alarm_name          = "${var.env}-${var.service}-AmazonMQ-high-no-of-unacknowledged_messages"
+  alarm_name          = "${var.env}-${var.service}-AmazonMQ-high-no-of-unacknowledged-messages"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "MessageUnacknowledgedCount"
@@ -176,6 +176,28 @@ resource "aws_cloudwatch_metric_alarm" "unacknowledged_messages" {
   period              = "300"
   statistic           = "Average"
   threshold           = "5"
+  alarm_description   = "This alarm monitors for when consumers are not acknowledging messages"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "breaching"
+  tags                = var.tags
+
+  dimensions = {
+    Broker = aws_mq_broker.mq.broker_name
+  }
+}
+
+# Ready messages
+resource "aws_cloudwatch_metric_alarm" "ready_messages" {
+  alarm_name          = "${var.env}-${var.service}-AmazonMQ-high-no-of-unprocessed-messages"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "MessageReadyCount"
+  namespace           = "AWS/AmazonMQ"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "100"
   alarm_description   = "This alarm monitors for when messages are not being consumed from the queue"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
