@@ -25,12 +25,13 @@ variable "subnet_ids" {
 variable "mq_settings" {
   type = map(any)
   default = {
-    engine_type         = "RabbitMQ"
-    engine_version      = "3.13"
-    host_instance_type  = "mq.t3.micro"
-    deployment_mode     = "SINGLE_INSTANCE"
-    publicly_accessible = true
-    storage_type        = "ebs"
+    engine_type                    = "RabbitMQ"
+    engine_version                 = "3.13"
+    host_instance_type             = "mq.t3.micro"
+    deployment_mode                = "SINGLE_INSTANCE"
+    publicly_accessible            = true
+    storage_type                   = "ebs"
+    ready_messages_alarm_threshold = 100
   }
 }
 

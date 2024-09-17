@@ -197,7 +197,7 @@ resource "aws_cloudwatch_metric_alarm" "ready_messages" {
   namespace           = "AWS/AmazonMQ"
   period              = "300"
   statistic           = "Average"
-  threshold           = "100"
+  threshold           = var.mq_settings["ready_messages_alarm_threshold"]
   alarm_description   = "This alarm monitors for when messages are not being consumed from the queue"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
