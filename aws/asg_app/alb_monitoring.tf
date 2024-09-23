@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_dashboard" "dash" {
-  dashboard_name = "${var.env}-${var.service}-AutoScalingGroup-App"
+  dashboard_name = "${var.env}-${var.service}-ASG-App"
   dashboard_body = jsonencode(
     {
       "widgets" : [
