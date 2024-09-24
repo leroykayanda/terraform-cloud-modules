@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_dashboard" "dash" {
-  dashboard_name = "${var.env}-${var.service}-AutoScalingGroup-App"
+  dashboard_name = "${var.env}-${var.service}-ASG-App"
   dashboard_body = jsonencode(
     {
       "widgets" : [
@@ -168,33 +168,41 @@ resource "aws_cloudwatch_dashboard" "dash" {
           }
         },
         {
-          "type" : "metric",
-          "x" : 6,
-          "y" : 12,
-          "width" : 6,
           "height" : 6,
+          "width" : 6,
+          "y" : 12,
+          "x" : 6,
+          "type" : "metric",
           "properties" : {
-            "view" : "timeSeries",
-            "stacked" : true,
             "metrics" : [
-              ["AWS/EC2", "NetworkIn", "AutoScalingGroupName", aws_autoscaling_group.asg.name]
+              [{ "expression" : "(( m1/60)*8)/1000000", "label" : "NetworkIn", "id" : "e1", "region" : var.region }],
+              ["AWS/EC2", "NetworkIn", "AutoScalingGroupName", aws_autoscaling_group.asg.name, { "region" : var.region, "id" : "m1", "visible" : false }]
             ],
-            "region" : var.region
+            "region" : var.region,
+            "stacked" : true,
+            "view" : "timeSeries",
+            "period" : 300,
+            "stat" : "Average",
+            "title" : "NetworkIn (Mbps)"
           }
         },
         {
-          "type" : "metric",
-          "x" : 12,
-          "y" : 12,
-          "width" : 6,
           "height" : 6,
+          "width" : 6,
+          "y" : 12,
+          "x" : 12,
+          "type" : "metric",
           "properties" : {
-            "view" : "timeSeries",
-            "stacked" : true,
             "metrics" : [
-              ["AWS/EC2", "NetworkOut", "AutoScalingGroupName", aws_autoscaling_group.asg.name]
+              [{ "expression" : "(( m1/60)*8)/1000000", "label" : "NetworkOut", "id" : "e1" }],
+              ["AWS/EC2", "NetworkOut", "AutoScalingGroupName", aws_autoscaling_group.asg.name, { "region" : var.region, "visible" : false, "id" : "m1" }]
             ],
-            "region" : var.region
+            "region" : var.region,
+            "stacked" : true,
+            "view" : "timeSeries",
+            "period" : 300,
+            "stat" : "Average",
+            "title" : "NetworkOut (Mbps)"
           }
         }
       ]
@@ -212,6 +220,28 @@ resource "aws_cloudwatch_metric_alarm" "unhealthy_hosts" {
   statistic           = "Maximum"
   threshold           = 1
   alarm_description   = "This alarm monitors for ELB unhealthy hosts"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "breaching"
+  tags                = var.tags
+
+  dimensions = {
+    TargetGroup  = aws_lb_target_group.target_group.arn_suffix
+    LoadBalancer = module.alb.arn_suffix
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "no_healthy_hosts" {
+  alarm_name          = "${var.env}-${var.service}-ELB-No-Healthy-Hosts"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "HealthyHostCount"
+  namespace           = "AWS/ApplicationELB"
+  period              = "60"
+  statistic           = "Minimum"
+  threshold           = 0
+  alarm_description   = "This alarm monitors for when there an no healthy ELB hosts"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
