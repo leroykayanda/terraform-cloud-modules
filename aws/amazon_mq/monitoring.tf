@@ -160,6 +160,31 @@ resource "aws_cloudwatch_dashboard" "dash" {
               ]
             }
           }
+        },
+        {
+          "type" : "metric",
+          "x" : 0,
+          "y" : 12,
+          "width" : 6,
+          "height" : 6,
+          "properties" : {
+            "view" : "timeSeries",
+            "stacked" : false,
+            "region" : var.region,
+            "metrics" : [
+              ["AWS/AmazonMQ", "RabbitMQDiskFree", "Broker", aws_mq_broker.mq.broker_name, { "region" : var.region }]
+            ],
+            "title" : "RabbitMQDiskFree",
+            "period" : 300,
+            "annotations" : {
+              "horizontal" : [
+                {
+                  "label" : "disk_left",
+                  "value" : 10000000000
+                }
+              ]
+            }
+          }
         }
       ]
     }
@@ -284,4 +309,24 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
   }
 }
 
+# Disk Free
+resource "aws_cloudwatch_metric_alarm" "disk" {
+  alarm_name          = "${var.env}-${var.service}-AmazonMQ-Low-Disk-Free-Space"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "RabbitMQDiskFree"
+  namespace           = "AWS/AmazonMQ"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "10000000000"
+  alarm_description   = "This alarm monitors for low free disk space"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "breaching"
+  tags                = var.tags
 
+  dimensions = {
+    Broker = aws_mq_broker.mq.broker_name
+  }
+}
