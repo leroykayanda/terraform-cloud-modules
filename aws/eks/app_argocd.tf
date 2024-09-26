@@ -5,7 +5,7 @@ resource "kubernetes_namespace" "ns" {
   }
 }
 
-#argo helm chart
+# Argo helm chart
 resource "helm_release" "argocd" {
   count      = var.cluster_created ? 1 : 0
   name       = "argo-cd"
@@ -43,13 +43,7 @@ EOT
   ]
 }
 
-#ingress dns name
-
-data "aws_lb" "ingress" {
-  count      = var.cluster_created ? 1 : 0
-  name       = "${var.env}-eks-cluster"
-  depends_on = [kubernetes_ingress_v1.ingress]
-}
+# Ingress dns name
 
 resource "aws_route53_record" "ingress-elb" {
   count   = var.cluster_created ? 1 : 0
@@ -64,7 +58,7 @@ resource "aws_route53_record" "ingress-elb" {
   }
 }
 
-#ingress
+# Ingress
 
 #kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
 resource "kubernetes_ingress_v1" "ingress" {
@@ -72,19 +66,12 @@ resource "kubernetes_ingress_v1" "ingress" {
   metadata {
     name      = "argocd"
     namespace = "argocd"
-    annotations = {
-      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTPS"
-      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
-      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
-      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
-      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
-      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
-      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
-      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
-      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
-      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
-      "alb.ingress.kubernetes.io/group.name"               = var.env
-    }
+    annotations = merge(
+      local.ingress_annotations,
+      {
+        "alb.ingress.kubernetes.io/backend-protocol" = "HTTPS"
+      }
+    )
   }
 
   spec {
@@ -116,7 +103,7 @@ resource "kubernetes_ingress_v1" "ingress" {
   }
 }
 
-#argo ssh auth
+# Argo ssh auth
 
 resource "kubernetes_secret" "argo-secret" {
   count = var.cluster_created ? 1 : 0
@@ -133,11 +120,11 @@ resource "kubernetes_secret" "argo-secret" {
   data = {
     "type"          = "git"
     "url"           = var.argocd["repo"]
-    "sshPrivateKey" = var.argo_ssh_private_key
+    "sshPrivateKey" = var.argocd_ssh_private_key
   }
 }
 
-#argo notifications secret
+# Argo notifications secret
 
 resource "kubernetes_secret" "argocd_notifications_secret" {
   count = var.cluster_created ? 1 : 0
@@ -147,13 +134,13 @@ resource "kubernetes_secret" "argocd_notifications_secret" {
   }
 
   data = {
-    "slack-token" = var.argo_slack_token
+    "slack-token" = var.argocd_slack_token
   }
 
   type = "Opaque"
 }
 
-#argo notifications
+# Argo notifications
 
 resource "kubernetes_config_map" "argocd_notifications_cm" {
   count = var.cluster_created ? 1 : 0
@@ -199,7 +186,7 @@ resource "kubernetes_config_map" "argocd_notifications_cm" {
   }
 }
 
-#image updater
+# Image updater
 
 resource "helm_release" "image_updater" {
   count      = var.cluster_created ? 1 : 0
@@ -209,4 +196,10 @@ resource "helm_release" "image_updater" {
   namespace  = "argocd"
   version    = "0.10.1"
   values     = var.argocd_image_updater_values
+}
+
+data "aws_lb" "ingress" {
+  count      = var.cluster_created ? 1 : 0
+  name       = "${var.env}-eks-cluster"
+  depends_on = [kubernetes_ingress_v1.ingress]
 }

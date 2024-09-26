@@ -1,4 +1,4 @@
-# elk namespace
+# ELK namespace
 
 resource "kubernetes_namespace" "elk" {
   count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "elk" {
   }
 }
 
-# elasticsearch
+# ELK helm chart
 
 resource "helm_release" "elastic" {
   count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -56,7 +56,7 @@ resource "helm_release" "elastic" {
       accessModes: ["${var.elastic["pv_access_mode"]}"]
     resources: 
       requests:
-        cpu: "500m"
+        cpu: "100m"
         memory: "1.5Gi"
       limits:
         cpu: "1000m"
@@ -77,7 +77,7 @@ resource "helm_release" "elastic" {
 
 }
 
-# kibana dns name
+# Kibana dns name
 
 resource "aws_route53_record" "kibana" {
   count   = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -92,7 +92,7 @@ resource "aws_route53_record" "kibana" {
   }
 }
 
-# kibana helm chart
+# Kibana helm chart
 
 resource "helm_release" "kibana" {
   count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -121,7 +121,7 @@ resource "helm_release" "kibana" {
     <<EOF
     resources: 
       requests:
-        cpu: "500m"
+        cpu: "100m"
         memory: "1Gi"
       limits:
         cpu: "1000m"
@@ -142,27 +142,14 @@ resource "helm_release" "kibana" {
 
 }
 
-# kibana ingress
+# Kibana ingress
 
 resource "kubernetes_ingress_v1" "kibana" {
   count = var.cluster_created && var.logs_type == "elk" ? 1 : 0
   metadata {
-    name      = "kibana"
-    namespace = "elk"
-    annotations = {
-      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTP"
-      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
-      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
-      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
-      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
-      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
-      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
-      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
-      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
-      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
-      "alb.ingress.kubernetes.io/success-codes"            = "200-399"
-      "alb.ingress.kubernetes.io/group.name"               = var.env
-    }
+    name        = "kibana"
+    namespace   = "elk"
+    annotations = local.ingress_annotations
   }
 
   spec {
@@ -194,7 +181,7 @@ resource "kubernetes_ingress_v1" "kibana" {
   }
 }
 
-# logstash helm chart
+# Logstash helm chart
 
 resource "helm_release" "logstash" {
   count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -248,7 +235,7 @@ resource "helm_release" "logstash" {
           targetPort: 8080
     resources: 
       requests:
-        cpu: "512m"
+        cpu: "100m"
         memory: "1Gi"
       limits:
         cpu: "1024m"
@@ -268,7 +255,7 @@ resource "helm_release" "logstash" {
   ]
 }
 
-# filebeat helm chart
+# Filebeat helm chart
 
 resource "helm_release" "filebeat" {
   count      = var.cluster_created && var.logs_type == "elk" ? 1 : 0
@@ -302,6 +289,11 @@ resource "helm_release" "filebeat" {
       limits:
         cpu: "1024m"
         memory: "1000Mi"
+    tolerations:
+    - key: "priority"
+      operator: "Equal"
+      value: "critical"
+      effect: "NoSchedule"
     EOF
   ]
 

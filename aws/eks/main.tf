@@ -42,17 +42,29 @@ module "eks" {
     critical-nodegroup = var.critical_nodegroup
   }
 
-  tags = {
-    Environment                                 = var.env
-    Team                                        = var.team
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-  }
+  tags = var.cluster_tags
 }
 
-module "access_log_bucket" {
-  source            = "../aws-alb-access-log-bucket"
-  env               = var.env
-  team              = var.team
-  microservice_name = "${var.company_name}-eks-cluster"
+module "access_logs_bucket" {
+  count                          = var.create_access_logs_bucket ? 1 : 0
+  source                         = "terraform-aws-modules/s3-bucket/aws"
+  bucket                         = "${var.company_name}-eks-ingress-access-logs"
+  acl                            = "log-delivery-write"
+  force_destroy                  = true
+  control_object_ownership       = true
+  object_ownership               = "ObjectWriter"
+  attach_elb_log_delivery_policy = true
+  attach_lb_log_delivery_policy  = true
+  tags                           = var.tags
+  lifecycle_rule = [
+    {
+      id      = "expire_old_logs"
+      enabled = true
+
+      expiration = {
+        days = var.elb_access_log_expiration
+      }
+    }
+  ]
 }
 

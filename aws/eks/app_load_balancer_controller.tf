@@ -1,9 +1,12 @@
+# ALB controller helm chart
+
 resource "helm_release" "lb" {
   count      = var.cluster_created ? 1 : 0
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
+  version    = "1.8.3"
 
   set {
     name  = "clusterName"
@@ -21,7 +24,7 @@ resource "helm_release" "lb" {
   }
 }
 
-#create service account
+# Create service account
 resource "aws_iam_role" "lb_role" {
   count = var.cluster_created ? 1 : 0
   name  = "${var.cluster_name}-${var.lb_service_name}"

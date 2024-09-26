@@ -3,26 +3,35 @@ variable "env" {
   description = "Deployment environment eg prod, dev"
 }
 
-variable "team" {
-  type        = string
-  description = "Used to tag resources"
+variable "region" {
+  type = string
 }
 
 variable "sns_topic" {
   type        = string
   description = "SNS topic ARN for notifications"
-}
-
-variable "region" {
-  type = string
+  default     = null
 }
 
 variable "company_name" {
   type        = string
   description = "To make bucket name unique"
+  default     = "contoso"
 }
 
-#eks
+variable "tags" {
+  type        = map(string)
+  description = "Used to tag resources"
+  default     = {}
+}
+
+variable "cluster_tags" {
+  type        = map(string)
+  description = "Used to tag the EKS cluster"
+  default     = {}
+}
+
+# EKS
 variable "cluster_created" {
   description = "create applications such as argocd only when the eks cluster has already been created"
   default     = false
@@ -30,12 +39,12 @@ variable "cluster_created" {
 
 variable "metrics_type" {
   description = "cloudwatch or prometheus-grafana"
-  default     = "cloudwatch"
+  default     = "prometheus-grafana"
 }
 
 variable "logs_type" {
   description = "cloudwatch or elk"
-  default     = "cloudwatch"
+  default     = "elk"
 }
 
 variable "autoscaling_type" {
@@ -116,7 +125,12 @@ variable "access_entries" {
   description = "Map of access entries for the EKS cluster"
 }
 
-#argocd
+variable "create_access_logs_bucket" {
+  default     = true
+  description = "Whether to create ELB access logs bucket or not"
+}
+
+# Argocd
 variable "public_ingress_subnets" {
   type = string
 }
@@ -129,12 +143,12 @@ variable "zone_id" {
   type = string
 }
 
-variable "argo_ssh_private_key" {
+variable "argocd_ssh_private_key" {
   description = "The SSH private key"
   type        = string
 }
 
-variable "argo_slack_token" {
+variable "argocd_slack_token" {
   type = string
 }
 
@@ -149,7 +163,7 @@ variable "karpenter" {
 variable "argocd_image_updater_values" {
 }
 
-# elastic
+# Elastic
 
 variable "elastic" {
   type = any
@@ -176,9 +190,34 @@ variable "create_pv_full_alert" {
 }
 
 variable "slack_incoming_webhook_url" {
-  type = string
+  type        = string
+  description = "Used by Grafana for sending out alerts."
 }
 
 variable "grafana_password" {
   type = string
 }
+
+variable "elb_security_policy" {
+  type    = string
+  default = "ELBSecurityPolicy-TLS13-1-2-Ext2-2021-06"
+}
+
+variable "elb_access_log_expiration" {
+  type        = number
+  description = "Days after which to delete ELB access logs"
+  default     = 180
+}
+
+# Scalyr
+variable "set_up_scalyr" {
+  type    = bool
+  default = false
+}
+
+variable "scalyr_api_key" {
+  type        = string
+  description = "Must be a 'Log Write Access' API key. Log into DataSet and select your account (email address). Then select 'Api Keys'"
+  default     = null
+}
+
