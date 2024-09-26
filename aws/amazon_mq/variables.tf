@@ -32,6 +32,7 @@ variable "mq_settings" {
     publicly_accessible            = true
     storage_type                   = "ebs"
     ready_messages_alarm_threshold = 100
+    disk_space_alarm_threshold     = 10000000000 #10 Gb
   }
 }
 
