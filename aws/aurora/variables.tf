@@ -20,18 +20,19 @@ variable "aurora_settings" {
     "engine"                                 = "aurora-postgresql",
     "engine_version"                         = "16.1",
     "engine_mode"                            = "provisioned",
-    "serverless_cluster"                     = true
+    "serverless_cluster"                     = false
     "serverless_min_capacity"                = "0.5",
     "serverless_max_capacity"                = "8",
     "backup_retention_period"                = 35,
     "port"                                   = 5432,
-    "instance_class"                         = "db.serverless"
-    "db_instance_count"                      = 2,
+    "instance_class"                         = "db.t4g.medium"
+    "db_instance_count"                      = 1,
     "publicly_accessible"                    = false,
     "performance_insights_retention_period"  = 31
     "freeable_memory_alarm_threshold"        = 2000000000
     "disk_queue_depth_alarm_threshold"       = 200
     "buffer_cache_hit_ratio_alarm_threshold" = 80
+    "dbload_alarm_threshold"                 = 2
   }
 }
 
