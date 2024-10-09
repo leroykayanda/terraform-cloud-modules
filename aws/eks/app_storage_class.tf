@@ -43,7 +43,7 @@ resource "helm_release" "aws_efs_csi_driver" {
   }
 }
 
-#create service account
+# Create service account
 
 resource "aws_iam_role" "efs" {
   name = "${var.cluster_name}-efs-sa-role"
@@ -85,15 +85,17 @@ resource "aws_efs_file_system" "efs" {
   creation_token   = "${var.cluster_name}-efs"
   performance_mode = "generalPurpose"
   throughput_mode  = "elastic"
+  encrypted        = true
 
-  tags = {
-    Name        = "${var.cluster_name}-efs"
-    Environment = var.env
-    Team        = var.team
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.cluster_name}-efs"
+    }
+  )
 }
 
-# security group
+# EFS security group
 
 resource "aws_security_group" "efs" {
   name        = "${var.cluster_name}-efs-sg"
@@ -108,9 +110,7 @@ resource "aws_security_group" "efs" {
   }
 
   tags = {
-    Name        = "${var.cluster_name}-efs-sg"
-    Environment = var.env
-    Team        = var.team
+    Name = "${var.cluster_name}-efs-sg"
   }
 }
 

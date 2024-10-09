@@ -13,14 +13,10 @@ resource "aws_cloudwatch_metric_alarm" "cluster_failed_node_count" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "ignore"
+  tags                = var.tags
 
   dimensions = {
     ClusterName = var.cluster_name
-  }
-
-  tags = {
-    Environment = var.env
-    Team        = var.team
   }
 }
 
@@ -44,10 +40,7 @@ resource "aws_cloudwatch_metric_alarm" "node_cpu_utilization" {
     ClusterName = var.cluster_name
   }
 
-  tags = {
-    Environment = var.env
-    Team        = var.team
-  }
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "node_filesystem_utilization" {
@@ -65,14 +58,10 @@ resource "aws_cloudwatch_metric_alarm" "node_filesystem_utilization" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "ignore"
+  tags                = var.tags
 
   dimensions = {
     ClusterName = var.cluster_name
-  }
-
-  tags = {
-    Environment = var.env
-    Team        = var.team
   }
 }
 
@@ -91,14 +80,10 @@ resource "aws_cloudwatch_metric_alarm" "node_memory_utilization" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "ignore"
+  tags                = var.tags
 
   dimensions = {
     ClusterName = var.cluster_name
-  }
-
-  tags = {
-    Environment = var.env
-    Team        = var.team
   }
 }
 

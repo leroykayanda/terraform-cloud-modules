@@ -590,8 +590,7 @@ resource "grafana_rule_group" "pod_not_ready" {
       }
 
       datasource_uid = "PBFA97CFB590B2093"
-      model          = "{\"editorMode\":\"code\",\"expr\":\"kube_pod_status_ready{condition=\\\"false\\\", pod!~\\\"argo-cd-argocd-redis-secret-init-.*\\\"}\",\"instant\":true,\"intervalMs\":1000,\"legendFormat\":\"__auto\",\"maxDataPoints\":43200,\"range\":false,\"refId\":\"A\"}"
-
+      model          = "{\"editorMode\":\"code\",\"expr\":\"kube_pod_status_phase{phase=~\\\"(Pending|Failed|Unknown)\\\"}\",\"instant\":true,\"intervalMs\":1000,\"legendFormat\":\"__auto\",\"maxDataPoints\":43200,\"range\":false,\"refId\":\"A\"}"
     }
     data {
       ref_id = "B"
@@ -603,7 +602,6 @@ resource "grafana_rule_group" "pod_not_ready" {
 
       datasource_uid = "__expr__"
       model          = "{\"conditions\":[{\"evaluator\":{\"params\":[],\"type\":\"gt\"},\"operator\":{\"type\":\"and\"},\"query\":{\"params\":[\"B\"]},\"reducer\":{\"params\":[],\"type\":\"last\"},\"type\":\"query\"}],\"datasource\":{\"type\":\"__expr__\",\"uid\":\"__expr__\"},\"expression\":\"A\",\"intervalMs\":1000,\"maxDataPoints\":43200,\"reducer\":\"max\",\"refId\":\"B\",\"type\":\"reduce\"}"
-
     }
     data {
       ref_id = "C"
@@ -615,7 +613,6 @@ resource "grafana_rule_group" "pod_not_ready" {
 
       datasource_uid = "__expr__"
       model          = "{\"conditions\":[{\"evaluator\":{\"params\":[0],\"type\":\"gt\"},\"operator\":{\"type\":\"and\"},\"query\":{\"params\":[\"C\"]},\"reducer\":{\"params\":[],\"type\":\"last\"},\"type\":\"query\"}],\"datasource\":{\"type\":\"__expr__\",\"uid\":\"__expr__\"},\"expression\":\"B\",\"intervalMs\":1000,\"maxDataPoints\":43200,\"refId\":\"C\",\"type\":\"threshold\"}"
-
     }
 
     no_data_state  = "NoData"

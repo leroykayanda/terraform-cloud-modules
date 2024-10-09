@@ -1,6 +1,6 @@
-variable "microservice_name" {
+variable "service" {
   type        = string
-  description = "Name of the ECS service"
+  description = "Name of the service"
 }
 
 variable "env" {

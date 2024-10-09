@@ -311,14 +311,14 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
 
 # Disk Free
 resource "aws_cloudwatch_metric_alarm" "disk" {
-  alarm_name          = "${var.env}-${var.service}-AmazonMQ-Low-Disk-Free-Space"
+  alarm_name          = "${var.env}-${var.service}-AmazonMQ-Low-Free-Disk-Space"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "RabbitMQDiskFree"
   namespace           = "AWS/AmazonMQ"
   period              = "300"
   statistic           = "Average"
-  threshold           = "10000000000"
+  threshold           = var.mq_settings["disk_space_alarm_threshold"]
   alarm_description   = "This alarm monitors for low free disk space"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]

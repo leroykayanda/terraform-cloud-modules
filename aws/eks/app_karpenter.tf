@@ -1,3 +1,5 @@
+# Karpenter helm chart
+
 resource "helm_release" "karpenter" {
   count      = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
   name       = "karpenter"
@@ -58,7 +60,7 @@ resource "helm_release" "karpenter" {
 
 }
 
-# create service account
+# Create service account
 
 resource "aws_iam_role" "karpenter" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
@@ -151,7 +153,7 @@ resource "kubernetes_service_account" "karpenter" {
   automount_service_account_token = true
 }
 
-# setting up a instance profile
+# Setting up a instance profile
 
 resource "aws_iam_role" "karpenter_instance_profile_role" {
   count = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
@@ -172,7 +174,7 @@ resource "aws_iam_role" "karpenter_instance_profile_role" {
   })
 }
 
-# add karpenter role to EKS access entries to allow karpenter nodes to join cluster
+# Add karpenter role to EKS access entries to allow karpenter nodes to join cluster
 
 resource "aws_eks_access_entry" "karpenter" {
   count         = var.cluster_created && var.autoscaling_type == "karpenter" ? 1 : 0
@@ -364,10 +366,9 @@ spec:
       "${var.karpenter["karpenter_subnet_key"]}" : "${var.karpenter["karpenter_subnet_value"]}"
   instanceProfile: "${aws_iam_instance_profile.karpenter[0].name}"
   tags:
-    Team: "${var.team}"
-    Environment: "${var.env}"
+    ${jsonencode(var.tags)}
   blockDeviceMappings:
-  - deviceName: "/dev/xvda"
+  - deviceName: "${var.karpenter["disk_device_name"]}"
     ebs:
       volumeSize: ${var.karpenter["disk_size"]}
       volumeType: "gp3"

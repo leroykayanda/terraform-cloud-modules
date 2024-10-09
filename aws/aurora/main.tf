@@ -68,6 +68,7 @@ resource "aws_rds_cluster" "aurora" {
   engine_version                  = var.aurora_settings["engine_version"]
   engine_mode                     = var.aurora_settings["engine_mode"]
   availability_zones              = var.availability_zones
+  database_name                   = var.db_credentials["db_name"]
   master_username                 = var.db_credentials["user"]
   master_password                 = var.db_credentials["password"]
   backup_retention_period         = var.aurora_settings["backup_retention_period"]
@@ -82,9 +83,8 @@ resource "aws_rds_cluster" "aurora" {
   skip_final_snapshot             = false
   vpc_security_group_ids          = [var.security_group_id]
   final_snapshot_identifier       = "${var.env}-${var.service}"
-  database_name                   = var.db_credentials["db_name"]
   snapshot_identifier             = local.snapshot_identifier
-  allow_major_version_upgrade     = true
+  allow_major_version_upgrade     = false
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.db_parameter_group.name
   storage_type                    = "aurora-iopt1"
   tags                            = var.tags

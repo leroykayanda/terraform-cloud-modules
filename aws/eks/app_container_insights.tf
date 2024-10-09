@@ -1,3 +1,5 @@
+# Container insights helm chart
+
 resource "helm_release" "insights" {
   count      = var.cluster_created && var.metrics_type == "cloudwatch" ? 1 : 0
   name       = var.container_insights_service_name
@@ -24,6 +26,8 @@ resource "helm_release" "insights" {
     kubernetes_service_account.container_insights_sa
   ]
 }
+
+# Fluentbit helm chart
 
 resource "helm_release" "fluent_bit" {
   count      = var.cluster_created && var.logs_type == "cloudwatch" ? 1 : 0
@@ -73,7 +77,8 @@ resource "helm_release" "fluent_bit" {
   }
 }
 
-#create service account
+# Create service account
+
 resource "aws_iam_role" "container_insights_role" {
   count = var.cluster_created && var.metrics_type == "cloudwatch" ? 1 : 0
   name  = "${var.cluster_name}-${var.container_insights_service_name}"

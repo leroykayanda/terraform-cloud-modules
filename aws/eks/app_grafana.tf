@@ -1,4 +1,4 @@
-# grafana namespace
+# Grafana namespace
 
 resource "kubernetes_namespace" "grafana" {
   count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "grafana" {
   }
 }
 
-# prometheus helm chart
+# Prometheus helm chart
 
 resource "helm_release" "prometheus" {
   count      = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
@@ -53,7 +53,7 @@ resource "helm_release" "prometheus" {
 
 }
 
-# prometheus dns name
+# Prometheus dns name
 
 resource "aws_route53_record" "prometheus" {
   count   = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
@@ -68,27 +68,14 @@ resource "aws_route53_record" "prometheus" {
   }
 }
 
-# prometheus ingress
+# Prometheus ingress
 
 resource "kubernetes_ingress_v1" "prometheus" {
   count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   metadata {
-    name      = "prometheus"
-    namespace = "grafana"
-    annotations = {
-      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTP"
-      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
-      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
-      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
-      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
-      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
-      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
-      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
-      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
-      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
-      "alb.ingress.kubernetes.io/success-codes"            = "200-399"
-      "alb.ingress.kubernetes.io/group.name"               = var.env
-    }
+    name        = "prometheus"
+    namespace   = "grafana"
+    annotations = local.ingress_annotations
   }
 
   spec {
@@ -120,7 +107,7 @@ resource "kubernetes_ingress_v1" "prometheus" {
   }
 }
 
-# grafana helm chart
+# Grafana helm chart
 
 resource "helm_release" "grafana" {
   count      = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
@@ -217,7 +204,7 @@ EOF
 
 }
 
-# grafana dns name
+# Grafana dns name
 
 resource "aws_route53_record" "grafana" {
   count   = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
@@ -232,27 +219,14 @@ resource "aws_route53_record" "grafana" {
   }
 }
 
-# grafana ingress
+# Grafana ingress
 
 resource "kubernetes_ingress_v1" "grafana" {
   count = var.cluster_created && var.metrics_type == "prometheus-grafana" ? 1 : 0
   metadata {
-    name      = "grafana"
-    namespace = "grafana"
-    annotations = {
-      "alb.ingress.kubernetes.io/backend-protocol"         = "HTTP"
-      "alb.ingress.kubernetes.io/listen-ports"             = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
-      "alb.ingress.kubernetes.io/ssl-redirect"             = "443"
-      "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
-      "alb.ingress.kubernetes.io/load-balancer-name"       = "${var.env}-eks-cluster"
-      "alb.ingress.kubernetes.io/subnets"                  = "${var.public_ingress_subnets}"
-      "alb.ingress.kubernetes.io/certificate-arn"          = "${var.certificate_arn}"
-      "alb.ingress.kubernetes.io/load-balancer-attributes" = var.argocd["load_balancer_attributes"]
-      "alb.ingress.kubernetes.io/target-group-attributes"  = var.argocd["target_group_attributes"]
-      "alb.ingress.kubernetes.io/tags"                     = var.argocd["tags"]
-      "alb.ingress.kubernetes.io/success-codes"            = "200-399"
-      "alb.ingress.kubernetes.io/group.name"               = var.env
-    }
+    name        = "grafana"
+    namespace   = "grafana"
+    annotations = local.ingress_annotations
   }
 
   spec {
