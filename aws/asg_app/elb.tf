@@ -33,8 +33,8 @@ resource "aws_lb_target_group" "target_group" {
     path                = var.elb_settings["health_check_path"]
     timeout             = 5
     interval            = 30
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    healthy_threshold   = var.elb_settings["health_check_healthy_threshold"]
+    unhealthy_threshold = var.elb_settings["health_check_unhealthy_threshold"]
     matcher             = var.elb_settings["health_check_matcher"]
     protocol            = var.elb_settings["health_check_protocol"]
   }

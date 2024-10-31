@@ -28,20 +28,22 @@ variable "elb_settings" {
   type        = map(any)
   description = "Various settings for the ELB"
   default = {
-    "internal"                      = false
-    "idle_timeout"                  = 300
-    "load_balancer_type"            = "application"
-    "access_logs_expiry"            = 180
-    "target_group_port"             = 443
-    "target_group_protocol"         = "HTTPS"
-    "target_group_protocol_version" = "HTTP1"
-    "health_check_path"             = "/"
-    "health_check_matcher"          = "200-399"
-    "health_check_protocol"         = "HTTPS"
-    "deregistration_delay"          = 60
-    "ssl_policy"                    = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-    "access_log_bucket"             = "my-bucket"
-    certificate_arn                 = "arn:aws:acm:af-south-1:123:certificate/REDACTED"
+    "internal"                         = false
+    "idle_timeout"                     = 300
+    "load_balancer_type"               = "application"
+    "access_logs_expiry"               = 180
+    "target_group_port"                = 443
+    "target_group_protocol"            = "HTTPS"
+    "target_group_protocol_version"    = "HTTP1"
+    "health_check_path"                = "/"
+    "health_check_matcher"             = "200-399"
+    "health_check_protocol"            = "HTTPS"
+    "health_check_healthy_threshold"   = 2
+    "health_check_unhealthy_threshold" = 10
+    "deregistration_delay"             = 60
+    "ssl_policy"                       = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+    "access_log_bucket"                = "my-bucket"
+    certificate_arn                    = "arn:aws:acm:af-south-1:123:certificate/REDACTED"
   }
 }
 
