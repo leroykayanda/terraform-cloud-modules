@@ -1,46 +1,5 @@
-resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
-  retention_in_days = 30
-
-  tags = {
-    Environment = var.env
-    Team        = var.team
-  }
-}
-
-resource "aws_lambda_function" "lambda_function" {
-  function_name = "${var.env}-${var.microservice_name}"
-  package_type  = "Image"
-  role          = var.iam_role
-  image_uri     = var.image_uri
-  timeout       = var.timeout
-  memory_size   = var.memory_size
-
-  dynamic "vpc_config" {
-    for_each = var.needs_vpc == "yes" ? [1] : []
-    content {
-      subnet_ids         = var.subnets
-      security_group_ids = [var.security_group_id]
-    }
-  }
-
-  environment {
-    variables = var.env_variables
-  }
-
-  ephemeral_storage {
-    size = var.ephemeral_storage
-  }
-
-  tags = {
-    Environment = var.env
-    Team        = var.team
-  }
-
-}
-
 resource "aws_cloudwatch_dashboard" "dash" {
-  dashboard_name = "${var.env}-${var.microservice_name}-Lambda"
+  dashboard_name = "${var.env}-${var.service}-Lambda"
 
   dashboard_body = jsonencode(
     {
@@ -129,4 +88,27 @@ resource "aws_cloudwatch_dashboard" "dash" {
       ]
     }
   )
+}
+
+# Errors
+
+resource "aws_cloudwatch_metric_alarm" "errors" {
+  alarm_name          = "${var.env}-${var.service}-Lambda-Error"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = "60"
+  statistic           = "Maximum"
+  threshold           = 1
+  alarm_description   = "This alarm monitors lambda errors"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "ignore"
+  tags                = var.tags
+
+  dimensions = {
+    FunctionName = aws_lambda_function.lambda_function.function_name
+  }
 }

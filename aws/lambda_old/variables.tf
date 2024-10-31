@@ -3,9 +3,15 @@ variable "env" {
   description = "Deployment environment eg prod, dev"
 }
 
-variable "microservice_name" {
+variable "service" {
   type        = string
   description = "Name of the ECS service"
+}
+
+variable "env_variables" {
+  type = map(string)
+  default = {
+  }
 }
 
 variable "team" {
@@ -13,11 +19,11 @@ variable "team" {
   description = "For resource tags"
 }
 
-variable "iam_role" {
+variable "handler" {
   type = string
 }
 
-variable "image_uri" {
+variable "runtime" {
   type = string
 }
 
@@ -25,21 +31,28 @@ variable "timeout" {
   type = number
 }
 
-variable "memory_size" {
-  type = number
-}
-
-variable "env_variables" {
-  type = map(any)
-}
-
-variable "region" {
+variable "iam_role" {
   type = string
 }
 
+variable "memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "filename" {
+  type = string
+}
+
+variable "ephemeral_storage" {
+  type    = number
+  default = 512
+}
+
+/* 
+
 variable "subnets" {
-  type    = list(string)
-  default = []
+  type = list(string)
 }
 
 variable "security_group_id" {
@@ -50,9 +63,4 @@ variable "security_group_id" {
 variable "needs_vpc" {
   type    = string
   default = "no"
-}
-
-variable "ephemeral_storage" {
-  type    = number
-  default = 512
-}
+} */
