@@ -26,6 +26,10 @@ variable "private_subnets" {
   type = list(string)
 }
 
+variable "security_groups" {
+  type = list(string)
+}
+
 # Optional. We have set sensible defaults
 
 variable "encrypted" {
