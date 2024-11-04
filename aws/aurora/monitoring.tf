@@ -33,7 +33,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "view" : "timeSeries",
             "stacked" : true,
             "region" : var.region,
-            "stat" : "Maximum",
+            "stat" : "Average",
             "period" : 60,
             "title" : "ServerlessDatabaseCapacity"
           }
@@ -299,22 +299,6 @@ resource "aws_cloudwatch_dashboard" "dash" {
             ],
             "region" : var.region
           }
-        },
-        {
-          "type" : "metric",
-          "x" : 6,
-          "y" : 24,
-          "width" : 6,
-          "height" : 6,
-          "properties" : {
-            "metrics" : [
-              ["AWS/RDS", "CPUCreditBalance", "DBClusterIdentifier", aws_rds_cluster.aurora.id, { "period" : 300 }]
-            ],
-            "view" : "timeSeries",
-            "stacked" : true,
-            "region" : var.region,
-            "stat" : "Average"
-          }
         }
       ]
     }
@@ -466,27 +450,5 @@ resource "aws_cloudwatch_metric_alarm" "buffer_cache_hit_ratio" {
 
   dimensions = {
     DBClusterIdentifier = aws_rds_cluster.aurora.cluster_identifier
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "db_load" {
-  count               = var.aurora_settings["serverless_cluster"] ? 0 : var.aurora_settings["db_instance_count"]
-  alarm_name          = "${var.env}-${var.service}-DB-${count.index}-High-DBLoad"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
-  metric_name         = "DBLoad"
-  namespace           = "AWS/RDS"
-  period              = "300"
-  statistic           = "Average"
-  threshold           = var.aurora_settings["dbload_alarm_threshold"]
-  alarm_description   = "This alarm monitors for high DBLoad"
-  alarm_actions       = [var.sns_topic]
-  ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
-  treat_missing_data  = "ignore"
-  tags                = var.tags
-
-  dimensions = {
-    DBInstanceIdentifier = aws_rds_cluster_instance.cluster_instances[count.index].id
   }
 }

@@ -20,19 +20,18 @@ variable "aurora_settings" {
     "engine"                                 = "aurora-postgresql",
     "engine_version"                         = "16.1",
     "engine_mode"                            = "provisioned",
-    "serverless_cluster"                     = false
+    "serverless_cluster"                     = true
     "serverless_min_capacity"                = "0.5",
     "serverless_max_capacity"                = "8",
     "backup_retention_period"                = 35,
     "port"                                   = 5432,
-    "instance_class"                         = "db.t4g.medium"
-    "db_instance_count"                      = 1,
+    "instance_class"                         = "db.serverless"
+    "db_instance_count"                      = 2,
     "publicly_accessible"                    = false,
     "performance_insights_retention_period"  = 31
     "freeable_memory_alarm_threshold"        = 2000000000
     "disk_queue_depth_alarm_threshold"       = 200
     "buffer_cache_hit_ratio_alarm_threshold" = 80
-    "dbload_alarm_threshold"                 = 2
   }
 }
 
@@ -56,10 +55,6 @@ variable "availability_zones" {
   default     = ["af-south-1a", "af-south-1b", "af-south-1c"]
 }
 
-variable "region" {
-  type = string
-}
-
 # For these variables, we have set sensible defaults but you can override them by passing them as module inputs
 
 variable "tags" {
@@ -68,9 +63,10 @@ variable "tags" {
   default     = {}
 }
 
-variable "creating_db" {
-  type    = bool
-  default = false
+variable "restoring_snaphot" {
+  type        = bool
+  description = "Are you restoring DB from a snapshot"
+  default     = false
 }
 
 variable "snapshot_cluster" {
@@ -80,8 +76,9 @@ variable "snapshot_cluster" {
 }
 
 variable "db_cluster_snapshot_identifier" {
-  type    = string
-  default = null
+  type        = string
+  description = "Name of the snapshort we are restoring"
+  default     = null
 }
 
 variable "preferred_maintenance_window" {
@@ -99,8 +96,11 @@ variable "enabled_cloudwatch_logs_exports" {
   default = ["postgresql"]
 }
 
+variable "region" {
+  type = string
+}
+
 variable "sns_topic" {
   type        = string
   description = "SNS topic ARN for notifications"
-  default     = null
 }
