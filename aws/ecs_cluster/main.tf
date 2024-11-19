@@ -58,7 +58,7 @@ resource "aws_launch_template" "ecs_lt" {
   instance_type          = var.instance_type
   key_name               = var.key_name
   update_default_version = true
-  user_data              = base64encode(var.user_data)
+  user_data              = var.user_data == null ? null : base64encode(var.user_data)
   tags                   = var.tags
 
   iam_instance_profile {
