@@ -342,13 +342,12 @@ resource "aws_cloudwatch_metric_alarm" "service_memory" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "breaching"
+  tags                = var.tags
 
   dimensions = {
     ServiceName = "${var.world}-${var.service}"
     ClusterName = "${var.world}-${var.cluster_name}"
   }
-
-  tags = var.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "service_cpu" {
@@ -365,13 +364,12 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "breaching"
+  tags                = var.tags
 
   dimensions = {
     ServiceName = "${var.world}-${var.service}"
     ClusterName = "${var.world}-${var.cluster_name}"
   }
-
-  tags = var.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "running_tasks" {
@@ -388,11 +386,32 @@ resource "aws_cloudwatch_metric_alarm" "running_tasks" {
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
   treat_missing_data  = "breaching"
+  tags                = var.tags
 
   dimensions = {
     ServiceName = "${var.world}-${var.service}"
     ClusterName = "${var.world}-${var.cluster_name}"
   }
+}
 
-  tags = var.tags
+resource "aws_cloudwatch_metric_alarm" "pending_tasks" {
+  alarm_name          = "${var.world}-${var.service}-ECS-Service-Pending-Tasks"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "PendingTaskCount"
+  namespace           = "ECS/ContainerInsights"
+  period              = "300"
+  statistic           = "Maximum"
+  threshold           = "1"
+  alarm_description   = "This alarm monitors for when there are pending tasks in an ECS service"
+  alarm_actions       = [var.sns_topic]
+  ok_actions          = [var.sns_topic]
+  datapoints_to_alarm = "1"
+  treat_missing_data  = "breaching"
+  tags                = var.tags
+
+  dimensions = {
+    ServiceName = "${var.world}-${var.service}"
+    ClusterName = "${var.world}-${var.cluster_name}"
+  }
 }
