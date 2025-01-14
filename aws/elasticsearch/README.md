@@ -1,5 +1,3 @@
-
-
     module "elasticsearch" {
       source                    = "../_modules/elasticsearch"
       service                   = var.service
@@ -18,3 +16,6 @@
       availability_zone_count   = var.availability_zone_count
       advanced_security_options = var.advanced_security_options
     }
+Setting up SAML using Azure AD
+[link-1](https://opster.com/guides/opensearch/opensearch-security/how-to-set-up-single-sign-on-using-active-directory-in-opensearch/)
+[link-2](https://isar-nasimov.medium.com/aws-opensearch-saml-2-0-sso-via-azure-active-directory-cb68bc5b2c5d)
