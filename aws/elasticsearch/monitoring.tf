@@ -178,7 +178,7 @@ resource "aws_cloudwatch_metric_alarm" "FreeStorageSpace" {
   namespace           = "AWS/ES"
   period              = "60"
   statistic           = "Minimum"
-  threshold           = 20000
+  threshold           = var.storage_alarm_threshold
   alarm_description   = "This alarm monitors for ES low storage space"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]

@@ -48,6 +48,12 @@ variable "ebs_volume_size" {
   default = 100
 }
 
+variable "storage_alarm_threshold" {
+  type        = number
+  description = "Free storage threshold to alert on in mb"
+  default     = 50000
+}
+
 variable "tags" {
   type        = map(string)
   description = "Used to tag resources"
@@ -77,5 +83,15 @@ variable "advanced_security_options" {
   default = {
     enabled                        = true
     internal_user_database_enabled = true
+  }
+}
+
+variable "domain_endpoint_options" {
+  type        = map(string)
+  description = "Custom domain configs"
+  default = {
+    custom_endpoint_enabled         = false
+    custom_endpoint                 = null
+    custom_endpoint_certificate_arn = null
   }
 }

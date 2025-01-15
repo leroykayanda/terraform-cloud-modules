@@ -15,6 +15,8 @@
       zone_awareness_enabled    = var.zone_awareness_enabled
       availability_zone_count   = var.availability_zone_count
       advanced_security_options = var.advanced_security_options
+      storage_alarm_threshold   = var.storage_alarm_threshold
+      domain_endpoint_options   = var.domain_endpoint_options
     }
 Setting up SAML using Azure AD
 [link-1](https://opster.com/guides/opensearch/opensearch-security/how-to-set-up-single-sign-on-using-active-directory-in-opensearch/)

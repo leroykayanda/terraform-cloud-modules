@@ -41,7 +41,10 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   domain_endpoint_options {
-    enforce_https = true
+    enforce_https                   = true
+    custom_endpoint_enabled         = var.domain_endpoint_options["custom_endpoint_enabled"]
+    custom_endpoint                 = var.domain_endpoint_options["custom_endpoint"]
+    custom_endpoint_certificate_arn = var.domain_endpoint_options["custom_endpoint_certificate_arn"]
   }
 
   access_policies = <<POLICY
