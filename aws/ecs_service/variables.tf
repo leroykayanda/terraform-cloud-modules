@@ -18,11 +18,6 @@ variable "task_execution_role" {
   description = "Task IAM role"
 }
 
-variable "container_image" {
-  description = "Container image URI"
-  type        = string
-}
-
 variable "cluster_name" {
   type        = string
   description = "Name of the ECS cluster"
@@ -31,6 +26,11 @@ variable "cluster_name" {
 variable "cluster_arn" {
   type        = string
   description = "ARN of cluster to add this service to"
+}
+
+variable "ecr_repository" {
+  type        = string
+  description = "Name of the ECR repo"
 }
 
 # For these variables, we have set sensible defaults but you can override them by passing them as module inputs
@@ -109,12 +109,6 @@ variable "efs_access_point_id" {
   type        = string
   description = "EFS accesspoint Id"
   default     = null
-}
-
-variable "container_image_2" {
-  type        = string
-  description = "ECR Image URI for the second container"
-  default     = "null"
 }
 
 variable "command" {

@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     [
       {
         name         = var.container_name
-        image        = var.container_image
+        image        = local.container_image
         essential    = true
         network_mode = var.container_network_mode
         command      = var.command
@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       },
       {
         name         = var.container_name_2
-        image        = var.container_image_2
+        image        = local.container_image
         essential    = true
         network_mode = var.container_network_mode
         command      = var.command
@@ -106,7 +106,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     [
       {
         name         = var.container_name
-        image        = var.container_image
+        image        = local.container_image
         essential    = true
         network_mode = var.container_network_mode
         command      = var.command

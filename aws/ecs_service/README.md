@@ -6,8 +6,8 @@
       cluster_arn                       = data.aws_ecs_cluster.ecs_cluster.arn
       cluster_name                      = var.ecs_cluster_name
       container_name                    = var.container_name
-      container_image                   = local.container_image
       task_execution_role               = aws_iam_role.ecs_task_execution_role.arn
+      ecr_repository                    = var.ecr_repository
       world                             = var.world # The parameters below are optional and have sensible defaults. Review to see which ones need to be changed. 
       tags                              = var.tags[var.world]
       region                            = var.region
@@ -23,7 +23,6 @@
       sns_topic                         = var.sns_topic[var.world]
       two_containers                    = var.two_containers
       container_name_2                  = var.container_name_2
-      container_image_2                 = var.container_image_2
       task_launch_type                  = var.task_launch_type
       platform_version                  = var.platform_version
       create_volume                     = var.create_volume
