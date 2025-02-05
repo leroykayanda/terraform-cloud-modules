@@ -12,3 +12,9 @@ variable "image_tag_mutability" {
   type    = string
   default = "IMMUTABLE"
 }
+
+variable "images_to_keep" {
+  type        = number
+  description = "How many images will be kept by the lifecycle policy"
+  default     = 10
+}
