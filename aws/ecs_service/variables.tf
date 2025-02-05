@@ -263,3 +263,13 @@ variable "sns_topic" {
   description = "For alarm notifications"
   default     = null
 }
+
+variable "alarm_periods" {
+  type = map(number)
+  default = {
+    "service_memory" = 600
+    "service_cpu"    = 600
+    "running_tasks"  = 120
+    "pending_tasks"  = 300
+  }
+}

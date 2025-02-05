@@ -334,7 +334,7 @@ resource "aws_cloudwatch_metric_alarm" "service_memory" {
   evaluation_periods  = "1"
   metric_name         = "MemoryUtilization"
   namespace           = "AWS/ECS"
-  period              = "300"
+  period              = var.alarm_periods["service_memory"]
   statistic           = "Average"
   threshold           = "90"
   alarm_description   = "This alarm monitors for high ECS service memory"
@@ -356,7 +356,7 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu" {
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
   namespace           = "AWS/ECS"
-  period              = "300"
+  period              = var.alarm_periods["service_cpu"]
   statistic           = "Average"
   threshold           = "90"
   alarm_description   = "This alarm monitors for high ECS service CPU"
@@ -378,7 +378,7 @@ resource "aws_cloudwatch_metric_alarm" "running_tasks" {
   evaluation_periods  = "1"
   metric_name         = "RunningTaskCount"
   namespace           = "ECS/ContainerInsights"
-  period              = "120"
+  period              = var.alarm_periods["running_tasks"]
   statistic           = "Minimum"
   threshold           = "0"
   alarm_description   = "This alarm monitors for when there are no running tasks in an ECS service"
@@ -400,7 +400,7 @@ resource "aws_cloudwatch_metric_alarm" "pending_tasks" {
   evaluation_periods  = "1"
   metric_name         = "PendingTaskCount"
   namespace           = "ECS/ContainerInsights"
-  period              = "300"
+  period              = var.alarm_periods["pending_tasks"]
   statistic           = "Average"
   threshold           = "1"
   alarm_description   = "This alarm monitors for when there are pending tasks in an ECS service"
