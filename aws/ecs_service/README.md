@@ -45,4 +45,5 @@
       elb_certificate_arn               = var.elb_certificate_arn
       elb_access_logs_bucket            = var.elb_access_logs_bucket
       company_name                      = var.company_name
+      alarm_periods                     = var.alarm_periods
     }
