@@ -142,3 +142,37 @@ variable "block_device_mappings" {
     "volume_type" = "gp3"
   }
 }
+
+variable "active_alarms" {
+  type        = map(bool)
+  description = "Which alarms do you want to be created"
+  default = {
+    asg_memory               = true
+    asg_cpu                  = true
+    container_instance_count = true
+    asg_max_capacity_usage   = true
+  }
+}
+
+variable "alarm_thresholds" {
+  type = map(number)
+  default = {
+    "asg_memory"             = 90
+    "asg_cpu"                = 90
+    "asg_max_capacity_usage" = 90
+  }
+}
+
+variable "alarm_periods" {
+  type = map(number)
+  default = {
+    "asg_memory"               = 900 # 15min
+    "asg_cpu"                  = 900 # 15min
+    "container_instance_count" = 300 # 5min
+    "asg_max_capacity_usage"   = 900 # 15min
+  }
+}
+
+variable "sns_topic" {
+  type = string
+}

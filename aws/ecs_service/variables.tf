@@ -264,12 +264,32 @@ variable "sns_topic" {
   default     = null
 }
 
+variable "active_alarms" {
+  type        = map(bool)
+  description = "Which alarms do you want to be created"
+  default = {
+    service_memory   = true
+    service_cpu      = true
+    running_tasks    = true
+    pending_tasks    = true
+    asg_max_capacity = true
+  }
+}
+
 variable "alarm_periods" {
   type = map(number)
   default = {
-    "service_memory" = 600
-    "service_cpu"    = 600
-    "running_tasks"  = 120
-    "pending_tasks"  = 300
+    "service_memory" = 900 # 15min
+    "service_cpu"    = 900 # 15min
+    "running_tasks"  = 300 # 5min
+    "pending_tasks"  = 900 # 15min
+  }
+}
+
+variable "alarm_thresholds" {
+  type = map(number)
+  default = {
+    "service_memory" = 90
+    "service_cpu"    = 90
   }
 }

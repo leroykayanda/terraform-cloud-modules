@@ -321,14 +321,42 @@ resource "aws_cloudwatch_dashboard" "dash" {
               ]
             }
           }
+        },
+        {
+          "type" : "metric",
+          "x" : 0,
+          "y" : 24,
+          "width" : 6,
+          "height" : 6,
+          "properties" : {
+            "metrics" : [
+              [{ "expression" : "m1/m2*100", "label" : "ASG Usage", "id" : "e1", "region" : var.region }],
+              ["AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", "${var.cluster_name}-ecs-capacity-prov-cluster-node", { "id" : "m1", "visible" : false, "region" : var.region }],
+              [".", "GroupMaxSize", ".", ".", { "id" : "m2", "visible" : false, "region" : var.region }]
+            ],
+            "view" : "timeSeries",
+            "stacked" : true,
+            "region" : var.region,
+            "stat" : "Average",
+            "period" : 300,
+            "annotations" : {
+              "horizontal" : [
+                {
+                  "label" : "ASG Usage",
+                  "value" : 90
+                }
+              ]
+            },
+            "title" : "ASG Maximum Capacity Usage"
+          }
         }
       ]
     }
   )
 }
 
-
 resource "aws_cloudwatch_metric_alarm" "service_memory" {
+  count               = var.active_alarms["service_memory"] ? 1 : 0
   alarm_name          = "${var.world}-${var.service}-ECS-Service-High-Memory-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -336,12 +364,12 @@ resource "aws_cloudwatch_metric_alarm" "service_memory" {
   namespace           = "AWS/ECS"
   period              = var.alarm_periods["service_memory"]
   statistic           = "Average"
-  threshold           = "90"
+  threshold           = var.alarm_thresholds["service_memory"]
   alarm_description   = "This alarm monitors for high ECS service memory"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
@@ -351,6 +379,7 @@ resource "aws_cloudwatch_metric_alarm" "service_memory" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "service_cpu" {
+  count               = var.active_alarms["service_cpu"] ? 1 : 0
   alarm_name          = "${var.world}-${var.service}-ECS-Service-High-CPU-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -358,12 +387,12 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu" {
   namespace           = "AWS/ECS"
   period              = var.alarm_periods["service_cpu"]
   statistic           = "Average"
-  threshold           = "90"
+  threshold           = var.alarm_thresholds["service_cpu"]
   alarm_description   = "This alarm monitors for high ECS service CPU"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
@@ -373,6 +402,7 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "running_tasks" {
+  count               = var.active_alarms["running_tasks"] ? 1 : 0
   alarm_name          = "${var.world}-${var.service}-ECS-Service-No-Running-Tasks"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -385,7 +415,7 @@ resource "aws_cloudwatch_metric_alarm" "running_tasks" {
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
@@ -395,19 +425,20 @@ resource "aws_cloudwatch_metric_alarm" "running_tasks" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "pending_tasks" {
+  count               = var.active_alarms["pending_tasks"] ? 1 : 0
   alarm_name          = "${var.world}-${var.service}-ECS-Service-Pending-Tasks"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "3"
   metric_name         = "PendingTaskCount"
   namespace           = "ECS/ContainerInsights"
   period              = var.alarm_periods["pending_tasks"]
   statistic           = "Average"
-  threshold           = "1"
+  threshold           = "5"
   alarm_description   = "This alarm monitors for when there are pending tasks in an ECS service"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  datapoints_to_alarm = "3"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
