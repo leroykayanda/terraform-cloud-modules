@@ -194,68 +194,29 @@ variable "task_security_group" {
   default     = null
 }
 
-variable "vpc_id" {
-  type = string
-}
-
-variable "create_elb" {
-  default     = false
-  description = "Whether to create an ELB or not"
-}
-
-variable "existing_elb_settings" {
+variable "load_balancer" {
   type        = map(any)
-  description = "Use a pre-existing ELB"
+  description = "Loadbalancer configuration details"
   default = {
-    use_existing_elb = false
-    target_group_arn = ""
-    container_port   = null
+    uses_load_balancer               = false
+    load_balancer_name               = ""
+    load_balancer_listener_rule_path = "/*"
+    vpc_id                           = null
+    health_check_path                = "/"
   }
 }
 
-variable "elb_settings" {
-  type = map(any)
+variable "load_balancer_defaults" {
+  type        = map(any)
+  description = "Loadbalancer default configuration details"
   default = {
-    "internal"                      = false
-    "idle_timeout"                  = 60
-    "load_balancer_type"            = "application"
-    "access_logs_expiry"            = 180
-    "container_port"                = 80
-    "target_group_protocol"         = "HTTP"
-    "target_group_protocol_version" = "HTTP2"
-    "health_check_path"             = "/"
-    "health_check_matcher"          = "200-399"
-    "deregistration_delay"          = 5
-    "ssl_policy"                    = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+    load_balancer_listener_port       = 443
+    target_group_protocol             = "HTTP"
+    target_group_deregistration_delay = 60
+    target_group_protocol_version     = "HTTP1"
+    health_protocol                   = "HTTP"
+    health_matcher                    = "200-499"
   }
-}
-
-variable "elb_subnets" {
-  type        = list(string)
-  description = "Subnets for the ALB. Can be public or private"
-  default     = []
-}
-
-variable "elb_security_group" {
-  type    = string
-  default = null
-}
-
-variable "elb_access_logs_bucket" {
-  description = "Name of the access log bucket"
-  default     = null
-}
-
-variable "company_name" {
-  type        = string
-  description = "To make the ELB access log bucket name unique"
-  default     = null
-}
-
-variable "elb_certificate_arn" {
-  type        = string
-  description = "Certificate for the ALB HTTPS listener"
-  default     = null
 }
 
 variable "sns_topic" {
@@ -292,4 +253,9 @@ variable "alarm_thresholds" {
     "service_memory" = 90
     "service_cpu"    = 90
   }
+}
+
+variable "container_port" {
+  type        = number
+  description = "Port container listens on"
 }
