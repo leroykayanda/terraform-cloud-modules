@@ -15,7 +15,7 @@ variable "load_balancer_type" {
   default     = "application"
 }
 
-variable "world" {
+variable "env" {
   type        = string
   description = "Name of the environment"
 }
@@ -45,9 +45,22 @@ variable "create_access_logs_bucket" {
   description = "Whether to create ELB access logs bucket or not"
 }
 
+variable "existing_access_logs_bucket" {
+  type        = string
+  default     = ""
+  description = "An existing ELB access logs bucket. Leave as blank if none exists."
+}
+
+variable "use_access_logs_bucket_prefix" {
+  type        = bool
+  default     = false
+  description = "S3 bucket prefix. Logs are stored in the root if not configured. Set to true to set prefix as var.env-var.service"
+}
+
 variable "company_name" {
   type        = string
   description = "To make the ELB access log bucket name unique"
+  default     = ""
 }
 
 variable "elb_access_log_expiration" {
@@ -89,4 +102,19 @@ variable "ssl_policy" {
   type        = string
   description = "Policy ELB listener will use"
   default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+}
+
+variable "target_group_details" {
+  type        = map(string)
+  description = "Details to use when creating a target group"
+  default = {
+    create_target_group   = true
+    application_port      = 443
+    protocol              = "HTTPS"
+    deregistration_delay  = "30"
+    protocol_version      = "HTTP1"
+    health_check_path     = "/"
+    health_check_protocol = "HTTPS"
+    health_check_matcher  = "200"
+  }
 }

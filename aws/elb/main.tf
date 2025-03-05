@@ -1,6 +1,6 @@
 resource "aws_security_group" "sg" {
-  name        = "${local.world}${local.separator}${var.service}"
-  description = "${local.world}${local.separator}${var.service}"
+  name        = "${var.env}-${var.service}"
+  description = "${var.env}-${var.service}"
   vpc_id      = var.vpc_id
 
   dynamic "ingress" {
@@ -25,14 +25,14 @@ resource "aws_security_group" "sg" {
   }
 
   tags = {
-    Name = "${local.world}${local.separator}${var.service}"
+    Name = "${var.env}-${var.service}"
   }
 }
 
 module "access_logs_bucket" {
-  count                          = var.create_access_logs_bucket ? 1 : 0
+  count                          = var.create_access_logs_bucket && !var.use_access_logs_bucket_prefix ? 1 : 0
   source                         = "terraform-aws-modules/s3-bucket/aws"
-  bucket                         = "${var.company_name}-${local.world}${local.separator}${var.service}-access-logs"
+  bucket                         = "${var.company_name}-${var.env}-${var.service}-access-logs"
   acl                            = "log-delivery-write"
   force_destroy                  = true
   control_object_ownership       = true
@@ -53,7 +53,7 @@ module "access_logs_bucket" {
 }
 
 resource "aws_lb" "lb" {
-  name                       = "${local.world}${local.separator}${var.service}"
+  name                       = "${var.env}-${var.service}"
   internal                   = var.internal
   load_balancer_type         = var.load_balancer_type
   security_groups            = [aws_security_group.sg.id]
@@ -66,8 +66,9 @@ resource "aws_lb" "lb" {
   dynamic "access_logs" {
     for_each = var.create_access_logs_bucket ? [1] : []
     content {
-      bucket  = module.access_logs_bucket[0].s3_bucket_id
+      bucket  = var.existing_access_logs_bucket == "" ? module.access_logs_bucket[0].s3_bucket_id : var.existing_access_logs_bucket
       enabled = true
+      prefix  = var.use_access_logs_bucket_prefix ? "${var.env}-${var.service}" : null
     }
   }
 }
@@ -89,7 +90,8 @@ resource "aws_lb_listener" "redirect" {
   }
 }
 
-resource "aws_lb_listener" "listener_443" {
+resource "aws_lb_listener" "listener_443_fixed_response" {
+  count             = var.target_group_details["create_target_group"] ? 0 : 1
   load_balancer_arn = aws_lb.lb.arn
   protocol          = "HTTPS"
   port              = 443
@@ -102,8 +104,46 @@ resource "aws_lb_listener" "listener_443" {
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "Hello"
-      status_code  = "200"
+      message_body = "Not Found"
+      status_code  = "404"
     }
+  }
+}
+
+resource "aws_lb_listener" "listener_443_forward" {
+  count             = var.target_group_details["create_target_group"] ? 1 : 0
+  load_balancer_arn = aws_lb.lb.arn
+  protocol          = "HTTPS"
+  port              = 443
+  certificate_arn   = var.certificate_arn
+  ssl_policy        = var.ssl_policy
+  tags              = var.tags
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group[0].arn
+  }
+}
+
+resource "aws_lb_target_group" "target_group" {
+  count                = var.target_group_details["create_target_group"] ? 1 : 0
+  name                 = "${var.env}-${var.service}"
+  port                 = var.target_group_details["application_port"]
+  protocol             = var.target_group_details["protocol"]
+  target_type          = "instance"
+  vpc_id               = var.vpc_id
+  tags                 = var.tags
+  deregistration_delay = var.target_group_details["deregistration_delay"]
+  protocol_version     = var.target_group_details["protocol_version"]
+
+  health_check {
+    path                = var.target_group_details["health_check_path"]
+    protocol            = var.target_group_details["health_check_protocol"]
+    matcher             = var.target_group_details["health_check_matcher"]
+    port                = "traffic-port"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 10
+    interval            = 30
   }
 }
