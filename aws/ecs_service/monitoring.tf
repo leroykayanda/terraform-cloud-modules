@@ -415,7 +415,7 @@ resource "aws_cloudwatch_metric_alarm" "running_tasks" {
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
   datapoints_to_alarm = "1"
-  treat_missing_data  = "ignore"
+  treat_missing_data  = "breaching"
   tags                = var.tags
 
   dimensions = {
