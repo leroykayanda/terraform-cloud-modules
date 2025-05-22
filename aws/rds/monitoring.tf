@@ -332,6 +332,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_lag_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_low_urgency" {
+  count               = var.replicate_source_db == null ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-Replication-Slot-Lag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -353,6 +354,7 @@ resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_low_urgency"
 }
 
 resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_high_urgency" {
+  count               = var.replicate_source_db == null ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-Replication-Slot-Lag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
