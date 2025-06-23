@@ -20,6 +20,13 @@ variable "server_certificate_arn" {
 variable "active_directory_id" {
   type        = string
   description = "The ID of the Active Directory to be used for authentication if type is directory-service-authentication."
+  default     = null
+}
+
+variable "saml_provider_arn" {
+  type        = string
+  description = "The ARN of the IAM SAML identity provider if type is federated-authentication"
+  default     = null
 }
 
 variable "security_group_ids" {
@@ -39,7 +46,7 @@ variable "tags" {
   default = {}
 }
 
-variable "type" {
+variable "authentication_type" {
   type        = string
   description = "The type of client authentication to be used. Specify certificate-authentication to use certificate-based authentication, directory-service-authentication to use Active Directory authentication, or federated-authentication to use Federated Authentication via SAML 2.0."
 }
