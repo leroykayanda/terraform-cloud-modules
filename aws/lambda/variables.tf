@@ -13,8 +13,6 @@ variable "iam_role" {
   description = "Amazon Resource Name (ARN) of the function's execution role. The role provides the function's identity and access to AWS services and resources."
 }
 
-# Optional variables. We have set sensible defaults
-
 variable "tags" {
   type        = map(string)
   description = "To tag resources."

@@ -17,7 +17,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               ["AWS/Lambda", "Errors", "FunctionName", aws_lambda_function.lambda_function.function_name, { "region" : "${var.region}" }]
             ],
             "region" : "${var.region}",
-            "period" : 300
+            "period" : 60
           }
         },
         {
@@ -33,7 +33,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "view" : "timeSeries",
             "stacked" : true,
             "region" : "${var.region}",
-            "period" : 300,
+            "period" : 60,
             "stat" : "Sum"
           }
         },
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "view" : "timeSeries",
             "stacked" : true,
             "region" : "${var.region}",
-            "period" : 300,
+            "period" : 60,
             "stat" : "Maximum"
           }
         },
@@ -68,7 +68,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
             "view" : "timeSeries",
             "stacked" : true,
             "region" : "${var.region}",
-            "period" : 300,
+            "period" : 60,
             "stat" : "Sum"
           }
         },
