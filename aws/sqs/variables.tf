@@ -3,20 +3,15 @@ variable "env" {
   description = "Deployment environment eg prod, dev"
 }
 
-variable "microservice_name" {
+variable "service" {
   type        = string
   description = "Name of the ECS service"
-}
-
-variable "team" {
-  type        = string
-  description = "For resource tags"
 }
 
 variable "sns_topic" {
   type        = string
   description = "SNS topic ARN for notifications"
-  default     = ""
+  default     = null
 }
 
 variable "delay_seconds" {
@@ -34,9 +29,38 @@ variable "max_message_size" {
 variable "visibility_timeout_seconds" {
   type        = number
   description = "The visibility timeout for the queue. An integer from 0 to 43200 (12 hours). The default for this attribute is 30."
+  default     = 900 # 15 minutes
 }
 
 variable "message_retention_seconds" {
   type        = number
   description = "The number of seconds Amazon SQS retains a message. Integer representing seconds, from 60 (1 minute) to 1209600 (14 days). The default for this attribute is 345600 (4 days)."
+  default     = 1209600 # 14 days
+}
+
+variable "receive_wait_time_seconds" {
+  type        = number
+  description = "Time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning. An integer from 0 to 20 (seconds). The default for this attribute is 0, meaning that the call will return immediately."
+  default     = 0
+}
+
+variable "sqs_managed_sse_enabled" {
+  type        = bool
+  description = "Boolean to enable server-side encryption (SSE) of message content with SQS-owned encryption keys. "
+  default     = true
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Used to tag resources"
+  default     = {}
+}
+
+variable "alarm_thresholds" {
+  type        = map(number)
+  description = "Used to tag resources"
+  default = {
+    "approximate_number_of_messages_visible" = 50
+    "approximate_age_of_oldest_message"      = 600
+  }
 }
