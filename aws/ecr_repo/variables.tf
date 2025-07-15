@@ -10,11 +10,11 @@ variable "env" {
 
 variable "image_tag_mutability" {
   type    = string
-  default = "IMMUTABLE"
+  default = "MUTABLE"
 }
 
 variable "images_to_keep" {
   type        = number
-  description = "How many images will be kept by the lifecycle policy"
   default     = 10
+  description = "policy for how many images to keep in ECR repository"
 }
