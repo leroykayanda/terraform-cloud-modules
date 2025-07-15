@@ -11,8 +11,9 @@ resource "aws_ec2_client_vpn_endpoint" "vpn" {
   session_timeout_hours  = var.session_timeout_hours
 
   authentication_options {
+    type                = var.authentication_type
     active_directory_id = var.active_directory_id
-    type                = var.type
+    saml_provider_arn   = var.saml_provider_arn
   }
 
   connection_log_options {

@@ -163,20 +163,11 @@ resource "aws_ecs_service" "ecs_service" {
   }
 
   dynamic "load_balancer" {
-    for_each = var.create_elb ? [1] : []
+    for_each = var.load_balancer["create"] ? [1] : []
     content {
       target_group_arn = aws_lb_target_group.target_group[0].arn
-      container_name   = var.container_name
-      container_port   = var.elb_settings["container_port"]
-    }
-  }
-
-  dynamic "load_balancer" {
-    for_each = var.existing_elb_settings["use_existing_elb"] ? [1] : []
-    content {
-      target_group_arn = var.existing_elb_settings["target_group_arn"]
-      container_name   = var.container_name
-      container_port   = var.existing_elb_settings["container_port"]
+      container_name   = var.service
+      container_port   = var.container_port
     }
   }
 
@@ -210,4 +201,46 @@ resource "aws_appautoscaling_target" "ecs_app_scaling" {
   resource_id        = "service/${var.world}-${var.cluster_name}/${aws_ecs_service.ecs_service.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
+}
+
+# Load balancer configs
+
+resource "aws_lb_target_group" "target_group" {
+  count                = var.load_balancer["uses_load_balancer"] ? 1 : 0
+  name                 = "${local.world}${local.separator}${var.service}"
+  port                 = var.container_port
+  protocol             = var.load_balancer_defaults["target_group_protocol"]
+  target_type          = "instance"
+  vpc_id               = var.load_balancer["vpc_id"]
+  tags                 = var.tags
+  deregistration_delay = var.load_balancer_defaults["target_group_deregistration_delay"]
+  protocol_version     = var.load_balancer_defaults["target_group_protocol_version"]
+
+  health_check {
+    path                = var.load_balancer["health_check_path"]
+    protocol            = var.load_balancer_defaults["health_protocol"]
+    matcher             = var.load_balancer_defaults["health_matcher"]
+    port                = "traffic-port"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 10
+    interval            = 30
+  }
+}
+
+resource "aws_lb_listener_rule" "rule" {
+  count        = var.load_balancer["uses_load_balancer"] ? 1 : 0
+  listener_arn = data.aws_lb_listener.listener[0].arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group[0].arn
+  }
+
+  condition {
+    path_pattern {
+      values = [var.load_balancer["load_balancer_listener_rule_path"]]
+    }
+  }
+
 }
