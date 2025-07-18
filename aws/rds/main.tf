@@ -7,7 +7,7 @@ resource "aws_db_subnet_group" "subnet_group" {
 }
 
 resource "aws_kms_key" "kms_key" {
-  count                   = var.replicate_source_db == null ? 1 : 0
+  count                   = var.replicate_source_db == null && !var.use_default_kms_key ? 1 : 0
   description             = "Encrypts the ${local.world}${local.separator}${var.service} db"
   deletion_window_in_days = var.kms_key_deletion
   tags                    = var.tags
@@ -48,6 +48,7 @@ resource "aws_db_instance" "db_instance" {
   tags                                  = var.tags
   iam_database_authentication_enabled   = var.iam_database_authentication_enabled
   replicate_source_db                   = var.replicate_source_db
+  snapshot_identifier                   = var.snapshot_identifier
   timeouts {
     create = "120m" # 2 hours
     update = "120m" # 2 hours

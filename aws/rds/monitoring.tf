@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["freeable_memory"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-Memory-Usage"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -20,6 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_high_urgency" {
+  count               = var.create_alarms && var.active_alarms["freeable_memory"] ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-Memory-Usage"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -41,6 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["free_storage_space"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-Low-Storage-Space"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -62,6 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_high_urgency" {
+  count               = var.create_alarms && var.active_alarms["free_storage_space"] ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-Low-Storage-Space"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -83,6 +87,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["cpu"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-CPU-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -104,6 +109,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high_urgency" {
+  count               = var.create_alarms && var.active_alarms["cpu"] ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-CPU-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -125,6 +131,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["disk_queue_depth"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-DiskQueueDepth"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 30
@@ -146,6 +153,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "read_latency_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["read_latency"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-ReadLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 5
@@ -167,6 +175,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "write_latency_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["write_latency"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-WriteLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 5
@@ -188,6 +197,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iops_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["iops"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-IOPs-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -238,6 +248,7 @@ resource "aws_cloudwatch_metric_alarm" "iops_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iops_high_urgency" {
+  count               = var.create_alarms && var.active_alarms["iops"] ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-IOPs-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -288,7 +299,7 @@ resource "aws_cloudwatch_metric_alarm" "iops_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_lag_low_urgency" {
-  count               = var.replicate_source_db != null ? 1 : 0
+  count               = var.create_alarms && var.active_alarms["replica_lag"] && var.replicate_source_db != null ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-ReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -310,7 +321,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_lag_low_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_lag_high_urgency" {
-  count               = var.replicate_source_db != null ? 1 : 0
+  count               = var.create_alarms && var.active_alarms["replica_lag"] && var.replicate_source_db != null ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-ReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -332,7 +343,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_lag_high_urgency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_low_urgency" {
-  count               = var.replicate_source_db == null ? 1 : 0
+  count               = var.create_alarms && var.active_alarms["oldest_replication_slot_lag"] && var.replicate_source_db == null ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-Replication-Slot-Lag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -354,7 +365,7 @@ resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_low_urgency"
 }
 
 resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_high_urgency" {
-  count               = var.replicate_source_db == null ? 1 : 0
+  count               = var.create_alarms && var.active_alarms["oldest_replication_slot_lag"] && var.replicate_source_db == null ? 1 : 0
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-Replication-Slot-Lag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -376,6 +387,7 @@ resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_high_urgency
 }
 
 resource "aws_cloudwatch_metric_alarm" "db_load_low_urgency" {
+  count               = var.create_alarms && var.active_alarms["db_load"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-DBLoad"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -397,6 +409,7 @@ resource "aws_cloudwatch_metric_alarm" "db_load_low_urgency" {
 }
 
 resource "aws_cloudwatch_dashboard" "dash" {
+  count          = var.create_alarms && var.active_alarms["dashboard"] ? 1 : 0
   dashboard_name = "${local.world}${local.separator}${var.service}-DB"
 
   dashboard_body = jsonencode(

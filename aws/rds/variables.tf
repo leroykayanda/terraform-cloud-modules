@@ -148,9 +148,16 @@ variable "storage_type" {
   description = "One of standard (magnetic), gp2 (general purpose SSD), gp3 (general purpose SSD that needs iops independently) io1 (provisioned IOPS SSD) or io2 (block express storage provisioned IOPS SSD)"
 }
 
+variable "snapshot_identifier" {
+  type        = string
+  description = "Specifies whether or not to create this database from a snapshot. This corresponds to the snapshot ID you'd find in the RDS console"
+  default     = null
+}
+
 variable "iops" {
   type        = string
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of io1 or io2"
+  default     = null
 }
 
 variable "enabled_cloudwatch_logs_exports" {
@@ -171,6 +178,12 @@ variable "publicly_accessible" {
 variable "iam_database_authentication_enabled" {
   type    = bool
   default = false
+}
+
+variable "create_alarms" {
+  type        = bool
+  description = "Whether to create alarms for the RDS instance"
+  default     = true
 }
 
 variable "low_urgency_alarm_thresholds" {
@@ -201,6 +214,24 @@ variable "high_urgency_alarm_thresholds" {
   }
 }
 
+variable "active_alarms" {
+  type        = map(bool)
+  description = "Which alarms to create for the RDS instance"
+  default = {
+    freeable_memory             = true
+    free_storage_space          = true
+    cpu                         = true
+    disk_queue_depth            = true
+    read_latency                = true
+    write_latency               = true
+    iops                        = true
+    replica_lag                 = true
+    oldest_replication_slot_lag = true
+    db_load                     = true
+    dashboard                   = true
+  }
+}
+
 variable "sns_topic" {
   type        = map(string)
   description = "For alarm notifications"
@@ -216,4 +247,10 @@ variable "replicate_source_db" {
 variable "region" {
   type    = string
   default = "us-east-1"
+}
+
+variable "use_default_kms_key" {
+  type        = bool
+  description = "Whether to use the default KMS key for encryption. If set to true, the module will not create a new KMS key."
+  default     = true
 }
