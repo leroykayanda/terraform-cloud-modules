@@ -6,13 +6,6 @@ resource "aws_db_subnet_group" "subnet_group" {
   tags        = var.tags
 }
 
-resource "aws_kms_key" "kms_key" {
-  count                   = var.replicate_source_db == null && !var.use_default_kms_key ? 1 : 0
-  description             = "Encrypts the ${local.world}${local.separator}${var.service} db"
-  deletion_window_in_days = var.kms_key_deletion
-  tags                    = var.tags
-}
-
 resource "aws_db_instance" "db_instance" {
   allocated_storage                     = var.allocated_storage
   max_allocated_storage                 = var.max_allocated_storage
@@ -26,9 +19,8 @@ resource "aws_db_instance" "db_instance" {
   engine                                = var.engine
   engine_version                        = var.engine_version
   final_snapshot_identifier             = "${local.world}${local.separator}${var.service}"
-  identifier                            = "${local.world}${local.separator}${var.service}"
+  identifier                            = local.identifier
   instance_class                        = var.instance_class
-  kms_key_id                            = local.kms_key_id
   multi_az                              = var.multi_az
   storage_encrypted                     = var.storage_encrypted
   username                              = var.db_username
@@ -53,5 +45,11 @@ resource "aws_db_instance" "db_instance" {
     create = "120m" # 2 hours
     update = "120m" # 2 hours
     delete = "60m"  # 1 hour
+  }
+  lifecycle {
+    ignore_changes = [
+      password,
+      username,
+    ]
   }
 }

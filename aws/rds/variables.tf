@@ -61,6 +61,12 @@ variable "delete_automated_backups" {
   default     = false
 }
 
+variable "identifier" {
+  type        = string
+  description = "The name of the RDS instance"
+  default     = null
+}
+
 variable "deletion_protection" {
   default = true
 }
