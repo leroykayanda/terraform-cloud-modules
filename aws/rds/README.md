@@ -42,10 +42,12 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_active_alarms"></a> [active\_alarms](#input\_active\_alarms) | Which alarms to create for the RDS instance | `map(bool)` | <pre>{<br/>  "cpu": true,<br/>  "dashboard": true,<br/>  "db_load": true,<br/>  "disk_queue_depth": true,<br/>  "free_storage_space": true,<br/>  "freeable_memory": true,<br/>  "iops": true,<br/>  "oldest_replication_slot_lag": true,<br/>  "read_latency": true,<br/>  "replica_lag": true,<br/>  "write_latency": true<br/>}</pre> | no |
 | <a name="input_allocated_storage"></a> [allocated\_storage](#input\_allocated\_storage) | The allocated storage in gibibytes. | `number` | `500` | no |
 | <a name="input_auto_minor_version_upgrade"></a> [auto\_minor\_version\_upgrade](#input\_auto\_minor\_version\_upgrade) | Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window. | `bool` | `false` | no |
 | <a name="input_backup_retention_period"></a> [backup\_retention\_period](#input\_backup\_retention\_period) | The days to retain backups for. Must be between 0 and 35. | `number` | `21` | no |
 | <a name="input_backup_window"></a> [backup\_window](#input\_backup\_window) | The daily time range (in UTC) during which automated backups are created if they are enabled. Must not overlap with maintenance\_window.Eg: 00:00-02:00 | `string` | `"01:00-01:30"` | no |
+| <a name="input_create_alarms"></a> [create\_alarms](#input\_create\_alarms) | Whether to create alarms for the RDS instance | `bool` | `true` | no |
 | <a name="input_db_name"></a> [db\_name](#input\_db\_name) | The name of the database to create when the DB instance is created. | `string` | `null` | no |
 | <a name="input_db_password"></a> [db\_password](#input\_db\_password) | n/a | `string` | `null` | no |
 | <a name="input_db_subnets"></a> [db\_subnets](#input\_db\_subnets) | subnets to create the db in | `list(string)` | `null` | no |
@@ -58,7 +60,7 @@ No modules.
 | <a name="input_high_urgency_alarm_thresholds"></a> [high\_urgency\_alarm\_thresholds](#input\_high\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 100,<br/>  "free_storage_space": 1000000000000,<br/>  "freeable_memory": 10000000000,<br/>  "iops": 35000,<br/>  "oldest_replication_slot_lag": "300000000000",<br/>  "replica_lag": 1800<br/>}</pre> | no |
 | <a name="input_iam_database_authentication_enabled"></a> [iam\_database\_authentication\_enabled](#input\_iam\_database\_authentication\_enabled) | n/a | `bool` | `false` | no |
 | <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | The instance type of the RDS instance. | `string` | n/a | yes |
-| <a name="input_iops"></a> [iops](#input\_iops) | The amount of provisioned IOPS. Setting this implies a storage\_type of io1 or io2 | `string` | n/a | yes |
+| <a name="input_iops"></a> [iops](#input\_iops) | The amount of provisioned IOPS. Setting this implies a storage\_type of io1 or io2 | `string` | `null` | no |
 | <a name="input_kms_key_deletion"></a> [kms\_key\_deletion](#input\_kms\_key\_deletion) | The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the KMS key. If you specify a value, it must be between 7 and 30, inclusive. | `number` | `30` | no |
 | <a name="input_low_urgency_alarm_thresholds"></a> [low\_urgency\_alarm\_thresholds](#input\_low\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 85,<br/>  "db_load": 45,<br/>  "disk_queue_depth": 30,<br/>  "free_storage_space": 3000000000000,<br/>  "freeable_memory": 50000000000,<br/>  "iops": 30000,<br/>  "oldest_replication_slot_lag": "200000000000",<br/>  "read_latency": 0.5,<br/>  "replica_lag": 900,<br/>  "write_latency": 0.5<br/>}</pre> | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | n/a | `string` | `"Sun:03:00-Sun:03:30"` | no |
@@ -73,10 +75,12 @@ No modules.
 | <a name="input_replicate_source_db"></a> [replicate\_source\_db](#input\_replicate\_source\_db) | Specifies that this resource is a Replica database, and to use this value as the source database | `string` | `null` | no |
 | <a name="input_service"></a> [service](#input\_service) | Name of the service | `string` | n/a | yes |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | Determines whether a final DB snapshot is created before the DB instance is deleted. If true | `bool` | `false` | no |
+| <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | Specifies whether or not to create this database from a snapshot. This corresponds to the snapshot ID you'd find in the RDS console | `string` | `null` | no |
 | <a name="input_sns_topic"></a> [sns\_topic](#input\_sns\_topic) | For alarm notifications | `map(string)` | `null` | no |
 | <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | Specifies whether the DB instance is encrypted. | `bool` | `true` | no |
 | <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | One of standard (magnetic), gp2 (general purpose SSD), gp3 (general purpose SSD that needs iops independently) io1 (provisioned IOPS SSD) or io2 (block express storage provisioned IOPS SSD) | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_use_default_kms_key"></a> [use\_default\_kms\_key](#input\_use\_default\_kms\_key) | Whether to use the default KMS key for encryption. If set to true, the module will not create a new KMS key. | `bool` | `true` | no |
 | <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | List of VPC security groups to associate. | `list(string)` | n/a | yes |
 | <a name="input_world"></a> [world](#input\_world) | Deployment environment eg prod, dev | `string` | n/a | yes |
 
