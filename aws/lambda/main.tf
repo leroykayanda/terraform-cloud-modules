@@ -29,8 +29,11 @@ resource "aws_lambda_function" "lambda_function" {
     size = var.ephemeral_storage
   }
 
-  image_config {
-    command = var.command
+  dynamic "image_config" {
+    for_each = length(var.command) > 0 ? [1] : []
+    content {
+      command = var.command
+    }
   }
 
 }
