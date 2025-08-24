@@ -1,12 +1,11 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "${var.world}-${var.service}"
+  name = "${var.env}-${var.service}"
+  tags = var.tags
 
   setting {
     name  = "containerInsights"
     value = "enabled"
   }
-
-  tags = var.tags
 }
 
 resource "aws_ecs_cluster_capacity_providers" "capacity_provider" {
@@ -35,7 +34,7 @@ resource "aws_ecs_cluster_capacity_providers" "ec2_capacity_provider" {
 
 resource "aws_ecs_capacity_provider" "capacity_provider" {
   count = var.capacity_provider == "EC2" ? 1 : 0
-  name  = "${var.world}-${var.service}"
+  name  = "${var.env}-${var.service}"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_asg[0].arn
@@ -53,7 +52,7 @@ resource "aws_ecs_capacity_provider" "capacity_provider" {
 
 resource "aws_launch_template" "ecs_lt" {
   count                  = var.capacity_provider == "EC2" ? 1 : 0
-  name                   = "${var.world}-${var.service}"
+  name                   = "${var.env}-${var.service}"
   image_id               = var.image_id
   instance_type          = var.instance_type
   key_name               = var.key_name
@@ -86,7 +85,7 @@ resource "aws_launch_template" "ecs_lt" {
 
 resource "aws_autoscaling_group" "ecs_asg" {
   count                     = var.capacity_provider == "EC2" ? 1 : 0
-  name                      = "${var.world}-${var.service}"
+  name                      = "${var.env}-${var.service}"
   vpc_zone_identifier       = var.vpc_subnets
   desired_capacity          = var.asg_autoscaling_settings["desired_capacity"]
   max_size                  = var.asg_autoscaling_settings["max_size"]
@@ -112,7 +111,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.world}-${var.service}-ASG"
+    value               = "${var.env}-${var.service}-ASG"
     propagate_at_launch = true
   }
 

@@ -1,4 +1,4 @@
-variable "world" {
+variable "env" {
   type        = string
   description = "Deployment environment eg prod, dev"
 }
@@ -8,12 +8,17 @@ variable "service" {
   description = "Name of the ECS service"
 }
 
+variable "container_insights" {
+  type        = string
+  description = "enabled or disabled"
+  default     = "enabled"
+}
+
 variable "image_id" {
   type        = string
   description = "AMI"
+  default     = null
 }
-
-# For these variables, we have set sensible defaults but you can override them by passing them as module inputs
 
 variable "capacity_provider" {
   type        = string
@@ -174,5 +179,6 @@ variable "alarm_periods" {
 }
 
 variable "sns_topic" {
-  type = string
+  type    = string
+  default = null
 }

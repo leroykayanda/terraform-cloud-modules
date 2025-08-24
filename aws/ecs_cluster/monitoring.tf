@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "asg_memory" {
   count               = var.capacity_provider == "EC2" && var.active_alarms["asg_memory"] ? 1 : 0
-  alarm_name          = "${var.world}-${var.service}-ASG-High-Memory-Usage"
+  alarm_name          = "${var.env}-${var.service}-ASG-High-Memory-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "mem_used_percent"
@@ -22,7 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_memory" {
 
 resource "aws_cloudwatch_metric_alarm" "asg_cpu" {
   count               = var.capacity_provider == "EC2" && var.active_alarms["asg_cpu"] ? 1 : 0
-  alarm_name          = "${var.world}-${var.service}-ASG-High-CPU-Usage"
+  alarm_name          = "${var.env}-${var.service}-ASG-High-CPU-Usage"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
@@ -44,7 +44,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_cpu" {
 
 resource "aws_cloudwatch_metric_alarm" "container_instance_count" {
   count               = var.capacity_provider == "EC2" && var.active_alarms["container_instance_count"] ? 1 : 0
-  alarm_name          = "${var.world}-${var.service}-ASG-No-Running-Instances"
+  alarm_name          = "${var.env}-${var.service}-ASG-No-Running-Instances"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "ContainerInstanceCount"
@@ -60,13 +60,13 @@ resource "aws_cloudwatch_metric_alarm" "container_instance_count" {
   tags                = var.tags
 
   dimensions = {
-    ClusterName = "${var.world}-${var.service}"
+    ClusterName = "${var.env}-${var.service}"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "asg_max_capacity_usage" {
   count               = var.capacity_provider == "EC2" && var.active_alarms["asg_max_capacity_usage"] ? 1 : 0
-  alarm_name          = "${var.world}-${var.service}-ASG-Instances-Close-To-Maximum-ASG-Capacity"
+  alarm_name          = "${var.env}-${var.service}-ASG-Instances-Close-To-Maximum-ASG-Capacity"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   threshold           = var.alarm_thresholds["asg_max_capacity_usage"]
