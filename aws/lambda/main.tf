@@ -29,4 +29,8 @@ resource "aws_lambda_function" "lambda_function" {
     size = var.ephemeral_storage
   }
 
+  image_config {
+    command = var.command
+  }
+
 }

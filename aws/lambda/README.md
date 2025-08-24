@@ -1,13 +1,15 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.4.0 |
 
 ## Modules
 
@@ -27,6 +29,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_retention"></a> [cloudwatch\_log\_retention](#input\_cloudwatch\_log\_retention) | In days | `number` | `30` | no |
+| <a name="input_command"></a> [command](#input\_command) | Parameters to pass to the container image. | `list(string)` | `[]` | no |
 | <a name="input_env"></a> [env](#input\_env) | Deployment environment eg prod, dev | `string` | n/a | yes |
 | <a name="input_env_variables"></a> [env\_variables](#input\_env\_variables) | Map of environment variables that are accessible from the function code during execution | `map(any)` | `{}` | no |
 | <a name="input_ephemeral_storage"></a> [ephemeral\_storage](#input\_ephemeral\_storage) | The size of the Lambda function Ephemeral storage(/tmp) represented in MB. The minimum supported ephemeral\_storage value defaults to 512MB and the maximum supported value is 10240MB. | `number` | `512` | no |
@@ -48,6 +51,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_arn"></a> [arn](#output\_arn) | n/a |
+| <a name="output_invoke_arn"></a> [invoke\_arn](#output\_invoke\_arn) | n/a |
 | <a name="output_log_group_arn"></a> [log\_group\_arn](#output\_log\_group\_arn) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 <!-- END_TF_DOCS -->

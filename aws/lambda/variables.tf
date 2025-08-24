@@ -64,6 +64,12 @@ variable "subnets" {
   default = []
 }
 
+variable "command" {
+  type        = list(string)
+  description = "Parameters to pass to the container image."
+  default     = []
+}
+
 variable "security_group_id" {
   type    = string
   default = null

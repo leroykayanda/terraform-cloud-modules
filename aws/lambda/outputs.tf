@@ -9,3 +9,7 @@ output "name" {
 output "log_group_arn" {
   value = aws_cloudwatch_log_group.lambda_logs.arn
 }
+
+output "invoke_arn" {
+  value = aws_lambda_function.lambda_function.invoke_arn
+}
