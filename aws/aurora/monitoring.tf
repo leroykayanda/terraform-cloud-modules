@@ -309,17 +309,17 @@ resource "aws_cloudwatch_metric_alarm" "acu_usage" {
   count               = var.aurora_settings["serverless_cluster"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-ACUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "ACUUtilization"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = "90"
   alarm_description   = "This alarm monitors for high Aurora ACU usage"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  datapoints_to_alarm = "15"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
@@ -330,17 +330,17 @@ resource "aws_cloudwatch_metric_alarm" "acu_usage" {
 resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
   alarm_name          = "${var.env}-${var.service}-DB-Low-Memory"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "FreeableMemory"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = var.aurora_settings["freeable_memory_alarm_threshold"]
   alarm_description   = "This alarm monitors for low database memory"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
-  treat_missing_data  = "breaching"
+  datapoints_to_alarm = "15"
+  treat_missing_data  = "ignore"
   tags                = var.tags
 
   dimensions = {
@@ -351,16 +351,16 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
 resource "aws_cloudwatch_metric_alarm" "rds_CPUUtilization" {
   alarm_name          = "${var.env}-${var.service}-DB-High-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "CPUUtilization"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = "90"
   alarm_description   = "This alarm monitors for high database CPU"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
+  datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
 
@@ -372,16 +372,16 @@ resource "aws_cloudwatch_metric_alarm" "rds_CPUUtilization" {
 resource "aws_cloudwatch_metric_alarm" "read_latency" {
   alarm_name          = "${var.env}-${var.service}-DB-High-ReadLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "ReadLatency"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = "1"
   alarm_description   = "This alarm monitors for high DB read latency"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
+  datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
 
@@ -393,16 +393,16 @@ resource "aws_cloudwatch_metric_alarm" "read_latency" {
 resource "aws_cloudwatch_metric_alarm" "write_latency" {
   alarm_name          = "${var.env}-${var.service}-DB-High-WriteLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "WriteLatency"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = "1"
   alarm_description   = "This alarm monitors for high DB write latency"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
+  datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
 
@@ -414,16 +414,16 @@ resource "aws_cloudwatch_metric_alarm" "write_latency" {
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
   alarm_name          = "${var.env}-${var.service}-DB-High-DiskQueueDepth"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "DiskQueueDepth"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = var.aurora_settings["disk_queue_depth_alarm_threshold"]
   alarm_description   = "This alarm monitors for high DB disk queue depth"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
+  datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
 
@@ -435,16 +435,16 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
 resource "aws_cloudwatch_metric_alarm" "buffer_cache_hit_ratio" {
   alarm_name          = "${var.env}-${var.service}-DB-Low-BufferCacheHitRatio"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "15"
   metric_name         = "BufferCacheHitRatio"
   namespace           = "AWS/RDS"
-  period              = "300"
+  period              = "60"
   statistic           = "Average"
   threshold           = var.aurora_settings["buffer_cache_hit_ratio_alarm_threshold"]
   alarm_description   = "This alarm monitors for high DB disk queue depth"
   alarm_actions       = [var.sns_topic]
   ok_actions          = [var.sns_topic]
-  datapoints_to_alarm = "1"
+  datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
 

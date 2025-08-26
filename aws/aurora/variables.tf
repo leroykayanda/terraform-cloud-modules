@@ -49,13 +49,24 @@ variable "security_group_id" {
   type = string
 }
 
+variable "storage_type" {
+  type        = string
+  description = "Specifies the storage type to be associated with the DB cluster. Valid values are: \"\", aurora-iopt1 (Aurora DB Clusters)"
+  default     = ""
+}
+
 variable "availability_zones" {
   type        = list(string)
   description = "For Aurora"
   default     = ["af-south-1a", "af-south-1b", "af-south-1c"]
 }
 
-# For these variables, we have set sensible defaults but you can override them by passing them as module inputs
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Enable to allow major engine version upgrades when changing engine versions"
+  default     = false
+}
+
 
 variable "tags" {
   type        = map(string)

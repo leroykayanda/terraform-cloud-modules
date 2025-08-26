@@ -28,7 +28,6 @@ No modules.
 | [aws_cloudwatch_metric_alarm.write_latency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_db_parameter_group.db_parameter_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_parameter_group) | resource |
 | [aws_db_subnet_group.subnet_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
-| [aws_kms_key.kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_rds_cluster.aurora](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster) | resource |
 | [aws_rds_cluster_instance.cluster_instances](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_instance) | resource |
 | [aws_rds_cluster_parameter_group.db_parameter_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_parameter_group) | resource |
@@ -39,6 +38,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allow_major_version_upgrade"></a> [allow\_major\_version\_upgrade](#input\_allow\_major\_version\_upgrade) | Enable to allow major engine version upgrades when changing engine versions | `bool` | `false` | no |
 | <a name="input_aurora_settings"></a> [aurora\_settings](#input\_aurora\_settings) | n/a | `map(any)` | <pre>{<br/>  "backup_retention_period": 35,<br/>  "buffer_cache_hit_ratio_alarm_threshold": 80,<br/>  "db_instance_count": 2,<br/>  "disk_queue_depth_alarm_threshold": 200,<br/>  "engine": "aurora-postgresql",<br/>  "engine_mode": "provisioned",<br/>  "engine_version": "16.1",<br/>  "freeable_memory_alarm_threshold": 2000000000,<br/>  "instance_class": "db.serverless",<br/>  "parameter_group_family": "aurora-postgresql16",<br/>  "performance_insights_retention_period": 31,<br/>  "port": 5432,<br/>  "publicly_accessible": false,<br/>  "serverless_cluster": true,<br/>  "serverless_max_capacity": "8",<br/>  "serverless_min_capacity": "0.5"<br/>}</pre> | no |
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | For Aurora | `list(string)` | <pre>[<br/>  "af-south-1a",<br/>  "af-south-1b",<br/>  "af-south-1c"<br/>]</pre> | no |
 | <a name="input_db_cluster_snapshot_identifier"></a> [db\_cluster\_snapshot\_identifier](#input\_db\_cluster\_snapshot\_identifier) | Name of the snapshort we are restoring | `string` | `null` | no |
@@ -54,6 +54,7 @@ No modules.
 | <a name="input_service"></a> [service](#input\_service) | Name of the service | `string` | n/a | yes |
 | <a name="input_snapshot_cluster"></a> [snapshot\_cluster](#input\_snapshot\_cluster) | Cluster whose snapshot we are using | `string` | `null` | no |
 | <a name="input_sns_topic"></a> [sns\_topic](#input\_sns\_topic) | SNS topic ARN for notifications | `string` | n/a | yes |
+| <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | Specifies the storage type to be associated with the DB cluster. Valid values are: "", aurora-iopt1 (Aurora DB Clusters) | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | To tag resources. | `map(string)` | `{}` | no |
 
 ## Outputs

@@ -1,9 +1,3 @@
-resource "aws_kms_key" "kms_key" {
-  description             = "Encrypts the ${var.env}-${var.service} db"
-  deletion_window_in_days = 7
-  tags                    = var.tags
-}
-
 resource "aws_db_subnet_group" "subnet_group" {
   name        = "${var.env}-${var.service}"
   subnet_ids  = var.db_subnets
@@ -75,7 +69,6 @@ resource "aws_rds_cluster" "aurora" {
   deletion_protection             = true
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   storage_encrypted               = true
-  kms_key_id                      = aws_kms_key.kms_key.arn
   port                            = var.aurora_settings["port"]
   preferred_maintenance_window    = var.preferred_maintenance_window
   preferred_backup_window         = var.preferred_backup_window
@@ -84,9 +77,9 @@ resource "aws_rds_cluster" "aurora" {
   final_snapshot_identifier       = "${var.env}-${var.service}"
   database_name                   = var.db_credentials["db_name"]
   snapshot_identifier             = local.snapshot_identifier
-  allow_major_version_upgrade     = true
+  allow_major_version_upgrade     = var.allow_major_version_upgrade
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.db_parameter_group.name
-  storage_type                    = "aurora-iopt1"
+  storage_type                    = var.storage_type
   tags                            = var.tags
 
   dynamic "serverlessv2_scaling_configuration" {
@@ -118,7 +111,6 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   preferred_maintenance_window          = aws_rds_cluster.aurora.preferred_maintenance_window
   auto_minor_version_upgrade            = false
   performance_insights_enabled          = true
-  performance_insights_kms_key_id       = aws_kms_key.kms_key.arn
   performance_insights_retention_period = var.aurora_settings["performance_insights_retention_period"]
   db_parameter_group_name               = aws_db_parameter_group.db_parameter_group.name
   copy_tags_to_snapshot                 = true
