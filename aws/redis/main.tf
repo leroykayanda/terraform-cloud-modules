@@ -24,6 +24,7 @@ resource "aws_elasticache_replication_group" "group" {
   subnet_group_name          = local.subnet_group_name
   security_group_ids         = var.security_groups
   snapshot_retention_limit   = var.snapshot_retention_limit
+  auth_token_update_strategy = var.auth_token_update_strategy
   tags                       = var.tags
 }
 

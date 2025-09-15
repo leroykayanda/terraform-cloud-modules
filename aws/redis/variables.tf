@@ -137,3 +137,9 @@ variable "subnet_group_name" {
   description = "Name of the cache subnet group to be used for the replication group."
   default     = null
 }
+
+variable "auth_token_update_strategy" {
+  type        = string
+  description = "Strategy to use when updating the auth_token. Valid values are SET, ROTATE, and DELETE. Required if auth_token is set."
+  default     = null
+}
