@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_dashboard" "dash" {
+  count          = var.enable_monitoring ? 1 : 0
   dashboard_name = "${var.env}-${var.service}-Lambda"
 
   dashboard_body = jsonencode(
@@ -93,6 +94,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
 # Errors
 
 resource "aws_cloudwatch_metric_alarm" "errors" {
+  count               = var.enable_monitoring ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-Lambda-Error"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"

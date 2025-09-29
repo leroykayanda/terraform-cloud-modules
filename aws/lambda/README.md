@@ -30,6 +30,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_retention"></a> [cloudwatch\_log\_retention](#input\_cloudwatch\_log\_retention) | In days | `number` | `30` | no |
 | <a name="input_command"></a> [command](#input\_command) | Parameters to pass to the container image. | `list(string)` | `[]` | no |
+| <a name="input_enable_monitoring"></a> [enable\_monitoring](#input\_enable\_monitoring) | Whether to create monitoring resources | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | Deployment environment eg prod, dev | `string` | n/a | yes |
 | <a name="input_env_variables"></a> [env\_variables](#input\_env\_variables) | Map of environment variables that are accessible from the function code during execution | `map(any)` | `{}` | no |
 | <a name="input_ephemeral_storage"></a> [ephemeral\_storage](#input\_ephemeral\_storage) | The size of the Lambda function Ephemeral storage(/tmp) represented in MB. The minimum supported ephemeral\_storage value defaults to 512MB and the maximum supported value is 10240MB. | `number` | `512` | no |

@@ -80,6 +80,12 @@ variable "needs_vpc" {
   default = false
 }
 
+variable "enable_monitoring" {
+  type        = bool
+  description = "Whether to create monitoring resources"
+  default     = false
+}
+
 variable "ephemeral_storage" {
   type        = number
   description = "The size of the Lambda function Ephemeral storage(/tmp) represented in MB. The minimum supported ephemeral_storage value defaults to 512MB and the maximum supported value is 10240MB."
