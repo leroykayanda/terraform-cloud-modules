@@ -8,7 +8,7 @@ variable "service" {
   description = "Name of the service"
 }
 
-variable "db_subnets" {
+variable "subnets" {
   type        = list(string)
   description = "Subnets to create the db in"
 }
@@ -16,20 +16,15 @@ variable "db_subnets" {
 variable "aurora_settings" {
   type = map(any)
   default = {
-    "parameter_group_family"                 = "aurora-postgresql16"
+    "parameter_group_family"                 = "aurora-postgresql17"
     "engine"                                 = "aurora-postgresql",
-    "engine_version"                         = "16.1",
-    "engine_mode"                            = "provisioned",
-    "serverless_cluster"                     = true
-    "serverless_min_capacity"                = "0.5",
-    "serverless_max_capacity"                = "8",
-    "backup_retention_period"                = 35,
-    "port"                                   = 5432,
-    "instance_class"                         = "db.serverless"
-    "db_instance_count"                      = 2,
+    "engine_version"                         = "17.7",
+    "backup_retention_period"                = 14,
+    "instance_class"                         = "db.t4g.medium"
+    "db_instance_count"                      = 1,
     "publicly_accessible"                    = false,
     "performance_insights_retention_period"  = 31
-    "freeable_memory_alarm_threshold"        = 2000000000
+    "freeable_memory_alarm_threshold"        = 1000000000 # 1GB
     "disk_queue_depth_alarm_threshold"       = 200
     "buffer_cache_hit_ratio_alarm_threshold" = 80
   }
@@ -49,6 +44,11 @@ variable "security_group_id" {
   type = string
 }
 
+variable "promotion_tier" {
+  type    = number
+  default = 2
+}
+
 variable "storage_type" {
   type        = string
   description = "Specifies the storage type to be associated with the DB cluster. Valid values are: \"\", aurora-iopt1 (Aurora DB Clusters)"
@@ -63,8 +63,26 @@ variable "availability_zones" {
 
 variable "allow_major_version_upgrade" {
   type        = bool
-  description = "Enable to allow major engine version upgrades when changing engine versions"
+  description = "Enable to allow major engine version upgrades"
   default     = false
+}
+
+variable "auto_minor_version_upgrade" {
+  type        = bool
+  description = "Enable to allow minor engine version upgrades"
+  default     = false
+}
+
+variable "performance_insights_enabled" {
+  type        = bool
+  description = "Enable Performance Insights for the DB cluster"
+  default     = true
+}
+
+variable "copy_tags_to_snapshot" {
+  type        = bool
+  description = "Copy tags to DB cluster snapshots"
+  default     = true
 }
 
 
@@ -114,4 +132,46 @@ variable "region" {
 variable "sns_topic" {
   type        = string
   description = "SNS topic ARN for notifications"
+}
+
+variable "port" {
+  type        = number
+  description = "Port on which the database listens"
+  default     = 5432
+}
+
+variable "apply_immediately" {
+  type        = bool
+  description = "Whether to apply changes immediately"
+  default     = true
+}
+
+variable "engine_mode" {
+  type        = string
+  description = "Database engine mode"
+  default     = "provisioned"
+}
+
+variable "deletion_protection" {
+  type        = bool
+  description = "If the DB cluster should have deletion protection enabled"
+  default     = true
+}
+
+variable "serverless_cluster" {
+  type        = bool
+  description = "Provision an Aurora Serverless v2 cluster instead of a provisioned cluster"
+  default     = false
+}
+
+variable "storage_encrypted" {
+  type        = bool
+  description = "Specifies whether the DB cluster is encrypted"
+  default     = true
+}
+
+variable "skip_final_snapshot" {
+  type        = bool
+  description = "Determines whether a final DB snapshot is created before the DB cluster is deleted"
+  default     = false
 }

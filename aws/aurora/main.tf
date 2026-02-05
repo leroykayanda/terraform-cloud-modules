@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "subnet_group" {
   name        = "${var.env}-${var.service}"
-  subnet_ids  = var.db_subnets
+  subnet_ids  = var.subnets
   description = "Subnets for the db"
   tags        = var.tags
 }
@@ -57,22 +57,22 @@ resource "aws_db_parameter_group" "db_parameter_group" {
 
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier              = "${var.env}-${var.service}"
-  apply_immediately               = true
+  apply_immediately               = var.apply_immediately
   engine                          = var.aurora_settings["engine"]
   engine_version                  = var.aurora_settings["engine_version"]
-  engine_mode                     = var.aurora_settings["engine_mode"]
+  engine_mode                     = var.engine_mode
   availability_zones              = var.availability_zones
   master_username                 = var.db_credentials["user"]
   master_password                 = var.db_credentials["password"]
   backup_retention_period         = var.aurora_settings["backup_retention_period"]
   db_subnet_group_name            = aws_db_subnet_group.subnet_group.name
-  deletion_protection             = true
+  deletion_protection             = var.deletion_protection
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
-  storage_encrypted               = true
-  port                            = var.aurora_settings["port"]
+  storage_encrypted               = var.storage_encrypted
+  port                            = var.port
   preferred_maintenance_window    = var.preferred_maintenance_window
   preferred_backup_window         = var.preferred_backup_window
-  skip_final_snapshot             = false
+  skip_final_snapshot             = var.skip_final_snapshot
   vpc_security_group_ids          = [var.security_group_id]
   final_snapshot_identifier       = "${var.env}-${var.service}"
   database_name                   = var.db_credentials["db_name"]
@@ -83,7 +83,7 @@ resource "aws_rds_cluster" "aurora" {
   tags                            = var.tags
 
   dynamic "serverlessv2_scaling_configuration" {
-    for_each = var.aurora_settings["serverless_cluster"] ? [1] : []
+    for_each = var.serverless_cluster ? [1] : []
     content {
       min_capacity = var.aurora_settings["serverless_min_capacity"]
       max_capacity = var.aurora_settings["serverless_max_capacity"]
@@ -106,14 +106,14 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   engine_version                        = aws_rds_cluster.aurora.engine_version
   publicly_accessible                   = var.aurora_settings["publicly_accessible"]
   db_subnet_group_name                  = aws_rds_cluster.aurora.db_subnet_group_name
-  apply_immediately                     = true
-  promotion_tier                        = 2
+  apply_immediately                     = var.apply_immediately
+  promotion_tier                        = var.promotion_tier
   preferred_maintenance_window          = aws_rds_cluster.aurora.preferred_maintenance_window
-  auto_minor_version_upgrade            = false
-  performance_insights_enabled          = true
+  auto_minor_version_upgrade            = var.auto_minor_version_upgrade
+  performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.aurora_settings["performance_insights_retention_period"]
   db_parameter_group_name               = aws_db_parameter_group.db_parameter_group.name
-  copy_tags_to_snapshot                 = true
+  copy_tags_to_snapshot                 = var.copy_tags_to_snapshot
   tags                                  = var.tags
 
   lifecycle {

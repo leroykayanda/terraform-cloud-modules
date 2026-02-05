@@ -306,7 +306,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "acu_usage" {
-  count               = var.aurora_settings["serverless_cluster"] ? 1 : 0
+  count               = var.serverless_cluster ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-ACUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
