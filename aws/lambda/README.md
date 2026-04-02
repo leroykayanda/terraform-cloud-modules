@@ -23,25 +23,29 @@ No modules.
 | [aws_cloudwatch_log_group.lambda_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_metric_alarm.errors](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_lambda_function.lambda_function](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
+| [aws_lambda_function_url.url](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_url) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_authorization_type"></a> [authorization\_type](#input\_authorization\_type) | Type of authentication that the function URL uses. Valid values are AWS\_IAM and NONE | `string` | `"NONE"` | no |
 | <a name="input_cloudwatch_log_retention"></a> [cloudwatch\_log\_retention](#input\_cloudwatch\_log\_retention) | In days | `number` | `30` | no |
 | <a name="input_command"></a> [command](#input\_command) | Parameters to pass to the container image. | `list(string)` | `[]` | no |
-| <a name="input_enable_monitoring"></a> [enable\_monitoring](#input\_enable\_monitoring) | Whether to create monitoring resources | `bool` | `false` | no |
+| <a name="input_cors_settings"></a> [cors\_settings](#input\_cors\_settings) | CORS settings for the Lambda Function URL | `map(any)` | <pre>{<br/>  "allow_credentials": null,<br/>  "allow_headers": null,<br/>  "allow_methods": null,<br/>  "allow_origins": null,<br/>  "expose_headers": null,<br/>  "max_age": null<br/>}</pre> | no |
+| <a name="input_enable_function_url"></a> [enable\_function\_url](#input\_enable\_function\_url) | Whether to create a Lambda Function URL | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | Deployment environment eg prod, dev | `string` | n/a | yes |
 | <a name="input_env_variables"></a> [env\_variables](#input\_env\_variables) | Map of environment variables that are accessible from the function code during execution | `map(any)` | `{}` | no |
 | <a name="input_ephemeral_storage"></a> [ephemeral\_storage](#input\_ephemeral\_storage) | The size of the Lambda function Ephemeral storage(/tmp) represented in MB. The minimum supported ephemeral\_storage value defaults to 512MB and the maximum supported value is 10240MB. | `number` | `512` | no |
 | <a name="input_iam_role"></a> [iam\_role](#input\_iam\_role) | Amazon Resource Name (ARN) of the function's execution role. The role provides the function's identity and access to AWS services and resources. | `string` | n/a | yes |
 | <a name="input_image_uri"></a> [image\_uri](#input\_image\_uri) | ECR image URI containing the function's deployment package. Exactly one of filename, image\_uri, or s3\_bucket must be specified. | `string` | `null` | no |
+| <a name="input_invoke_mode"></a> [invoke\_mode](#input\_invoke\_mode) | The mode in which the function URL is invoked. Valid values are BUFFERED and RESPONSE\_STREAM | `string` | `"BUFFERED"` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | Amount of memory in MB your Lambda Function can use at runtime | `number` | `128` | no |
 | <a name="input_needs_vpc"></a> [needs\_vpc](#input\_needs\_vpc) | n/a | `bool` | `false` | no |
 | <a name="input_package_type"></a> [package\_type](#input\_package\_type) | Lambda deployment package type. Valid values are Zip and Image | `string` | `"Image"` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
 | <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | n/a | `string` | `null` | no |
-| <a name="input_service"></a> [service](#input\_service) | Name of the ECS service | `string` | n/a | yes |
+| <a name="input_service"></a> [service](#input\_service) | Name of the service | `string` | n/a | yes |
 | <a name="input_sns_topic"></a> [sns\_topic](#input\_sns\_topic) | For alarms | `string` | `null` | no |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | n/a | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | To tag resources. | `map(string)` | `{}` | no |

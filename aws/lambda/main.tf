@@ -37,3 +37,20 @@ resource "aws_lambda_function" "lambda_function" {
   }
 
 }
+
+# Lambda Function URL 
+resource "aws_lambda_function_url" "url" {
+  count              = var.enable_function_url ? 1 : 0
+  function_name      = aws_lambda_function.lambda_function.function_name
+  authorization_type = var.authorization_type
+  invoke_mode        = var.invoke_mode
+
+  cors {
+    allow_credentials = var.cors_settings.allow_credentials
+    allow_headers     = var.cors_settings.allow_headers
+    allow_methods     = var.cors_settings.allow_methods
+    expose_headers    = var.cors_settings.expose_headers
+    allow_origins     = var.cors_settings.allow_origins
+    max_age           = var.cors_settings.max_age
+  }
+}

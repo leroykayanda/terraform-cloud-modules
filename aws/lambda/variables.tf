@@ -5,7 +5,7 @@ variable "env" {
 
 variable "service" {
   type        = string
-  description = "Name of the ECS service"
+  description = "Name of the service"
 }
 
 variable "iam_role" {
@@ -81,9 +81,8 @@ variable "needs_vpc" {
 }
 
 variable "enable_monitoring" {
-  type        = bool
-  description = "Whether to create monitoring resources"
-  default     = false
+  type    = bool
+  default = false
 }
 
 variable "ephemeral_storage" {
@@ -96,4 +95,35 @@ variable "sns_topic" {
   type        = string
   description = "For alarms"
   default     = null
+}
+
+variable "enable_function_url" {
+  type        = bool
+  description = "Whether to create a Lambda Function URL"
+  default     = false
+}
+
+variable "authorization_type" {
+  description = "Type of authentication that the function URL uses. Valid values are AWS_IAM and NONE"
+  type        = string
+  default     = "NONE"
+}
+
+variable "invoke_mode" {
+  description = "The mode in which the function URL is invoked. Valid values are BUFFERED and RESPONSE_STREAM"
+  type        = string
+  default     = "BUFFERED"
+}
+
+variable "cors_settings" {
+  description = "CORS settings for the Lambda Function URL"
+  type        = map(any)
+  default = {
+    allow_credentials = null
+    allow_headers     = null
+    allow_methods     = null
+    expose_headers    = null
+    allow_origins     = null
+    max_age           = null
+  }
 }
