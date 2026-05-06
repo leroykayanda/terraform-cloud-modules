@@ -19,16 +19,9 @@ variable "tags" {
   default = {}
 }
 
-variable "kms_key_deletion" {
-  type        = number
-  description = "The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the KMS key. If you specify a value, it must be between 7 and 30, inclusive."
-  default     = 30
-}
-
 variable "allocated_storage" {
   type        = number
-  description = "The allocated storage in gibibytes."
-  default     = 500
+  description = "The allocated storage in gibibytes. If max_allocated_storage is configured, this argument represents the initial storage allocation and differences from the configuration will be ignored automatically when Storage Autoscaling occurs. If replicate_source_db is set, the value is ignored during the creation of the instance."
 }
 
 variable "max_allocated_storage" {
@@ -40,6 +33,12 @@ variable "max_allocated_storage" {
 variable "auto_minor_version_upgrade" {
   type        = bool
   description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window."
+  default     = false
+}
+
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible."
   default     = false
 }
 
@@ -80,7 +79,6 @@ variable "engine" {
 variable "engine_version" {
   type        = string
   description = "The engine version to use"
-  default     = "17.2"
 }
 
 variable "instance_class" {
@@ -173,7 +171,8 @@ variable "enabled_cloudwatch_logs_exports" {
 }
 
 variable "parameter_group_name" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "publicly_accessible" {
@@ -195,8 +194,8 @@ variable "create_alarms" {
 variable "low_urgency_alarm_thresholds" {
   type = map(number)
   default = {
-    freeable_memory             = 50000000000   # 50Gb
-    free_storage_space          = 3000000000000 # 3Tb
+    freeable_memory             = 50000000000 # 50Gb
+    free_storage_space          = 20          # 20% free space remaining
     cpu                         = 85
     disk_queue_depth            = 30
     read_latency                = 0.5 # 0.5s 
@@ -211,12 +210,13 @@ variable "low_urgency_alarm_thresholds" {
 variable "high_urgency_alarm_thresholds" {
   type = map(number)
   default = {
-    freeable_memory             = 10000000000   # 10Gb
-    free_storage_space          = 1000000000000 # 1Tb
+    freeable_memory             = 10000000000 # 10Gb
+    free_storage_space          = 10          # 10% free space remaining
     cpu                         = 100
     iops                        = 35000
     replica_lag                 = 1800           # 30min
     oldest_replication_slot_lag = "300000000000" #300 Gb
+    db_load                     = 70
   }
 }
 
@@ -233,7 +233,8 @@ variable "active_alarms" {
     iops                        = true
     replica_lag                 = true
     oldest_replication_slot_lag = true
-    db_load                     = true
+    db_load_low_urgency         = true
+    db_load_high_urgency        = true
     dashboard                   = true
   }
 }

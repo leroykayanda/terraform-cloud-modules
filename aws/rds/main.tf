@@ -41,6 +41,7 @@ resource "aws_db_instance" "db_instance" {
   iam_database_authentication_enabled   = var.iam_database_authentication_enabled
   replicate_source_db                   = var.replicate_source_db
   snapshot_identifier                   = var.snapshot_identifier
+  allow_major_version_upgrade           = var.allow_major_version_upgrade
   timeouts {
     create = "120m" # 2 hours
     update = "120m" # 2 hours

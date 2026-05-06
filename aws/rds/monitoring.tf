@@ -47,10 +47,6 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low_urgency" {
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-Low-Storage-Space"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
-  metric_name         = "FreeStorageSpace"
-  namespace           = "AWS/RDS"
-  period              = "60"
-  statistic           = "Average"
   threshold           = var.low_urgency_alarm_thresholds["free_storage_space"]
   alarm_description   = "This alarm monitors for when the DB is running out of storage"
   alarm_actions       = [var.sns_topic["low_urgency"]]
@@ -59,8 +55,26 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low_urgency" {
   treat_missing_data  = "ignore"
   tags                = var.tags
 
-  dimensions = {
-    DBInstanceIdentifier = aws_db_instance.db_instance.identifier
+  metric_query {
+    id          = "e1"
+    expression  = "m1/(${var.allocated_storage}*1000*1000*1000)*100"
+    label       = "Percent Free Storage Space Left"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+
+    metric {
+      metric_name = "FreeStorageSpace"
+      namespace   = "AWS/RDS"
+      period      = 300
+      stat        = "Average"
+
+      dimensions = {
+        DBInstanceIdentifier = aws_db_instance.db_instance.identifier
+      }
+    }
   }
 }
 
@@ -69,10 +83,6 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_high_urgency" {
   alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-Low-Storage-Space"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 15
-  metric_name         = "FreeStorageSpace"
-  namespace           = "AWS/RDS"
-  period              = "60"
-  statistic           = "Average"
   threshold           = var.high_urgency_alarm_thresholds["free_storage_space"]
   alarm_description   = "This alarm monitors for when the DB is running out of storage"
   alarm_actions       = [var.sns_topic["high_urgency"]]
@@ -81,8 +91,26 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_high_urgency" {
   treat_missing_data  = "ignore"
   tags                = var.tags
 
-  dimensions = {
-    DBInstanceIdentifier = aws_db_instance.db_instance.identifier
+  metric_query {
+    id          = "e1"
+    expression  = "m1/(${var.allocated_storage}*1000*1000*1000)*100"
+    label       = "Percent Free Storage Space Left"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+
+    metric {
+      metric_name = "FreeStorageSpace"
+      namespace   = "AWS/RDS"
+      period      = 300
+      stat        = "Average"
+
+      dimensions = {
+        DBInstanceIdentifier = aws_db_instance.db_instance.identifier
+      }
+    }
   }
 }
 
@@ -387,7 +415,7 @@ resource "aws_cloudwatch_metric_alarm" "oldest_replication_slot_lag_high_urgency
 }
 
 resource "aws_cloudwatch_metric_alarm" "db_load_low_urgency" {
-  count               = var.create_alarms && var.active_alarms["db_load"] ? 1 : 0
+  count               = var.create_alarms && var.active_alarms["db_load_low_urgency"] ? 1 : 0
   alarm_name          = "Low-Urgency-${local.world}${local.separator}${var.service}-DB-High-DBLoad"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
@@ -399,6 +427,28 @@ resource "aws_cloudwatch_metric_alarm" "db_load_low_urgency" {
   alarm_description   = "This alarm monitors for high DBLoad"
   alarm_actions       = [var.sns_topic["low_urgency"]]
   ok_actions          = [var.sns_topic["low_urgency"]]
+  datapoints_to_alarm = "15"
+  treat_missing_data  = "ignore"
+  tags                = var.tags
+
+  dimensions = {
+    DBInstanceIdentifier = aws_db_instance.db_instance.identifier
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "db_load_high_urgency" {
+  count               = var.create_alarms && var.active_alarms["db_load_high_urgency"] ? 1 : 0
+  alarm_name          = "High-Urgency-${local.world}${local.separator}${var.service}-DB-High-DBLoad"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 15
+  metric_name         = "DBLoad"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = var.high_urgency_alarm_thresholds["db_load"]
+  alarm_description   = "This alarm monitors for high DBLoad"
+  alarm_actions       = [var.sns_topic["high_urgency"]]
+  ok_actions          = [var.sns_topic["high_urgency"]]
   datapoints_to_alarm = "15"
   treat_missing_data  = "ignore"
   tags                = var.tags
@@ -617,7 +667,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               "horizontal" : [
                 {
                   "label" : "load",
-                  "value" : var.low_urgency_alarm_thresholds["db_load"]
+                  "value" : var.high_urgency_alarm_thresholds["db_load"]
                 }
               ]
             }
