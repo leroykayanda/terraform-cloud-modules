@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_dashboard" "dash" {
+  count          = var.create_alarms["dash"] ? 1 : 0
   dashboard_name = "${var.env}-${var.service}-DB"
   dashboard_body = jsonencode(
     {
@@ -306,7 +307,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "acu_usage" {
-  count               = var.serverless_cluster ? 1 : 0
+  count               = var.serverless_cluster && var.create_alarms["acu"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-ACUUtilization"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -328,6 +329,7 @@ resource "aws_cloudwatch_metric_alarm" "acu_usage" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
+  count               = var.create_alarms["memory"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-Low-Memory"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -349,6 +351,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_CPUUtilization" {
+  count               = var.create_alarms["cpu"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -370,6 +373,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_CPUUtilization" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "read_latency" {
+  count               = var.create_alarms["read_latency"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-ReadLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -391,6 +395,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "write_latency" {
+  count               = var.create_alarms["write_latency"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-WriteLatency"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -412,6 +417,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
+  count               = var.create_alarms["disk_queue_depth"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-High-DiskQueueDepth"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "15"
@@ -433,6 +439,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "buffer_cache_hit_ratio" {
+  count               = var.create_alarms["buffer_cache_hit_ratio"] ? 1 : 0
   alarm_name          = "${var.env}-${var.service}-DB-Low-BufferCacheHitRatio"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "15"

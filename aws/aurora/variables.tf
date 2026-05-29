@@ -40,6 +40,21 @@ variable "db_credentials" {
   }
 }
 
+variable "create_alarms" {
+  type        = map(bool)
+  description = "Alarms to create for the DB"
+  default = {
+    "dash"                   = true
+    "acu"                    = true
+    "memory"                 = true
+    "cpu"                    = true
+    "read_latency"           = true
+    "write_latency"          = true
+    "disk_queue_depth"       = true
+    "buffer_cache_hit_ratio" = true
+  }
+}
+
 variable "security_group_id" {
   type = string
 }
