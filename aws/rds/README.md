@@ -20,6 +20,7 @@ No modules.
 | [aws_cloudwatch_dashboard.dash](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard) | resource |
 | [aws_cloudwatch_metric_alarm.cpu_high_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cpu_low_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.db_load_high_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.db_load_low_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.disk_queue_depth_low_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.free_storage_space_high_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
@@ -36,14 +37,14 @@ No modules.
 | [aws_cloudwatch_metric_alarm.write_latency_low_urgency](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_db_instance.db_instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
 | [aws_db_subnet_group.subnet_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
-| [aws_kms_key.kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_active_alarms"></a> [active\_alarms](#input\_active\_alarms) | Which alarms to create for the RDS instance | `map(bool)` | <pre>{<br/>  "cpu": true,<br/>  "dashboard": true,<br/>  "db_load": true,<br/>  "disk_queue_depth": true,<br/>  "free_storage_space": true,<br/>  "freeable_memory": true,<br/>  "iops": true,<br/>  "oldest_replication_slot_lag": true,<br/>  "read_latency": true,<br/>  "replica_lag": true,<br/>  "write_latency": true<br/>}</pre> | no |
-| <a name="input_allocated_storage"></a> [allocated\_storage](#input\_allocated\_storage) | The allocated storage in gibibytes. | `number` | `500` | no |
+| <a name="input_active_alarms"></a> [active\_alarms](#input\_active\_alarms) | Which alarms to create for the RDS instance | `map(bool)` | <pre>{<br/>  "cpu": true,<br/>  "dashboard": true,<br/>  "db_load_high_urgency": true,<br/>  "db_load_low_urgency": true,<br/>  "disk_queue_depth": true,<br/>  "free_storage_space": true,<br/>  "freeable_memory": true,<br/>  "iops": true,<br/>  "oldest_replication_slot_lag": true,<br/>  "read_latency": true,<br/>  "replica_lag": true,<br/>  "write_latency": true<br/>}</pre> | no |
+| <a name="input_allocated_storage"></a> [allocated\_storage](#input\_allocated\_storage) | The allocated storage in gibibytes. If max\_allocated\_storage is configured, this argument represents the initial storage allocation and differences from the configuration will be ignored automatically when Storage Autoscaling occurs. If replicate\_source\_db is set, the value is ignored during the creation of the instance. | `number` | n/a | yes |
+| <a name="input_allow_major_version_upgrade"></a> [allow\_major\_version\_upgrade](#input\_allow\_major\_version\_upgrade) | Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible. | `bool` | `false` | no |
 | <a name="input_auto_minor_version_upgrade"></a> [auto\_minor\_version\_upgrade](#input\_auto\_minor\_version\_upgrade) | Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window. | `bool` | `false` | no |
 | <a name="input_backup_retention_period"></a> [backup\_retention\_period](#input\_backup\_retention\_period) | The days to retain backups for. Must be between 0 and 35. | `number` | `21` | no |
 | <a name="input_backup_window"></a> [backup\_window](#input\_backup\_window) | The daily time range (in UTC) during which automated backups are created if they are enabled. Must not overlap with maintenance\_window.Eg: 00:00-02:00 | `string` | `"01:00-01:30"` | no |
@@ -56,17 +57,17 @@ No modules.
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | n/a | `bool` | `true` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | Set of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported. Valid values (depending on engine). MySQL and MariaDB: audit, error, general, slowquery. PostgreSQL: postgresql, upgrade. MSSQL: agent , error. Oracle: alert, audit, listener, trace. eg ['postgresql'] | `list(string)` | <pre>[<br/>  "postgresql"<br/>]</pre> | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | The database engine to use eg. postgres, aurora-postgresql | `string` | `"postgres"` | no |
-| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | The engine version to use | `string` | `"17.2"` | no |
-| <a name="input_high_urgency_alarm_thresholds"></a> [high\_urgency\_alarm\_thresholds](#input\_high\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 100,<br/>  "free_storage_space": 1000000000000,<br/>  "freeable_memory": 10000000000,<br/>  "iops": 35000,<br/>  "oldest_replication_slot_lag": "300000000000",<br/>  "replica_lag": 1800<br/>}</pre> | no |
+| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | The engine version to use | `string` | n/a | yes |
+| <a name="input_high_urgency_alarm_thresholds"></a> [high\_urgency\_alarm\_thresholds](#input\_high\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 100,<br/>  "db_load": 70,<br/>  "free_storage_space": 10,<br/>  "freeable_memory": 10000000000,<br/>  "iops": 35000,<br/>  "oldest_replication_slot_lag": "300000000000",<br/>  "replica_lag": 1800<br/>}</pre> | no |
 | <a name="input_iam_database_authentication_enabled"></a> [iam\_database\_authentication\_enabled](#input\_iam\_database\_authentication\_enabled) | n/a | `bool` | `false` | no |
+| <a name="input_identifier"></a> [identifier](#input\_identifier) | The name of the RDS instance | `string` | `null` | no |
 | <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | The instance type of the RDS instance. | `string` | n/a | yes |
 | <a name="input_iops"></a> [iops](#input\_iops) | The amount of provisioned IOPS. Setting this implies a storage\_type of io1 or io2 | `string` | `null` | no |
-| <a name="input_kms_key_deletion"></a> [kms\_key\_deletion](#input\_kms\_key\_deletion) | The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the KMS key. If you specify a value, it must be between 7 and 30, inclusive. | `number` | `30` | no |
-| <a name="input_low_urgency_alarm_thresholds"></a> [low\_urgency\_alarm\_thresholds](#input\_low\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 85,<br/>  "db_load": 45,<br/>  "disk_queue_depth": 30,<br/>  "free_storage_space": 3000000000000,<br/>  "freeable_memory": 50000000000,<br/>  "iops": 30000,<br/>  "oldest_replication_slot_lag": "200000000000",<br/>  "read_latency": 0.5,<br/>  "replica_lag": 900,<br/>  "write_latency": 0.5<br/>}</pre> | no |
+| <a name="input_low_urgency_alarm_thresholds"></a> [low\_urgency\_alarm\_thresholds](#input\_low\_urgency\_alarm\_thresholds) | n/a | `map(number)` | <pre>{<br/>  "cpu": 85,<br/>  "db_load": 45,<br/>  "disk_queue_depth": 30,<br/>  "free_storage_space": 20,<br/>  "freeable_memory": 50000000000,<br/>  "iops": 30000,<br/>  "oldest_replication_slot_lag": "200000000000",<br/>  "read_latency": 0.5,<br/>  "replica_lag": 900,<br/>  "write_latency": 0.5<br/>}</pre> | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | n/a | `string` | `"Sun:03:00-Sun:03:30"` | no |
 | <a name="input_max_allocated_storage"></a> [max\_allocated\_storage](#input\_max\_allocated\_storage) | Specifies the maximum storage (in GiB) that Amazon RDS can automatically scale to for this DB instance. By default, Storage Autoscaling is disabled. To enable Storage Autoscaling, set max\_allocated\_storage to greater than or equal to allocated\_storage. Setting max\_allocated\_storage to 0 explicitly disables Storage Autoscaling. When configured, changes to allocated\_storage will be automatically ignored as the storage can dynamically scale. | `number` | `0` | no |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Specifies if the RDS instance is multi-AZ | `bool` | `false` | no |
-| <a name="input_parameter_group_name"></a> [parameter\_group\_name](#input\_parameter\_group\_name) | n/a | `string` | n/a | yes |
+| <a name="input_parameter_group_name"></a> [parameter\_group\_name](#input\_parameter\_group\_name) | n/a | `string` | `null` | no |
 | <a name="input_performance_insights_enabled"></a> [performance\_insights\_enabled](#input\_performance\_insights\_enabled) | n/a | `bool` | `true` | no |
 | <a name="input_performance_insights_retention_period"></a> [performance\_insights\_retention\_period](#input\_performance\_insights\_retention\_period) | Amount of time in days to retain Performance Insights data. Valid values are 7, 731 (2 years) or a multiple of 31 | `number` | `93` | no |
 | <a name="input_port"></a> [port](#input\_port) | The port on which the DB accepts connections. | `number` | `5432` | no |
@@ -88,5 +89,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_address"></a> [address](#output\_address) | n/a |
 | <a name="output_identifier"></a> [identifier](#output\_identifier) | n/a |
 <!-- END_TF_DOCS -->
