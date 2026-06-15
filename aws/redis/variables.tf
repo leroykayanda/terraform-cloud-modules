@@ -1,4 +1,4 @@
-variable "world" {
+variable "env" {
   type        = string
   description = "Deployment environment eg prod, dev"
 }
@@ -33,18 +33,12 @@ variable "multi_az_enabled" {
   type        = bool
   description = "Specifies whether to enable Multi-AZ Support for the replication group"
   default     = true
-
 }
 
 variable "automatic_failover_enabled" {
   type        = bool
   description = "Specifies whether a read-only replica will be automatically promoted to read/write primary if the existing primary fails. If enabled, num_cache_clusters must be greater than 1"
   default     = true
-}
-
-variable "parameter_group_name" {
-  type        = string
-  description = "Name of the parameter group to associate with this replication group."
 }
 
 variable "port" {
@@ -56,7 +50,7 @@ variable "port" {
 variable "engine" {
   type        = string
   description = "Name of the cache engine to be used for the clusters in this replication group. Valid values are redis or valkey."
-  default     = "redis"
+  default     = "valkey"
 }
 
 variable "engine_version" {
@@ -106,28 +100,20 @@ variable "security_groups" {
 }
 
 variable "snapshot_retention_limit" {
-  type        = string
+  type        = number
   description = "Number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of snapshot_retention_limit is set to zero (0), backups are turned off. Please note that setting a snapshot_retention_limit is not supported on cache.t1.micro cache nodes"
 }
 
 variable "sns_topic" {
-  type        = map(string)
+  type        = string
   description = "For alarm notifications"
   default     = null
 }
 
-variable "low_urgency_alarm_thresholds" {
+variable "alarm_thresholds" {
   type = map(number)
   default = {
     freeable_memory = 2000000000 # 2 Gb
-    cpu             = 80
-  }
-}
-
-variable "high_urgency_alarm_thresholds" {
-  type = map(number)
-  default = {
-    freeable_memory = 1000000000 # 1 Gb
     cpu             = 90
   }
 }
