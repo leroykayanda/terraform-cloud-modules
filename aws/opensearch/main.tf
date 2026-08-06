@@ -60,7 +60,7 @@ resource "aws_opensearch_domain" "os" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "es:*",
+      "Action": "es:ESHttp*",
       "Principal": {
         "AWS": "*"
       },
