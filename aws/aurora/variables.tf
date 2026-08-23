@@ -24,7 +24,8 @@ variable "aurora_settings" {
     "db_instance_count"                      = 1,
     "publicly_accessible"                    = false,
     "performance_insights_retention_period"  = 31
-    "freeable_memory_alarm_threshold"        = 1000000000 # 1GB
+    "freeable_memory_alarm_threshold"        = 10 # 10%
+    "total_memory"                           = 4  # 4GB
     "disk_queue_depth_alarm_threshold"       = 200
     "buffer_cache_hit_ratio_alarm_threshold" = 80
   }

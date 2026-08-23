@@ -333,10 +333,6 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
   alarm_name          = "${var.env}-${var.service}-DB-Low-Memory"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "15"
-  metric_name         = "FreeableMemory"
-  namespace           = "AWS/RDS"
-  period              = "60"
-  statistic           = "Average"
   threshold           = var.aurora_settings["freeable_memory_alarm_threshold"]
   alarm_description   = "This alarm monitors for low database memory"
   alarm_actions       = [var.sns_topic]
@@ -345,8 +341,26 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
   treat_missing_data  = "ignore"
   tags                = var.tags
 
-  dimensions = {
-    DBClusterIdentifier = aws_rds_cluster.aurora.cluster_identifier
+  metric_query {
+    id          = "e1"
+    expression  = "m1/(${var.aurora_settings["total_memory"]}*1000*1000*1000)*100"
+    label       = "Percent Free Memory"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+
+    metric {
+      metric_name = "FreeableMemory"
+      namespace   = "AWS/RDS"
+      period      = 60
+      stat        = "Average"
+
+      dimensions = {
+        DBClusterIdentifier = aws_rds_cluster.aurora.cluster_identifier
+      }
+    }
   }
 }
 
