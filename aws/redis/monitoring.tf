@@ -1,8 +1,8 @@
 resource "aws_cloudwatch_metric_alarm" "freeable_memory" {
   alarm_name          = "${local.env}${local.separator}${var.service}-Redis-High-Memory-Usage"
-  comparison_operator = "LessThanOrEqualToThreshold"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 15
-  metric_name         = "FreeableMemory"
+  metric_name         = "DatabaseMemoryUsagePercentage"
   namespace           = "AWS/ElastiCache"
   period              = "60"
   statistic           = "Average"

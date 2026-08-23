@@ -102,6 +102,7 @@ variable "security_groups" {
 variable "snapshot_retention_limit" {
   type        = number
   description = "Number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of snapshot_retention_limit is set to zero (0), backups are turned off. Please note that setting a snapshot_retention_limit is not supported on cache.t1.micro cache nodes"
+  default     = 2
 }
 
 variable "sns_topic" {
@@ -113,7 +114,7 @@ variable "sns_topic" {
 variable "alarm_thresholds" {
   type = map(number)
   default = {
-    freeable_memory = 2000000000 # 2 Gb
+    freeable_memory = 90
     cpu             = 90
   }
 }
@@ -121,11 +122,5 @@ variable "alarm_thresholds" {
 variable "subnet_group_name" {
   type        = string
   description = "Name of the cache subnet group to be used for the replication group."
-  default     = null
-}
-
-variable "auth_token_update_strategy" {
-  type        = string
-  description = "Strategy to use when updating the auth_token. Valid values are SET, ROTATE, and DELETE. Required if auth_token is set."
   default     = null
 }
