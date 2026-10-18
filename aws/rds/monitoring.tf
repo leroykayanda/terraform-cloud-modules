@@ -57,7 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low_urgency" {
 
   metric_query {
     id          = "e1"
-    expression  = "m1/(${var.allocated_storage}*1000*1000*1000)*100"
+    expression  = "m1/(${aws_db_instance.db_instance.allocated_storage * 1024 * 1024 * 1024})*100"
     label       = "Percent Free Storage Space Left"
     return_data = "true"
   }
@@ -93,7 +93,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_high_urgency" {
 
   metric_query {
     id          = "e1"
-    expression  = "m1/(${var.allocated_storage}*1000*1000*1000)*100"
+    expression  = "m1/(${aws_db_instance.db_instance.allocated_storage * 1024 * 1024 * 1024})*100"
     label       = "Percent Free Storage Space Left"
     return_data = "true"
   }
@@ -476,7 +476,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               "horizontal" : [
                 {
                   "label" : "free_memory",
-                  "value" : 50000000000
+                  "value" : var.high_urgency_alarm_thresholds["freeable_memory"]
                 }
               ]
             },
@@ -550,7 +550,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               "horizontal" : [
                 {
                   "label" : "free_storage",
-                  "value" : 3000000000000
+                  "value" : var.high_urgency_alarm_thresholds["free_storage_space"] / 100 * (var.max_allocated_storage * 1024 * 1024 * 1024)
                 }
               ]
             },
@@ -600,7 +600,7 @@ resource "aws_cloudwatch_dashboard" "dash" {
               "horizontal" : [
                 {
                   "label" : "iops",
-                  "value" : 30000
+                  "value" : var.high_urgency_alarm_thresholds["iops"]
                 }
               ]
             },
